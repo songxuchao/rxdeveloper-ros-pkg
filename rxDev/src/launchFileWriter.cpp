@@ -351,14 +351,16 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
             paramTag->SetAttribute("command", "dump");
         if (parameter->getType() == "command delete")
             paramTag->SetAttribute("command", "delete");
-        qDebug()<<"type: "<<parameter->getType();
-        qDebug()<<"ns: "<<parameter->getNamespace();
-        qDebug()<<"name: "<<parameter->getName();
-        qDebug()<<"Value: "<<parameter->getValue();
+//        qDebug()<<"type: "<<parameter->getType();
+//        qDebug()<<"ns: "<<parameter->getNamespace();
+//        qDebug()<<"name: "<<parameter->getName();
+//        qDebug()<<"Value: "<<parameter->getValue();
         paramTag->SetAttribute("file", parameter->getValue().toStdString());
-        paramTag->SetAttribute("param", parameter->getName().toStdString());
         //optional
-        paramTag->SetAttribute("ns", parameter->getNamespace().toStdString());
+        if (!parameter->getName().isEmpty())
+            paramTag->SetAttribute("param", parameter->getName().toStdString());
+        if (!parameter->getNamespace().isEmpty())
+            paramTag->SetAttribute("ns", parameter->getNamespace().toStdString());
         //end optional
     }
 
