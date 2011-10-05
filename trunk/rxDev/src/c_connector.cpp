@@ -450,7 +450,7 @@ void RxDev::openSpecFile(){
         seekRoot = seekRoot.parent();
     }
     QString filePath =  seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString();
-    qDebug()<<filePath;
+    //qDebug()<<filePath;
     QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
 }
 

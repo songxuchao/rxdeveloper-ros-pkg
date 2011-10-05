@@ -6,6 +6,7 @@
 #include <QToolBar>
 #include "launchFileWriter.h"
 #include "launchFileReader.h"
+#include <QUrl>
 
 
 /*!\brief initialize GUI
@@ -174,13 +175,13 @@ void RxDev::setViewScale(const QString &scale)
 bool RxDev::maybeSave()
 {
     QMessageBox::StandardButton button = QMessageBox::warning(this, QString(),
-                        tr("Did you save your progress?\nDo you really want to quit?"),
-                        QMessageBox::Yes | QMessageBox::Cancel);
-                if (button == QMessageBox::Cancel)
-                        return false;
-                if (button == QMessageBox::Yes)
-                        return true;
-                return true;
+                                                              tr("Did you save your progress?\nDo you really want to quit?"),
+                                                              QMessageBox::Yes | QMessageBox::Cancel);
+    if (button == QMessageBox::Cancel)
+        return false;
+    if (button == QMessageBox::Yes)
+        return true;
+    return true;
 }
 
 /*!\brief mouse remap mode
@@ -372,17 +373,26 @@ void RxDev::on_actionSave_as_Launchfile_triggered()
                 this, tr( "Save launch file as ..." ),
 
                 currentDir.absolutePath(), tr("Launchfiles (*.launch *.xml)"));
+    if (!file.isEmpty()){
+        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
+        currentDir.setPath(settings.value("currentDir").toString());
 
-    settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-    currentDir.setPath(settings.value("currentDir").toString());
+        //writing to Launchfile
+        LaunchWriter *launchFile = new LaunchWriter;
+        QList<QGraphicsItem *> list;
+        list=scene->items();
+        launchFile->createDocument(file,false,list);    //false = create launchfile
 
-    //writing to Launchfile
-    LaunchWriter *launchFile = new LaunchWriter;
-    QList<QGraphicsItem *> list;
-    list=scene->items();
-    launchFile->createDocument(file,false,list);    //false = create launchfile
+        QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("Writing done")),
+                                                                   QString::fromUtf8("<h2>Launchfile has been written!</h2>"
+                                                                                     "<p>The file "+file.toUtf8()+" was created. Do you want to open this file?</p>"),
 
+                                                                   QMessageBox::Yes | QMessageBox::No);
+        if (button == QMessageBox::Yes)
+            QDesktopServices::openUrl(QUrl::fromLocalFile( file));
+    }
 }
+
 
 /*!\brief load launchfile
  *
@@ -394,15 +404,16 @@ void RxDev::on_actionLoad_Launchfile_triggered()
     file = QFileDialog::getOpenFileName(
                 this, tr( "Open Launch File" ),
                 currentDir.absolutePath(), tr("Launchfiles (*.launch *.xml)"));
-    currentDir.setPath(settings.value("currentDir").toString());
-    settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-    if( !QFile::exists( file ) )
-    {
-        QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
-        return;
-    }
+    if (!file.isEmpty()){
+        currentDir.setPath(settings.value("currentDir").toString());
+        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
+        if( !QFile::exists( file ) )
+        {
+            QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
+            return;
+        }
 
-    /*    QFile launchFile(file);
+        /*    QFile launchFile(file);
     //loading and parsing launchfile
     launchFile.open(QIODevice::ReadOnly);
     while (!launchFile.atEnd())
@@ -415,18 +426,18 @@ void RxDev::on_actionLoad_Launchfile_triggered()
     }
     launchFile.close();
 */
-    TiXmlDocument doc( file.toStdString() );
-    bool loadOkay = doc.LoadFile();
-    if (loadOkay)
-    {
-        qDebug()<<"\n:"<<file;
-        loadDocument( &doc );
+        TiXmlDocument doc( file.toStdString() );
+        bool loadOkay = doc.LoadFile();
+        if (loadOkay)
+        {
+            qDebug()<<"\n:"<<file;
+            loadDocument( &doc );
+        }
+        else
+        {
+            qDebug()<<"\nFailed to load file "<<file;
+        }
     }
-    else
-    {
-        qDebug()<<"\nFailed to load file "<<file;
-    }
-
 
 }
 
@@ -442,27 +453,28 @@ void RxDev::on_actionLoad_Project_triggered()
     file = QFileDialog::getOpenFileName(
                 this, tr( "Open Project File" ),
                 currentDir.absolutePath(), tr("*.rxd (*.rxd)"));
-    currentDir.setPath(settings.value("currentDir").toString());
-    settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-    if( !QFile::exists( file ) )
-    {
-        QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
-        return;
-    }
-    TiXmlDocument doc( file.toStdString() );
-    bool loadOkay = doc.LoadFile();
-    if (loadOkay)
-    {
-        qDebug()<<"\n:"<<file;
-        loadDocument( &doc );
-    }
-    else
-    {
-        qDebug()<<"\nFailed to load file "<<file;
-    }
+    if (!file.isEmpty()){
+        currentDir.setPath(settings.value("currentDir").toString());
+        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
+        if( !QFile::exists( file ) )
+        {
+            QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
+            return;
+        }
+        TiXmlDocument doc( file.toStdString() );
+        bool loadOkay = doc.LoadFile();
+        if (loadOkay)
+        {
+            qDebug()<<"\n:"<<file;
+            loadDocument( &doc );
+        }
+        else
+        {
+            qDebug()<<"\nFailed to load file "<<file;
+        }
 
-    project=false;
-
+        project=false;
+    }
 
 }
 
@@ -475,15 +487,16 @@ void RxDev::on_actionSave_Project_triggered()
 
     QString file = QFileDialog::getSaveFileName(
                 this, tr( "Save project as ..." ),
-
                 currentDir.absolutePath(), tr("*.rxd (*.rxd)"));
 
-    settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-    currentDir.setPath(settings.value("currentDir").toString());
+    if (!file.isEmpty()){
+        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
+        currentDir.setPath(settings.value("currentDir").toString());
 
-    //writing to file
-    LaunchWriter *launchFile = new LaunchWriter;
-    QList<QGraphicsItem *> list;
-    list=scene->items();
-    launchFile->createDocument(file,true,list); //true = create projectfile
+        //writing to file
+        LaunchWriter *launchFile = new LaunchWriter;
+        QList<QGraphicsItem *> list;
+        list=scene->items();
+        launchFile->createDocument(file,true,list); //true = create projectfile
+    }
 }
