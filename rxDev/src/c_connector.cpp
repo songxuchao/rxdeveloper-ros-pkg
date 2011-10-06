@@ -201,9 +201,7 @@ void RxDev::on_pushButton_Param_clicked()
     newParam->setLocation(findSpace(QPoint(0,55)));
     if (newParam->getParamData()==true){
         scene->addItem(newParam);
-        gview->selectedParam=newParam;
     }
-
 }
 void RxDev::on_pushButton_remap_clicked()
 {
