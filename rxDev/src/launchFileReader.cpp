@@ -149,6 +149,10 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode)
             newMachine.setTimeout(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="default"){
             newMachine.setDefault(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newMachine.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newMachine.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -288,6 +292,10 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
                 newNode.setCwd(2);
             else
                 newNode.setCwd(0);
+        }else if (QString(tagAttribute->Name())=="if"){
+            newNode.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newNode.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -355,6 +363,10 @@ void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode)
             newParam.setStandardParameter(2);
             newParam.setType("binfile");
             newParam.setValue(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newParam.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newParam.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -390,6 +402,10 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode)
             newRemap.setFrom(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="to"){
             newRemap.setTo(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newRemap.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newRemap.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -429,6 +445,10 @@ void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode)
             newParam.setName(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="ns"){
             newParam.setNamespace(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newParam.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newParam.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -462,6 +482,10 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode)
             newEnv.setName(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="value"){
             newEnv.setValue(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newEnv.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newEnv.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -501,6 +525,10 @@ void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode)
         }else if (QString(tagAttribute->Name())=="value"){
             newArg.setValue_or_default(1);
             newArg.setValue(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newArg.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newArg.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -537,6 +565,10 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
             newIncludeFile.setNamespace(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="clear_params"){
             newIncludeFile.setClearParams(bool(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="if"){
+            newIncludeFile.setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newIncludeFile.setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
@@ -595,6 +627,10 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
                 newGroup->setClear_params(2);
             else
                 newGroup->setClear_params(0);
+        }else if (QString(tagAttribute->Name())=="if"){
+            newGroup->setIf(QString(tagAttribute->Value()));
+        }else if (QString(tagAttribute->Name())=="unless"){
+            newGroup->setUnless(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="x"){
             if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
                 x =ival;
