@@ -176,6 +176,10 @@ void LaunchWriter::create_machineTag(TiXmlElement &elem, QGraphicsItem &item)
         machineTag->SetAttribute("password", machine->getPassword().toStdString());
     if (machine->getTimeout()!="")
         machineTag->SetAttribute("timeout", machine->getTimeout().toStdString());
+    if (machine->getIf()!="")
+        machineTag->SetAttribute("if", machine->getIf().toStdString());
+    if (machine->getUnless()!="")
+        machineTag->SetAttribute("unless", machine->getUnless().toStdString());
     //end optional
     //for projectfiles
     if (project){ //if writing projectfile
@@ -208,6 +212,10 @@ void LaunchWriter::create_includeTag(TiXmlElement &elem, QGraphicsItem &item)
             includeTag->SetAttribute("clear_params", "true");
         else if (include->getClearParams()==false)  //can only be used if a ns exists
             includeTag->SetAttribute("clear_params", "false");
+        if (include->getIf()!="")
+            includeTag->SetAttribute("if", include->getIf().toStdString());
+        if (include->getUnless()!="")
+            includeTag->SetAttribute("unless", include->getUnless().toStdString());
 
     }
     //end optional
@@ -286,6 +294,10 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
         nodeTag->SetAttribute("cwd", "node");
     if (node->getLaunch_prefix() != "")
         nodeTag->SetAttribute("launch-prefix", node->getLaunch_prefix().toStdString());
+    if (node->getIf()!="")
+        nodeTag->SetAttribute("if", node->getIf().toStdString());
+    if (node->getUnless()!="")
+        nodeTag->SetAttribute("unless", node->getUnless().toStdString());
     //end optional
 
     //for projectfiles
@@ -363,7 +375,10 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
             paramTag->SetAttribute("ns", parameter->getNamespace().toStdString());
         //end optional
     }
-
+    if (parameter->getIf()!="")
+        paramTag->SetAttribute("if", parameter->getIf().toStdString());
+    if (parameter->getUnless()!="")
+        paramTag->SetAttribute("unless", parameter->getUnless().toStdString());
     //for projectfiles
     if (project){ //if writing projectfile
         paramTag->SetAttribute("x",parameter->pos().x());
@@ -422,6 +437,10 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter 
         //end optional
 
     }
+    if (parameter.getIf()!="")
+        paramTag->SetAttribute("if", parameter.getIf().toStdString());
+    if (parameter.getUnless()!="")
+        paramTag->SetAttribute("unless", parameter.getUnless().toStdString());
 
     //for projectfiles
     if (project){ //if writing projectfile
@@ -442,6 +461,13 @@ void LaunchWriter::create_envTag(TiXmlElement &elem, QGraphicsItem &item)
     EnvItem * env = qgraphicsitem_cast<EnvItem *>(&item);
     envTag->SetAttribute("name", env->getName().toStdString());
     envTag->SetAttribute("value", env->getValue().toStdString());
+    //optional
+    if (env->getIf()!="")
+        envTag->SetAttribute("if", env->getIf().toStdString());
+    if (env->getUnless()!="")
+        envTag->SetAttribute("unless", env->getUnless().toStdString());
+    //end optional
+
     //for projectfiles
     if (project){ //if writing projectfile
         envTag->SetAttribute("x",env->pos().x());
@@ -460,6 +486,13 @@ void LaunchWriter::create_envTag(TiXmlElement &elem, EnvItem &env)
     TiXmlElement * envTag = new TiXmlElement( "env" );
     envTag->SetAttribute("name", env.getName().toStdString());
     envTag->SetAttribute("value", env.getValue().toStdString());
+    //optional
+    if (env.getIf()!="")
+        envTag->SetAttribute("if", env.getIf().toStdString());
+    if (env.getUnless()!="")
+        envTag->SetAttribute("unless", env.getUnless().toStdString());
+    //end optional
+
     //for projectfiles
     if (project){ //if writing projectfile
         envTag->SetAttribute("x",env.pos().x());
@@ -483,7 +516,11 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, ArgItem &arg)
         argTag->SetAttribute("value", arg.getValue().toStdString());
     else if (arg.getValue_or_default()==2)
         argTag->SetAttribute("default", arg.getValue().toStdString());
-    //end optional
+    if (arg.getIf()!="")
+        argTag->SetAttribute("if", arg.getIf().toStdString());
+    if (arg.getUnless()!="")
+        argTag->SetAttribute("unless", arg.getUnless().toStdString());
+        //end optional
     //for projectfiles
     if (project){ //if writing projectfile
         argTag->SetAttribute("x",arg.pos().x());
@@ -507,6 +544,10 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, QGraphicsItem &item)
         argTag->SetAttribute("value", arg->getValue().toStdString());
     else if (arg->getValue_or_default()==2)
         argTag->SetAttribute("default", arg->getValue().toStdString());
+    if (arg->getIf()!="")
+        argTag->SetAttribute("if", arg->getIf().toStdString());
+    if (arg->getUnless()!="")
+        argTag->SetAttribute("unless", arg->getUnless().toStdString());
     //end optional
     //for projectfiles
     if (project){ //if writing projectfile
@@ -540,6 +581,13 @@ void LaunchWriter::create_remapTag(TiXmlElement &elem, QGraphicsItem &item)
 
     remapTag->SetAttribute("from", remap->getFrom().toStdString());
     remapTag->SetAttribute("to", remap->getTo().toStdString());
+    //optional
+    if (remap->getIf()!="")
+        remapTag->SetAttribute("if", remap->getIf().toStdString());
+    if (remap->getUnless()!="")
+        remapTag->SetAttribute("unless", remap->getUnless().toStdString());
+    //end optional
+
     //for projectfiles
     if (project){ //if writing projectfile
         remapTag->SetAttribute("x",remap->pos().x());
