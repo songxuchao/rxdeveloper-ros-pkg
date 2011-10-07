@@ -35,7 +35,7 @@ NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui
     }
     ui->lineEdit_name->setFocus();
 
-    remapModel = new QStandardItemModel(item->remapItems.count(),3);
+    remapModel = new QStandardItemModel(item->remapItems.count(),4);
     remapModel->setHeaderData(0,Qt::Horizontal,QObject::tr("from"));
     remapModel->setHeaderData(1,Qt::Horizontal,QObject::tr("to"));
     remapModel->setHeaderData(2,Qt::Horizontal,QObject::tr("if"));
