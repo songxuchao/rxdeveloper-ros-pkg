@@ -28,6 +28,7 @@ void LaunchWriter::createDocument(QString file, bool _project, QList<QGraphicsIt
     create_commentTag(*launchTag);
 
     //create tags for the scene items
+    QList<int> paramItems;          //List of parameterItems
     for (int i = 0; i < list.size(); i++) {
         switch (list.at(i)->type()){
 
@@ -39,10 +40,6 @@ void LaunchWriter::createDocument(QString file, bool _project, QList<QGraphicsIt
             if (list.at(i)->parentItem()==0)
                 create_groupTag(*launchTag,*list.at(i));
 
-            break;
-        case ParameterItem::Type:
-            if (list.at(i)->parentItem()==0)
-                create_paramTag(*launchTag,*list.at(i));
             break;
         case MachineItem::Type:
             if (list.at(i)->parentItem()==0)
@@ -64,11 +61,18 @@ void LaunchWriter::createDocument(QString file, bool _project, QList<QGraphicsIt
             if (list.at(i)->parentItem()==0)
                 create_remapTag(*launchTag,*list.at(i));
             break;
+        case ParameterItem::Type:
+            paramItems<<i;                  //save parameteritems for later
+            break;
         default:
             break;
         }
     }
-
+    //write parameter tags after everything else
+    for (int i=0;i<paramItems.size();i++){
+        if (list.at(paramItems.at(i))->parentItem()==0)
+        create_paramTag(*launchTag,*list.at(paramItems.at(i)));
+    }
 
     doc.SaveFile( file.toStdString() );
 
@@ -113,6 +117,7 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
     //Check for all tags
     QList<QGraphicsItem *> list;
     list=group->childItems();
+    QList<int> paramItems;
     for (int i = 0; i < list.size(); i++) {
         switch (list.at(i)->type()){
 
@@ -121,9 +126,6 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
             break;
         case GroupItem::Type:
             create_groupTag(*groupTag,*list.at(i));
-            break;
-        case ParameterItem::Type:
-            create_paramTag(*groupTag,*list.at(i));
             break;
         case MachineItem::Type:
             create_machineTag(*groupTag,*list.at(i));
@@ -140,12 +142,20 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         case RemapItem::Type:
             create_remapTag(*groupTag,*list.at(i));
             break;
-//        case 65550:
-//            create_remapTag(*groupTag,*list.at(i));
-//            break;
+            //        case 65550:
+            //            create_remapTag(*groupTag,*list.at(i));
+            //            break;
+        case ParameterItem::Type:
+            paramItems<<i;
+            break;
         default:
             break;
         }
+    }
+    //write parameter tags after everything else
+
+    for (int i=0;i<paramItems.size();i++){
+        create_paramTag(*groupTag,*list.at(paramItems.at(i)));
     }
 
 
@@ -311,15 +321,15 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
 
         create_envTag(*nodeTag,*node->envItems.at(i));
     }
+    //Check for embedded remap tags
+    for (int i = 0; i < node->remapItems.size(); i++) {
+        create_remapTag(*nodeTag,*node->remapItems.at(i));
+    }
     //Check for embedded param or rosparam tags
     for (int i = 0; i < node->paramItems.size(); i++) {
         create_paramTag(*nodeTag,*node->paramItems.at(i));
     }
 
-    //Check for embedded remap tags
-    for (int i = 0; i < node->remapItems.size(); i++) {
-        create_remapTag(*nodeTag,*node->remapItems.at(i));
-            }
 
     elem.LinkEndChild( nodeTag);
 
@@ -363,10 +373,10 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
             paramTag->SetAttribute("command", "dump");
         if (parameter->getType() == "command delete")
             paramTag->SetAttribute("command", "delete");
-//        qDebug()<<"type: "<<parameter->getType();
-//        qDebug()<<"ns: "<<parameter->getNamespace();
-//        qDebug()<<"name: "<<parameter->getName();
-//        qDebug()<<"Value: "<<parameter->getValue();
+        //        qDebug()<<"type: "<<parameter->getType();
+        //        qDebug()<<"ns: "<<parameter->getNamespace();
+        //        qDebug()<<"name: "<<parameter->getName();
+        //        qDebug()<<"Value: "<<parameter->getValue();
         paramTag->SetAttribute("file", parameter->getValue().toStdString());
         //optional
         if (!parameter->getName().isEmpty())
@@ -520,7 +530,7 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, ArgItem &arg)
         argTag->SetAttribute("if", arg.getIf().toStdString());
     if (arg.getUnless()!="")
         argTag->SetAttribute("unless", arg.getUnless().toStdString());
-        //end optional
+    //end optional
     //for projectfiles
     if (project){ //if writing projectfile
         argTag->SetAttribute("x",arg.pos().x());
