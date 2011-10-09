@@ -4,9 +4,11 @@
 #include <QCloseEvent>
 #include <QComboBox>
 #include <QToolBar>
+#include <QUrl>
 #include "launchFileWriter.h"
 #include "launchFileReader.h"
-#include <QUrl>
+#include "settings.h"
+
 
 
 /*!\brief initialize GUI
@@ -22,12 +24,11 @@ RxDev::RxDev(QWidget *parent) :
     ui->tabWidget->setCurrentIndex(0);  //0 = connector tab
 
     //load Settings
-    ui->actionSave_settings->setEnabled(false);
     loadSettings();
-    ui->tabWidget->removeTab(2);    //remove the settings tab
 
     //initialize connector tab
     setupConnector();
+
     //initialize list of available nodes and adding data
     availableNodes();
 
@@ -130,7 +131,7 @@ void RxDev::setupToolBar()
     toolBar->addAction(ui->actionQuit);
     toolBar->addSeparator();
     toolBar->addAction(ui->actionSettings);
-    toolBar->addAction(ui->actionSave_settings);
+
 
     toolBar = addToolBar(tr("&Launchfile"));
     toolBar->setObjectName("launchToolBar");
@@ -166,6 +167,8 @@ void RxDev::setViewScale(const QString &scale)
     gview->resetMatrix();
     gview->translate(oldMatrix.dx(), oldMatrix.dy());
     gview->scale(newScale, newScale);
+    ui->statusBar->showMessage(tr("scaling..."), 1000);
+
 }
 
 /*!\brief save dialog
@@ -195,6 +198,7 @@ void RxDev::on_actionRemap_triggered()
     ui->actionRemap->setChecked(true);
     ui->actionDelete_Item->setChecked(false);
     ui->actionDrag_Drop->setChecked(false);
+    ui->statusBar->showMessage(tr("remap arrow mode"), 5000);
 }
 
 /*!\brief mouse drag&drop mode
@@ -208,6 +212,7 @@ void RxDev::on_actionDrag_Drop_triggered()
     ui->actionRemap->setChecked(false);
     ui->actionDelete_Item->setChecked(false);
     ui->actionDrag_Drop->setChecked(true);
+    ui->statusBar->showMessage(tr("drag&drop mode"), 5000);
 }
 
 /*!\brief mouse delete mode
@@ -221,6 +226,7 @@ void RxDev::on_actionDelete_Item_triggered()
     ui->actionRemap->setChecked(false);
     ui->actionDelete_Item->setChecked(true);
     ui->actionDrag_Drop->setChecked(false);
+    ui->statusBar->showMessage(tr("deletion mode"), 5000);
 }
 
 /*!\brief load settings
@@ -238,7 +244,6 @@ void RxDev::loadSettings(){
         ui->actionSettings->toggle();
     }
 
-    ui->lineEdit_workingDir->setText(settings.value("workingDir").toString());
     workingDir = (settings.value("workingDir").toString());
     if((settings.value("currentDir").toString()==""))
         settings.setValue("currentDir",QDir::homePath());
@@ -310,58 +315,6 @@ void RxDev::on_actionAvailable_Tags_changed()
 
 }
 
-/*!\brief save settings
- *
- * Saves settings to the settings file.
- */
-void RxDev::on_actionSave_settings_triggered()
-{
-    workingDir = ui->lineEdit_workingDir->text();
-    settings.setValue("workingDir",ui->lineEdit_workingDir->text());
-    QMessageBox::information(this, (QString::fromUtf8("Information")),
-                             QString::fromUtf8("<h2>Settings saved</h2>"
-                                               "<p>Press 'OK' to continue!</p>"));
-    workingModel->setRootPath(workingDir.absolutePath());
-    ui->treeView_packageBrowser->setRootIndex(workingModel->index(workingDir.absolutePath()));
-
-}
-
-/*!\brief working direcory dialog
- *
- * Launches the working directory dialog.
- */
-void RxDev::on_pushButton_browseWorkingDir_clicked()
-{
-    QString sourceFolder = QFileDialog::getExistingDirectory(this, tr("Choose working directory"), QDir::homePath());
-    if (!sourceFolder.isEmpty())
-        ui->lineEdit_workingDir->setText( sourceFolder);
-}
-
-/*!\brief open/close settings
- *
- * Enables and disables toolbar items if the current tab is changed.
- */
-void RxDev::on_actionSettings_toggled(bool )
-{
-    if (ui->actionSettings->isChecked()==true){
-        ui->tabWidget->removeTab(1);
-        ui->tabWidget->removeTab(0);
-        ui->tabWidget->insertTab(2, ui->tab_5, "Settings");
-        ui->actionLoad_Project->setEnabled(false);
-        ui->actionSave_Project->setEnabled(false);
-        ui->actionLoad_Launchfile->setEnabled(false);
-        ui->actionSave_as_Launchfile->setEnabled(false);
-        ui->actionSave_settings->setEnabled(true);
-        ui->actionDrag_Drop->setEnabled(false);
-        ui->actionDelete_Item->setEnabled(false);
-        ui->actionRemap->setEnabled(false);
-    } else{
-        ui->tabWidget->removeTab(0);
-        ui->tabWidget->insertTab(0, ui->tab, "Component Connector");
-        ui->tabWidget->insertTab(1, ui->tab_2, "Component Creator");
-        ui->actionSave_settings->setEnabled(false);
-    }
-}
 
 /*!\brief save launchfile
  *
@@ -381,8 +334,9 @@ void RxDev::on_actionSave_as_Launchfile_triggered()
         LaunchWriter *launchFile = new LaunchWriter;
         QList<QGraphicsItem *> list;
         list=scene->items();
+        ui->statusBar->showMessage(tr("writing launchfile..."));
         launchFile->createDocument(file,false,list);    //false = create launchfile
-
+        ui->statusBar->showMessage(tr("Launchfile '%1' has been written").arg(file), 5000);
         QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("Writing done")),
                                                                    QString::fromUtf8("<h2>Launchfile has been written!</h2>"
                                                                                      "<p>The file "+file.toUtf8()+" was created. Do you want to open this file?</p>"),
@@ -409,7 +363,7 @@ void RxDev::on_actionLoad_Launchfile_triggered()
         settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
         if( !QFile::exists( file ) )
         {
-            QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
+            QMessageBox::critical( this, tr( "RxDev" ), tr( "The file '%1' does not exist!" ).arg( file ) );
             return;
         }
 
@@ -426,12 +380,14 @@ void RxDev::on_actionLoad_Launchfile_triggered()
     }
     launchFile.close();
 */
+
         TiXmlDocument doc( file.toStdString() );
         bool loadOkay = doc.LoadFile();
         if (loadOkay)
         {
-            qDebug()<<"\n:"<<file;
+            ui->statusBar->showMessage(tr("opening launchfile..."));
             loadDocument( &doc );
+            ui->statusBar->showMessage(tr("Launchfile '%1' has been opened").arg(file), 5000);
         }
         else
         {
@@ -465,8 +421,9 @@ void RxDev::on_actionLoad_Project_triggered()
         bool loadOkay = doc.LoadFile();
         if (loadOkay)
         {
-            qDebug()<<"\n:"<<file;
+            ui->statusBar->showMessage(tr("opening project..."));
             loadDocument( &doc );
+            ui->statusBar->showMessage(tr("Project '%1' has been opened").arg(file), 5000);
         }
         else
         {
@@ -494,9 +451,33 @@ void RxDev::on_actionSave_Project_triggered()
         currentDir.setPath(settings.value("currentDir").toString());
 
         //writing to file
+        ui->statusBar->showMessage(tr("writing launchfile..."));
         LaunchWriter *launchFile = new LaunchWriter;
         QList<QGraphicsItem *> list;
         list=scene->items();
         launchFile->createDocument(file,true,list); //true = create projectfile
+    }
+    ui->statusBar->showMessage(tr("Project '%1' has been written").arg(file), 5000);
+}
+
+
+/*!\brief save settings
+ *
+ * Saves settings to the settings file.
+ */
+void RxDev::on_actionSettings_triggered()
+{
+    Settings settingDialog(workingDir.absolutePath());
+    bool accept = settingDialog.exec();
+    if ((accept)){
+        workingDir = settingDialog.getWorkingDir();
+        settings.setValue("workingDir",settingDialog.getWorkingDir());
+
+        //update workingDir in the component creator tab
+        workingModel->setRootPath(workingDir.absolutePath());
+        ui->treeView_packageBrowser->setRootIndex(workingModel->index(workingDir.absolutePath()));
+        ui->statusBar->showMessage(tr("Settings saved"), 5000);
+    } else{
+
     }
 }
