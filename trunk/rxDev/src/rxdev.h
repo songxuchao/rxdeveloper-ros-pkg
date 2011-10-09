@@ -86,13 +86,6 @@ private slots:
 
     void loadSettings();
 
-    void on_actionSave_settings_triggered();
-
-
-
-    void on_actionSettings_toggled(bool );
-
-    void on_pushButton_browseWorkingDir_clicked();
 
     //new
 
@@ -169,6 +162,11 @@ void openSpecFile();
     void on_actionLoad_Project_triggered();
 
     void on_actionSave_Project_triggered();
+
+    void on_pushButton_refreshNodes_clicked();
+
+
+    void on_actionSettings_triggered();
 
 private:
     Ui::RxDev *ui;

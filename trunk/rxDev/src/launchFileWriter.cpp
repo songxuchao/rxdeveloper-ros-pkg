@@ -142,9 +142,7 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         case RemapItem::Type:
             create_remapTag(*groupTag,*list.at(i));
             break;
-            //        case 65550:
-            //            create_remapTag(*groupTag,*list.at(i));
-            //            break;
+
         case ParameterItem::Type:
             paramItems<<i;
             break;
@@ -153,7 +151,6 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         }
     }
     //write parameter tags after everything else
-
     for (int i=0;i<paramItems.size();i++){
         create_paramTag(*groupTag,*list.at(paramItems.at(i)));
     }

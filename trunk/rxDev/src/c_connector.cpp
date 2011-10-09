@@ -18,6 +18,33 @@
 QPoint menuPoint_availableNodes;
 
 
+void RxDev::setupConnector(){
+    ui->actionDrag_Drop->setChecked(true);
+
+    //scene->setSceneRect(QRectF(0, 0, 5000, 5000));
+    gview = new LaunchFileView();
+    scene = new LaunchFileScene(this,gview->width(), gview->height());
+    on_actionDrag_Drop_triggered();
+
+    ui->hLayout->addWidget( gview );
+
+
+    /*
+     setSizePolicy, when used with the horizontalLayout widget, allows the grapicsview to expand/contract
+     as the user re-sizes the main window.
+    */
+    gview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+
+    /*
+        add the scene to the QGraphicsView
+    */
+    gview->setScene( scene);
+
+    gview->show(); //let the show begin
+}
+
+
 void RxDev::availableNodes() {
 
     /* Create the data model */
@@ -26,9 +53,20 @@ void RxDev::availableNodes() {
 
     ui->treeView_availableNodes->setModel(model_availableNodes);
     ui->treeView_availableNodes->setContextMenuPolicy(Qt::CustomContextMenu);
-    QStringList availableNodeList;
 
+    on_pushButton_refreshNodes_clicked();
 
+    connect(ui->treeView_availableNodes, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showContextMenu_availableNodes(const QPoint&)));
+    connect(ui->treeView_availableNodes->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &,const QItemSelection &)),
+            this, SLOT(selectionHandle_availableNodes(const QItemSelection &,const QItemSelection &)));
+
+}
+void RxDev::on_pushButton_refreshNodes_clicked()
+{
+    ui->statusBar->showMessage(tr("refreshing nodelist...please wait!"));
+    packageList.clear();
+    model_availableNodes->clear();
     //get all available packages
     QProcess findPackages;
     findPackages.start(QString("rospack list-names"));
@@ -40,6 +78,7 @@ void RxDev::availableNodes() {
     packageList.removeFirst();
 
     //for all available packages do
+    QStringList availableNodeList;
     for(int pack=0; pack<packageList.count();pack++){
         //Get package-path
         QProcess getPackagePath;
@@ -74,74 +113,10 @@ void RxDev::availableNodes() {
 
         }
     }
-
-    connect(ui->treeView_availableNodes, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showContextMenu_availableNodes(const QPoint&)));
-    connect(ui->treeView_availableNodes->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &,const QItemSelection &)),
-            this, SLOT(selectionHandle_availableNodes(const QItemSelection &,const QItemSelection &)));
     model_availableNodes->setHeaderData(0, Qt::Horizontal, tr("Nodes"));
-
-
-}
-
-void RxDev::setupConnector(){
-    ui->actionDrag_Drop->setChecked(true);
-
-
-    //scene->setSceneRect(QRectF(0, 0, 5000, 5000));
-    gview = new LaunchFileView();
-    scene = new LaunchFileScene(this,gview->width(), gview->height());
-    on_actionDrag_Drop_triggered();
-
-    /*
-    QColor c (248,248,255); // create the background color
-    QBrush brush (c, Qt::SolidPattern);
-    gview->setBackgroundBrush(brush);
-    */
-    //connect(gview, SIGNAL(itemInserted(StateBox*)), this, SLOT(itemInserted(StateBox*)));
-
-    //gridLines = ( NULL );
-
-    ui->hLayout->addWidget( gview );
-
-
-
-    /* I created a gridLines class to draw a grid to make it interresting and have
-       the chance to see layering of objects in action.
-       */
-    //gridLines = new GridLines (gview->width(), gview->height());
-    //cscene->addItem(gridLines);
-
-
-
-
-
-    /*
-     setSizePolicy, when used with the horizontalLayout widget, allows the grapicsview to expand/contract
-     as the user re-sizes the main window.
-    */
-    gview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-
-    /*
-        add the scene to the QGraphicsView
-    */
-    gview->setScene( scene);
-
-    gview->show(); //let the show begin
-
-    //Test for Namespaces
-    /*
-    SimpleItem *ns = new SimpleItem();
-    ns.setPos(20,20);
-    scene->addItem(ns);
-*/
-
-
-    //End Test
+    ui->statusBar->showMessage(tr("Nodelist updated!"),5000);
 
 }
-
 
 
 void RxDev::on_pushButton_group_clicked()
