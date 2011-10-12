@@ -10,12 +10,12 @@
 class LaunchWriter
 {
 public:
-    void createDocument(QString file,bool _project,QList<QGraphicsItem *> &list);
+    void createDocument(QString file, QList<QGraphicsItem *> &list);
 private:
     bool project;
 private slots:
     //begin launchfilewriter
-    void create_commentTag(TiXmlElement &elem);
+    void create_commentTag(TiXmlElement &elem,QString comment);
     void create_groupTag(TiXmlElement &elem, QGraphicsItem &item);
     void create_machineTag(TiXmlElement &elem, QGraphicsItem &item);
     void create_includeTag(TiXmlElement &elem, QGraphicsItem &item);

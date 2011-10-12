@@ -136,8 +136,6 @@ void RxDev::setupToolBar()
     toolBar = addToolBar(tr("&Launchfile"));
     toolBar->setObjectName("launchToolBar");
     toolBar->setIconSize(QSize(16, 16));
-    toolBar->addAction(ui->actionLoad_Project);
-    toolBar->addAction(ui->actionSave_Project);
     toolBar->addAction(ui->actionLoad_Launchfile);
     toolBar->addAction(ui->actionSave_as_Launchfile);
 
@@ -258,8 +256,7 @@ void RxDev::loadSettings(){
 void RxDev::changeToolBar(){
 
     if (ui->tabWidget->currentIndex()==0)   {
-        ui->actionLoad_Project->setEnabled(true);
-        ui->actionSave_Project->setEnabled(true);
+
         ui->actionLoad_Launchfile->setEnabled(true);
         ui->actionSave_as_Launchfile->setEnabled(true);
         ui->actionLoad_Launchfile->setEnabled(true);
@@ -268,8 +265,7 @@ void RxDev::changeToolBar(){
         ui->actionDelete_Item->setEnabled(true);
         ui->actionRemap->setEnabled(true);
     } else {
-        ui->actionLoad_Project->setEnabled(false);
-        ui->actionSave_Project->setEnabled(false);
+
         ui->actionLoad_Launchfile->setEnabled(false);
         ui->actionSave_as_Launchfile->setEnabled(false);
         ui->actionLoad_Launchfile->setEnabled(false);
@@ -335,7 +331,7 @@ void RxDev::on_actionSave_as_Launchfile_triggered()
         QList<QGraphicsItem *> list;
         list=scene->items();
         ui->statusBar->showMessage(tr("writing launchfile..."));
-        launchFile->createDocument(file,false,list);    //false = create launchfile
+        launchFile->createDocument(file,list);
         ui->statusBar->showMessage(tr("Launchfile '%1' has been written").arg(file), 5000);
         QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("Writing done")),
                                                                    QString::fromUtf8("<h2>Launchfile has been written!</h2>"
@@ -396,70 +392,6 @@ void RxDev::on_actionLoad_Launchfile_triggered()
     }
 
 }
-
-
-/*!\brief load project file
- *
- * Get source project file and start the tinyXML with project set true.
- */
-void RxDev::on_actionLoad_Project_triggered()
-{
-    project=true;
-    QString file;
-    file = QFileDialog::getOpenFileName(
-                this, tr( "Open Project File" ),
-                currentDir.absolutePath(), tr("*.rxd (*.rxd)"));
-    if (!file.isEmpty()){
-        currentDir.setPath(settings.value("currentDir").toString());
-        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-        if( !QFile::exists( file ) )
-        {
-            QMessageBox::critical( this, tr( "RxDev" ), tr( "The file \"%1\" does not exist!" ).arg( file ) );
-            return;
-        }
-        TiXmlDocument doc( file.toStdString() );
-        bool loadOkay = doc.LoadFile();
-        if (loadOkay)
-        {
-            ui->statusBar->showMessage(tr("opening project..."));
-            loadDocument( &doc );
-            ui->statusBar->showMessage(tr("Project '%1' has been opened").arg(file), 5000);
-        }
-        else
-        {
-            qDebug()<<"\nFailed to load file "<<file;
-        }
-
-        project=false;
-    }
-
-}
-
-/*!\brief save project file
- *
- * Get target project file, collect items for the project file and make it produce project information
- */
-void RxDev::on_actionSave_Project_triggered()
-{
-
-    QString file = QFileDialog::getSaveFileName(
-                this, tr( "Save project as ..." ),
-                currentDir.absolutePath(), tr("*.rxd (*.rxd)"));
-
-    if (!file.isEmpty()){
-        settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
-        currentDir.setPath(settings.value("currentDir").toString());
-
-        //writing to file
-        ui->statusBar->showMessage(tr("writing launchfile..."));
-        LaunchWriter *launchFile = new LaunchWriter;
-        QList<QGraphicsItem *> list;
-        list=scene->items();
-        launchFile->createDocument(file,true,list); //true = create projectfile
-    }
-    ui->statusBar->showMessage(tr("Project '%1' has been written").arg(file), 5000);
-}
-
 
 /*!\brief save settings
  *

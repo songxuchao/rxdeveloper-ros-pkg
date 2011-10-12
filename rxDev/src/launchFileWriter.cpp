@@ -12,20 +12,20 @@
 #include "launchFileWriter.h"
 
 
-/*!\brief create project or launch document
+/*!\brief create launch document
  *
  * Create the <launch> tag and the children tags in the file.
  */
-void LaunchWriter::createDocument(QString file, bool _project, QList<QGraphicsItem *> &list)
+void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
 {
     //TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "", "" );
     //doc.LinkEndChild( decl );
     TiXmlDocument doc;
-    project=_project;
+
     TiXmlElement * launchTag = new TiXmlElement( "launch" );
     doc.LinkEndChild( launchTag );
 
-    create_commentTag(*launchTag);
+    create_commentTag(*launchTag,"Created with rxDev");
 
     //create tags for the scene items
     QList<int> paramItems;          //List of parameterItems
@@ -82,9 +82,9 @@ void LaunchWriter::createDocument(QString file, bool _project, QList<QGraphicsIt
  *
  * Creates a short comment tag.
  */
-void LaunchWriter::create_commentTag(TiXmlElement &elem)
+void LaunchWriter::create_commentTag(TiXmlElement &elem, QString commentText )
 {
-    TiXmlComment * comment = new TiXmlComment("Created with rxDev");
+    TiXmlComment * comment = new TiXmlComment(commentText.toAscii().data());
     elem.LinkEndChild( comment );
 }
 
@@ -106,13 +106,13 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         groupTag->SetAttribute("clear_params", "false");
     //end optional
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        groupTag->SetAttribute("x",group->getLocation().x());
-        groupTag->SetAttribute("y",group->getLocation().y());
-        groupTag->SetAttribute("width",group->getWidth());
-        groupTag->SetAttribute("height",group->getHeight());
-    }
+
+    QString xCor,yCor,width,height;
+    xCor = QString::number(group->pos().x());
+    yCor = QString::number(group->pos().y());
+    width = QString::number(group->getWidth());
+    height = QString::number(group->getHeight());
+    create_commentTag(*groupTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\"").append(" width=\"").append(width).append("\" height=\"").append(height).append("\""));
 
     //Check for all tags
     QList<QGraphicsItem *> list;
@@ -188,11 +188,11 @@ void LaunchWriter::create_machineTag(TiXmlElement &elem, QGraphicsItem &item)
     if (machine->getUnless()!="")
         machineTag->SetAttribute("unless", machine->getUnless().toStdString());
     //end optional
-    //for projectfiles
-    if (project){ //if writing projectfile
-        machineTag->SetAttribute("x",machine->pos().x());
-        machineTag->SetAttribute("y",machine->pos().y());
-    }
+
+    QString xCor,yCor;
+    xCor = QString::number(machine->pos().x());
+    yCor = QString::number(machine->pos().y());
+    create_commentTag(*machineTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
     //Check for embedded env tags
     for (int i = 0; i < machine->envItems.size(); i++) {
@@ -226,11 +226,12 @@ void LaunchWriter::create_includeTag(TiXmlElement &elem, QGraphicsItem &item)
 
     }
     //end optional
-    //for projectfiles
-    if (project){ //if writing projectfile
-        includeTag->SetAttribute("x",include->pos().x());
-        includeTag->SetAttribute("y",include->pos().y());
-    }
+
+    QString xCor,yCor;
+    xCor = QString::number(include->pos().x());
+    yCor = QString::number(include->pos().y());
+    create_commentTag(*includeTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
 
     //Check for embedded env tags
     for (int i = 0; i < include->envItems.size(); i++) {
@@ -307,11 +308,11 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
         nodeTag->SetAttribute("unless", node->getUnless().toStdString());
     //end optional
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        nodeTag->SetAttribute("x",node->getLocation().x());
-        nodeTag->SetAttribute("y",node->getLocation().y());
-    }
+    QString xCor,yCor;
+    xCor = QString::number(node->pos().x());
+    yCor = QString::number(node->pos().y());
+    create_commentTag(*nodeTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
 
     //Check for embedded env tags
     for (int i = 0; i < node->envItems.size(); i++) {
@@ -386,11 +387,12 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
         paramTag->SetAttribute("if", parameter->getIf().toStdString());
     if (parameter->getUnless()!="")
         paramTag->SetAttribute("unless", parameter->getUnless().toStdString());
-    //for projectfiles
-    if (project){ //if writing projectfile
-        paramTag->SetAttribute("x",parameter->pos().x());
-        paramTag->SetAttribute("y",parameter->pos().y());
-    }
+
+    QString xCor,yCor;
+    xCor = QString::number(parameter->pos().x());
+    yCor = QString::number(parameter->pos().y());
+    create_commentTag(*paramTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( paramTag );
 }
 
@@ -449,11 +451,11 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter 
     if (parameter.getUnless()!="")
         paramTag->SetAttribute("unless", parameter.getUnless().toStdString());
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        paramTag->SetAttribute("x",parameter.pos().x());
-        paramTag->SetAttribute("y",parameter.pos().y());
-    }
+    QString xCor,yCor;
+    xCor = QString::number(parameter.pos().x());
+    yCor = QString::number(parameter.pos().y());
+    create_commentTag(*paramTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
 
     elem.LinkEndChild( paramTag );
 }
@@ -475,11 +477,11 @@ void LaunchWriter::create_envTag(TiXmlElement &elem, QGraphicsItem &item)
         envTag->SetAttribute("unless", env->getUnless().toStdString());
     //end optional
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        envTag->SetAttribute("x",env->pos().x());
-        envTag->SetAttribute("y",env->pos().y());
-    }
+    QString xCor,yCor;
+    xCor = QString::number(env->pos().x());
+    yCor = QString::number(env->pos().y());
+    create_commentTag(*envTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( envTag );
 }
 
@@ -500,11 +502,11 @@ void LaunchWriter::create_envTag(TiXmlElement &elem, EnvItem &env)
         envTag->SetAttribute("unless", env.getUnless().toStdString());
     //end optional
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        envTag->SetAttribute("x",env.pos().x());
-        envTag->SetAttribute("y",env.pos().y());
-    }
+    QString xCor,yCor;
+    xCor = QString::number(env.pos().x());
+    yCor = QString::number(env.pos().y());
+    create_commentTag(*envTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( envTag );
 }
 
@@ -528,11 +530,12 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, ArgItem &arg)
     if (arg.getUnless()!="")
         argTag->SetAttribute("unless", arg.getUnless().toStdString());
     //end optional
-    //for projectfiles
-    if (project){ //if writing projectfile
-        argTag->SetAttribute("x",arg.pos().x());
-        argTag->SetAttribute("y",arg.pos().y());
-    }
+
+    QString xCor,yCor;
+    xCor = QString::number(arg.pos().x());
+    yCor = QString::number(arg.pos().y());
+    create_commentTag(*argTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( argTag );
 }
 
@@ -556,11 +559,12 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, QGraphicsItem &item)
     if (arg->getUnless()!="")
         argTag->SetAttribute("unless", arg->getUnless().toStdString());
     //end optional
-    //for projectfiles
-    if (project){ //if writing projectfile
-        argTag->SetAttribute("x",arg->pos().x());
-        argTag->SetAttribute("y",arg->pos().y());
-    }
+
+    QString xCor,yCor;
+    xCor = QString::number(arg->pos().x());
+    yCor = QString::number(arg->pos().y());
+    create_commentTag(*argTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( argTag );
 }
 
@@ -595,10 +599,10 @@ void LaunchWriter::create_remapTag(TiXmlElement &elem, QGraphicsItem &item)
         remapTag->SetAttribute("unless", remap->getUnless().toStdString());
     //end optional
 
-    //for projectfiles
-    if (project){ //if writing projectfile
-        remapTag->SetAttribute("x",remap->pos().x());
-        remapTag->SetAttribute("y",remap->pos().y());
-    }
+    QString xCor,yCor;
+    xCor = QString::number(remap->pos().x());
+    yCor = QString::number(remap->pos().y());
+    create_commentTag(*remapTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
     elem.LinkEndChild( remapTag );
 }

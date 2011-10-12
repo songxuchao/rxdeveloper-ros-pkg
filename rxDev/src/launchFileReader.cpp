@@ -30,7 +30,7 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
 
 /*!\brief First-level file parsing
  *
- * Parses the launch or project file for tags that are children of the <launch>-tag.
+ * Parses the launch file for tags that are children of the <launch>-tag.
  */
 void RxDev::beginParsing(TiXmlNode *firstLevelNode){
 
@@ -40,8 +40,18 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
 
         if (QString(firstLevelNode->Value())=="machine"){
             MachineItem* newMachine = new MachineItem;
-            create_machineItem(*newMachine,firstLevelNode);
+            int x,y;
+            create_machineItem(*newMachine,firstLevelNode,x,y);
             scene->addItem(newMachine);
+            if (x==0 &&y==0){
+                newMachine->setPos((findSpace(newMachine->mapToParent(QPoint(x,y)))));
+                newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+
+            } else{
+                newMachine->setPos(QPoint(x,y));
+                newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+            }
+
         }else if (QString(firstLevelNode->Value())=="group"){
             create_groupItem(firstLevelNode);
         }else if (QString(firstLevelNode->Value())=="node"){
@@ -50,16 +60,16 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
             QString nodePackage, nodeType;
             QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
             prepare_nodeOrTest(firstLevelNode, nodePackage, nodeType,
-                               nodeSubs,nodePubs, nodeArgs, nodeSrvs, x, y);
+                               nodeSubs,nodePubs, nodeArgs, nodeSrvs);
             newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
-            create_nodeorTestItem(*newNode,0, firstLevelNode);
+            create_nodeorTestItem(*newNode,0, firstLevelNode, x, y);
             scene->addItem(newNode);
-            if (project){ //if getprojectfile
-                newNode->setPos(QPoint(x,y));
-                newNode->setLocation(newNode->mapToParent(newNode->pos()));
-            } else{
+            if (x==0 &&y==0){
                 newNode->setPos(findSpace(QPoint(x,y)));
                 newNode->setLocation(newNode->pos());
+            } else{
+                newNode->setPos(QPoint(x,y));
+                newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="test"){
             NodeItem *newNode;
@@ -67,47 +77,99 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
             QString nodePackage, nodeType;
             QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
             prepare_nodeOrTest(firstLevelNode, nodePackage, nodeType,
-                               nodeSubs,nodePubs, nodeArgs, nodeSrvs, x, y);
+                               nodeSubs,nodePubs, nodeArgs, nodeSrvs);
             newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
-            create_nodeorTestItem(*newNode,1, firstLevelNode);
+            create_nodeorTestItem(*newNode,1, firstLevelNode, x, y);
             scene->addItem(newNode);
-            if (project){ //if getprojectfile
-                newNode->setPos(QPoint(x,y));
-                newNode->setLocation(newNode->mapToParent(newNode->pos()));
-            } else{
+            if (x==0 &&y==0){
                 newNode->setPos(findSpace(QPoint(x,y)));
                 newNode->setLocation(newNode->pos());
+            } else{
+                newNode->setPos(QPoint(x,y));
+                newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="param"){
             ParameterItem * newParam = new ParameterItem;
-            create_paramItem(*newParam,firstLevelNode);
+            int x,y;
+            create_paramItem(*newParam,firstLevelNode,x,y);
             scene->addItem(newParam);
+            if (x==0 &&y==0){
+                newParam->setPos(findSpace(QPoint(x,y)));
+                newParam->setLocation(newParam->pos());
+            } else{
+                newParam->setPos(QPoint(x,y));
+                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+            }
         }else if (QString(firstLevelNode->Value())=="rosparam"){
             ParameterItem * newParam = new ParameterItem;
-            create_rosparamItem(*newParam,firstLevelNode);
+            int x,y;
+            create_rosparamItem(*newParam,firstLevelNode,x,y);
             scene->addItem(newParam);
+            if (x==0 &&y==0){
+                newParam->setPos(findSpace(QPoint(x,y)));
+                newParam->setLocation(newParam->pos());
+            } else{
+                newParam->setPos(QPoint(x,y));
+                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+            }
         }else if (QString(firstLevelNode->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
-            create_remapItem(*newRemap,firstLevelNode);
+            int x,y;
+            create_remapItem(*newRemap,firstLevelNode,x,y);
             scene->addItem(newRemap);
+            if (x==0 &&y==0){
+                newRemap->setPos(findSpace(QPoint(x,y)));
+                newRemap->setLocation(newRemap->pos());
+            } else{
+                newRemap->setPos(QPoint(x,y));
+                newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
+            }
         }else if (QString(firstLevelNode->Value())=="include"){
             IncludeFileItem* newIncludeFile = new IncludeFileItem;
-            create_includeFileItem(*newIncludeFile,firstLevelNode);
+            int x,y;
+            create_includeFileItem(*newIncludeFile,firstLevelNode,x,y);
             scene->addItem(newIncludeFile);
+            if (x==0 &&y==0){
+                newIncludeFile->setPos(findSpace(QPoint(x,y)));
+                newIncludeFile->setLocation(newIncludeFile->pos());
+            } else{
+                newIncludeFile->setPos(QPoint(x,y));
+                newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
+            }
         }else if (QString(firstLevelNode->Value())=="env"){
             EnvItem * newEnv = new EnvItem;
-            create_envItem(*newEnv,firstLevelNode);
+            int x,y;
+            create_envItem(*newEnv,firstLevelNode,x,y);
             scene->addItem(newEnv);
+            if (x==0 &&y==0){
+                newEnv->setPos(findSpace(QPoint(x,y)));
+                newEnv->setLocation(newEnv->pos());
+            } else{
+                newEnv->setPos(QPoint(x,y));
+                newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
+            }
+
         }else if (QString(firstLevelNode->Value())=="arg"){
+            int x,y;
             ArgItem * newArg = new ArgItem;
-            create_argItem(*newArg,firstLevelNode);
+            create_argItem(*newArg,firstLevelNode,x,y);
             scene->addItem(newArg);
+            if (x==0 &&y==0){
+                newArg->setPos(findSpace(QPoint(x,y)));
+                newArg->setLocation(newArg->pos());
+            } else{
+                newArg->setPos(QPoint(x,y));
+                newArg->setLocation(newArg->mapToParent(newArg->pos()));
+            }
         }
         break;
 
-    case TiXmlNode::TINYXML_COMMENT:                        // ignored <tag>
+    case TiXmlNode::TINYXML_COMMENT:{                        // ignored <tag>
         printf( "Comment: \"%s\"", firstLevelNode->Value());
+        QPoint coords =getCoords(firstLevelNode);
+        qDebug()<<coords;
         break;
+    }
 
     case TiXmlNode::TINYXML_UNKNOWN:                        // ignored <tag>
         printf( "Unknown" );
@@ -123,14 +185,62 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
 
 }
 
+QPoint RxDev::getCoords(TiXmlNode *node){
+    int x=0,y=0;
+    if (QString(node->Value())!=""){
+        QString stringToParse;
+        stringToParse = node->Value();
+        if (stringToParse.contains("x=\"")){
+            int beginn = stringToParse.indexOf("x=\"")+3;
+            int end = stringToParse.indexOf("\"", beginn+1);
+            if (end!=-1){
+                //                qDebug()<< stringToParse.mid(beginn,end-beginn);
+                x=atoi((stringToParse.mid(beginn,end-beginn)).toAscii().data());
+            }
+        }
+        if (stringToParse.contains("y=\"")){
+            int beginn = stringToParse.indexOf("y=\"")+3;
+            int end = stringToParse.indexOf("\"", beginn+1);
+            if (end!=-1){
+                //                qDebug()<< stringToParse.mid(beginn,end-beginn);
+                y=atoi((stringToParse.mid(beginn,end-beginn)).toAscii().data());
+            }
+        }
+    }
+    return QPoint(x,y);
+}
+void RxDev::getGroupDim(TiXmlNode *node, int &width,int &height){
+    width=300,height=300;
+    if (QString(node->Value())!=""){
+        QString stringToParse;
+        stringToParse = node->Value();
+        if (stringToParse.contains("width=\"")){
+            int beginn = stringToParse.indexOf("width=\"")+7;
+            int end = stringToParse.indexOf("\"", beginn+1);
+            if (end!=-1){
+                //                qDebug()<< stringToParse.mid(beginn,end-beginn);
+                width=atoi((stringToParse.mid(beginn,end-beginn)).toAscii().data());
+            }
+        }
+        if (stringToParse.contains("height=\"")){
+            int beginn = stringToParse.indexOf("height=\"")+8;
+            int end = stringToParse.indexOf("\"", beginn+1);
+            if (end!=-1){
+                //                qDebug()<< stringToParse.mid(beginn,end-beginn);
+                height=atoi((stringToParse.mid(beginn,end-beginn)).toAscii().data());
+            }
+        }
+    }
+}
+
 /*!\brief <machine>-tag object
  *
  * get attributes for the <machine>-object and search for including tags.
  */
-void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode)
+void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,int &x,int &y)
 {
     TiXmlAttribute* tagAttribute=machineNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="name"){
@@ -153,22 +263,10 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode)
             newMachine.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newMachine.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
-    if (project){
-        newMachine.setPos(QPoint(x,y));
-        newMachine.setLocation(newMachine.mapToParent(newMachine.pos()));
-    } else{
-        newMachine.setPos((findSpace(newMachine.mapToParent(QPoint(x,y)))));
-        newMachine.setLocation(newMachine.mapToParent(newMachine.pos()));
-    }
+
     newMachine.updateMachineItem();
 
     //check for env-items
@@ -178,8 +276,12 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode)
         printf( "child" );
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild);
+            create_envItem(*newEnv,pChild,x,y);
             newMachine.addEnvItem(newEnv);
+        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
         }
     }
 }
@@ -190,24 +292,16 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode)
  */
 void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
                                QString &nodePackage, QString &nodeType,QStringList &nodeSubs,
-                               QStringList &nodePubs,QStringList &nodeArgs,QStringList &nodeSrvs, int &x, int &y){
+                               QStringList &nodePubs,QStringList &nodeArgs,QStringList &nodeSrvs){
 
     TiXmlAttribute* tagAttribute=nodeNode->ToElement()->FirstAttribute();
 
-
-    int ival=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="type"){
             nodeType =QString(tagAttribute->Value());
         }else if (QString(tagAttribute->Name())=="pkg"){
             nodePackage =QString(tagAttribute->Value());
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
@@ -234,10 +328,9 @@ void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
  *
  * get attributes for the object and search for including tags.
  */
-void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *nodeOrTestNode)
+void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *nodeOrTestNode,int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=nodeOrTestNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
     while (tagAttribute)
     {
         newNode.setNode_or_test(nodeOrTest);
@@ -296,12 +389,6 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             newNode.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newNode.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
@@ -314,23 +401,28 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
     {
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild);
+            create_envItem(*newEnv,pChild,x,y);
             newNode.addEnvItem(newEnv);
 
         }else if (QString(pChild->Value())=="param"){
             ParameterItem* newParam = new ParameterItem;
-            create_paramItem(*newParam,pChild);
+            create_paramItem(*newParam,pChild,x,y);
             newNode.addParamItem(newParam);
         }else if (QString(pChild->Value())=="rosparam"){
             ParameterItem* newParam = new ParameterItem;
-            create_rosparamItem(*newParam,pChild);
+            create_rosparamItem(*newParam,pChild,x,y);
             newNode.addParamItem(newParam);
         }else if (QString(pChild->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
-            create_remapItem(*newRemap,pChild);
+            create_remapItem(*newRemap,pChild,x,y);
             newNode.addRemapItem(newRemap);
 
+        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
         }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
 }
 
@@ -338,10 +430,10 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
  *
  * get attributes for the <parameter>-object.
  */
-void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode)
+void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode,int &x,int &y)
 {
     TiXmlAttribute* tagAttribute=parameterNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="name"){
@@ -367,24 +459,20 @@ void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode)
             newParam.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newParam.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
-
-    if (project){ //if getprojectfile
-        newParam.setPos(QPoint(x,y));
-        newParam.setLocation(newParam.mapToParent(newParam.pos()));
-    } else{
-
-        newParam.setPos(findSpace(QPoint(x,y)));
-        newParam.setLocation(newParam.pos());
+    TiXmlNode * pChild;
+    for ( pChild = parameterNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+    {
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
+        }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
+
     newParam.updateParameterItem();
 }
 
@@ -392,10 +480,10 @@ void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode)
  *
  * get attributes for the object.
  */
-void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode)
+void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int &y)
 {
     TiXmlAttribute* tagAttribute=remapNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="from"){
@@ -406,23 +494,19 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode)
             newRemap.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newRemap.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
-    if (project){ //if getprojectfile
-        newRemap.setPos(QPoint(x,y));
-        newRemap.setLocation(newRemap.mapToParent(newRemap.pos()));
-    } else{
-        newRemap.setPos(findSpace(QPoint(x,y)));
-        newRemap.setLocation(newRemap.pos());
+    TiXmlNode * pChild;
+    for ( pChild = remapNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+    {
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
+        }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
-
     newRemap.updateRemapItem();
 }
 
@@ -430,10 +514,10 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode)
  *
  * get attributes for the object..
  */
-void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode)
+void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=rosparamNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         newParam.setStandardParameter(3);
@@ -449,21 +533,18 @@ void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode)
             newParam.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newParam.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
-    if (project){ //if getprojectfile
-        newParam.setPos(QPoint(x,y));
-        newParam.setLocation(newParam.mapToParent(newParam.pos()));
-    } else{
-        newParam.setPos(findSpace(QPoint(x,y)));
-        newParam.setLocation(newParam.pos());
+    TiXmlNode * pChild;
+    for ( pChild = rosparamNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+    {
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
+        }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
     newParam.updateParameterItem();
 }
@@ -472,10 +553,10 @@ void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode)
  *
  * get attributes for the <env>-object.
  */
-void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode)
+void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=envNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="name"){
@@ -486,22 +567,18 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode)
             newEnv.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newEnv.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
-
         tagAttribute=tagAttribute->Next();
     }
-    if (project){ //if getprojectfile
-        newEnv.setPos(QPoint(x,y));
-        newEnv.setLocation(newEnv.mapToParent(newEnv.pos()));
-    } else{
-        newEnv.setPos(findSpace(QPoint(x,y)));
-        newEnv.setLocation(newEnv.pos());
+    TiXmlNode * pChild;
+    for ( pChild = envNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+    {
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
+        }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
 
     newEnv.updateEnvItem();
@@ -511,10 +588,10 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode)
  *
  * get attributes for the <arg>-object and search for including tags.
  */
-void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode)
+void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode,int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=argNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="name"){
@@ -529,34 +606,30 @@ void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode)
             newArg.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newArg.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
 
         tagAttribute=tagAttribute->Next();
     }
-    if (project){ //if getprojectfile
-        newArg.setPos(QPoint(x,y));
-        newArg.setLocation(newArg.mapToParent(newArg.pos()));
-    } else{
-        newArg.setPos(findSpace(QPoint(x,y)));
-        newArg.setLocation(newArg.pos());
+    TiXmlNode * pChild;
+    for ( pChild = argNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+    {
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
+        }
+        qDebug()<<"x:"<<x<<" y:"<<y;
     }
-
     newArg.updateArgItem();
 }
 /*!\brief <include>-tag object
  *
  * get attributes for the <include>-object and search for including tags.
  */
-void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *includeNode)
+void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *includeNode,int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=includeNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    x=0,y=0;
     while (tagAttribute)
     {
         if (QString(tagAttribute->Name())=="file"){
@@ -569,22 +642,10 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
             newIncludeFile.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newIncludeFile.setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
-    if (project){ //if getprojectfile
-        newIncludeFile.setPos(QPoint(x,y));
-        newIncludeFile.setLocation(newIncludeFile.mapToParent(newIncludeFile.pos()));
-    } else{
-        newIncludeFile.setPos(findSpace(QPoint(x,y)));
-        newIncludeFile.setLocation(newIncludeFile.pos());
-    }
+
     newIncludeFile.updateIncludeFileItem();
     //check for env and arg items
     TiXmlNode * pChild;
@@ -592,15 +653,21 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
     {
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild);
+            create_envItem(*newEnv,pChild,x,y);
             newIncludeFile.addEnvItem(newEnv);
 
         }else if (QString(pChild->Value())=="arg"){
             ArgItem* newArg = new ArgItem;
-            create_argItem(*newArg,pChild);
+            create_argItem(*newArg,pChild,x,y);
             newIncludeFile.addArgItem(newArg);
 
+        } else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            x=coords.x();
+            y=coords.y();
         }
+        qDebug()<<"x:"<<x<<" y:"<<y;
+
     }
 
 }
@@ -614,7 +681,8 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
     GroupItem* newGroup;
     newGroup = new GroupItem;
     TiXmlAttribute* tagAttribute=groupNode->ToElement()->FirstAttribute();
-    int x=0,y=0,ival=0;
+    int x=0,y=0;
+    int xGroup=0,yGroup=0;
     int width=200,height=200;
     while (tagAttribute)
     {
@@ -631,136 +699,106 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
             newGroup->setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
             newGroup->setUnless(QString(tagAttribute->Value()));
-        }else if (QString(tagAttribute->Name())=="x"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                x =ival;
-        }else if (QString(tagAttribute->Name())=="y"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                y =ival;
-        }else if (QString(tagAttribute->Name())=="width"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                width =ival;
-        }else if (QString(tagAttribute->Name())=="height"){
-            if (tagAttribute->QueryIntValue(&ival)==TIXML_SUCCESS)
-                height =ival;
         }
         tagAttribute=tagAttribute->Next();
     }
     newGroup->updateGroupItem();
-    if (project){ //if getprojectfile
-        newGroup->setPos(QPoint(x,y));
-        newGroup->setLocation(newGroup->mapToParent(newGroup->pos()));
-        newGroup->setWidth(width);
-        newGroup->setHeight(height);
-    } else{
-        newGroup->setPos(findSpace(QPoint(x,y)));
-        newGroup->setLocation(newGroup->pos());
-        newGroup->setWidth(width);
-        newGroup->setHeight(height);
 
-    }
 
     scene->addItem(newGroup);
 
     //check for included items
     TiXmlNode * pChild;
-    int itemcountA = 0;
-    int itemcountB = 0;
     for ( pChild = groupNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
 
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild);
-            itemcountA++;
+            create_envItem(*newEnv,pChild,x,y);
             newEnv->setParentItem(newGroup);
             scene->addItem(newEnv);
 
-            if (project){ //if getprojectfile
-                newEnv->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newEnv->setPos((findSpace(newEnv->mapToParent(QPoint(x,y)))));
                 newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
             } else{
-                newEnv->setPos((findSpace(newEnv->mapToParent(QPoint(x,y)))));
+                newEnv->setPos(QPoint(x,y));
                 newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
             }
         }else if (QString(pChild->Value())=="param"){
             ParameterItem* newParam = new ParameterItem;
-            create_paramItem(*newParam,pChild);
-            itemcountB++;
+            create_paramItem(*newParam,pChild,x,y);
             newParam->setParentItem(newGroup);
             scene->addItem(newParam);
-            if (project){ //if getprojectfile
-                newParam->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
             } else{
-                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
+                newParam->setPos(QPoint(x,y));
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
 
             }
         }else if (QString(pChild->Value())=="rosparam"){
             ParameterItem* newParam = new ParameterItem;
-            create_rosparamItem(*newParam,pChild);
-            itemcountA++;
+            create_rosparamItem(*newParam,pChild,x,y);
             newParam->setParentItem(newGroup);
             scene->addItem(newParam);
-            if (project){ //if getprojectfile
-                newParam->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
             } else{
-                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
+                newParam->setPos(QPoint(x,y));
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
             }
         }else if (QString(pChild->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
-            create_remapItem(*newRemap,pChild);
-            itemcountA++;
+            create_remapItem(*newRemap,pChild,x,y);
             newRemap->setParentItem(newGroup);
             scene->addItem(newRemap);
-            if (project){ //if getprojectfile
-                newRemap->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newRemap->setPos((findSpace(newRemap->mapToParent(QPoint(x,y)))));
                 newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
             } else{
-                newRemap->setPos((findSpace(newRemap->mapToParent(QPoint(x,y)))));
+                newRemap->setPos(QPoint(x,y));
                 newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
             }
         }else if (QString(pChild->Value())=="arg"){
+            int x,y;
             ArgItem* newArg = new ArgItem;
-            create_argItem(*newArg,pChild);
-            itemcountA++;
+            create_argItem(*newArg,pChild,x,y);
             newArg->setParentItem(newGroup);
             scene->addItem(newArg);
-            if (project){ //if getprojectfile
-                newArg->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newArg->setPos((findSpace(newArg->mapToParent(QPoint(x,y)))));
                 newArg->setLocation(newArg->mapToParent(newArg->pos()));
             } else{
-                newArg->setPos((findSpace(newArg->mapToParent(QPoint(x,y)))));
+                newArg->setPos(QPoint(x,y));
                 newArg->setLocation(newArg->mapToParent(newArg->pos()));
             }
         }
         else if (QString(pChild->Value())=="include"){
+            int x,y;
             IncludeFileItem* newIncludeFile = new IncludeFileItem;
-            create_includeFileItem(*newIncludeFile,pChild);
-            itemcountA++;
+            create_includeFileItem(*newIncludeFile,pChild,x,y);
             newIncludeFile->setParentItem(newGroup);
             scene->addItem(newIncludeFile);
-            if (project){ //if getprojectfile
-                newIncludeFile->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newIncludeFile->setPos((findSpace(newIncludeFile->mapToParent(QPoint(x,y)))));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             } else{
-                newIncludeFile->setPos((findSpace(newIncludeFile->mapToParent(QPoint(x,y)))));
+                newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             }
         }else if (QString(pChild->Value())=="machine"){
             MachineItem* newMachine = new MachineItem;
-            create_machineItem(*newMachine,pChild);
-            itemcountA++;
+            create_machineItem(*newMachine,pChild,x,y);
             newMachine->setParentItem(newGroup);
             scene->addItem(newMachine);
-            if (project){ //if getprojectfile
-                newMachine->setPos(QPoint(x,y));
+            if (x==0 &&y==0){
+                newMachine->setPos((findSpace(newMachine->mapToParent(QPoint(x,y)))));
                 newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
             } else{
-                newMachine->setPos((findSpace(newMachine->mapToParent(QPoint(x,y)))));
+                newMachine->setPos(QPoint(x,y));
                 newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
             }
         }else if (QString(pChild->Value())=="node"){
@@ -769,14 +807,13 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
             QString nodePackage, nodeType;
             QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
             prepare_nodeOrTest(pChild, nodePackage, nodeType,
-                               nodeSubs,nodePubs, nodeArgs, nodeSrvs, x1, y1);
+                               nodeSubs,nodePubs, nodeArgs, nodeSrvs);
             newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
-            create_nodeorTestItem(*newNode,0, pChild);
-            itemcountB++;
+            create_nodeorTestItem(*newNode,0, pChild, x1 , y1);
             newNode->setParentItem(newGroup);
             scene->addItem(newNode);
 
-            if (true){ //if getprojectfile
+            if (x==0 &&y==0){
                 newNode->setPos(QPoint(x1,y1));
                 newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }else{
@@ -790,29 +827,37 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
             QString nodePackage, nodeType;
             QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
             prepare_nodeOrTest(pChild, nodePackage, nodeType,
-                               nodeSubs,nodePubs, nodeArgs, nodeSrvs, x1, y1);
+                               nodeSubs,nodePubs, nodeArgs, nodeSrvs);
             newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
-            create_nodeorTestItem(*newNode,1, pChild);
-            itemcountB++;
+            create_nodeorTestItem(*newNode,1, pChild,x,y);
             newNode->setParentItem(newGroup);
             scene->addItem(newNode);
 
-            if (true){ //if getprojectfile
+            if (x==0 &&y==0){
                 newNode->setPos(QPoint(x1,y1));
                 newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }else{
                 newNode->setPos(QPoint(x1,y1));
                 newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }
-        }
+        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+            QPoint coords =getCoords(pChild);
+            xGroup=coords.x();
+            yGroup=coords.y();
+            getGroupDim(pChild,width,height);
 
-        //expand the groupitem depending on the included items count
-        if (project){
-            if (itemcountA*200 > newGroup->getWidth())
-                newGroup->setWidth(newGroup->getWidth()+200);
-            if (itemcountB*200 > newGroup->getWidth())
-                newGroup->setWidth(newGroup->getWidth()+200);
         }
+        if (xGroup==0 &&yGroup==0){
+            newGroup->setPos(findSpace(QPoint(xGroup,yGroup)));
+            newGroup->setLocation(newGroup->pos());
+        } else{
+            newGroup->setPos(QPoint(xGroup,yGroup));
+            newGroup->setLocation(newGroup->mapToParent(newGroup->pos()));
+        }
+        newGroup->setWidth(width);
+        newGroup->setHeight(height);
+
+
     }
     //end: check for included items
 }

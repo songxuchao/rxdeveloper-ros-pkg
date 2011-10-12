@@ -17,7 +17,5 @@
         <file>icons/draw-smudge.png</file>
         <file>icons/node-delete.png</file>
         <file>icons/segment-line.png</file>
-        <file>icons/project-save-as.png</file>
-        <file>icons/project-open.png</file>
     </qresource>
 </RCC>

@@ -146,23 +146,20 @@ void openSpecFile();
 
     void loadDocument( TiXmlNode * pParent);
     void create_groupItem(TiXmlNode *pParent);
-    void create_paramItem(ParameterItem &newParam, TiXmlNode * pParent);
-    void create_rosparamItem(ParameterItem &newParam, TiXmlNode * pParent);
-    void create_envItem(EnvItem &newEnv,TiXmlNode * pParent);
-    void create_argItem(ArgItem &newArg,TiXmlNode * pParent);
-    void create_remapItem(RemapItem &newRemap, TiXmlNode * pParent);
-    void create_includeFileItem(IncludeFileItem &newInclude,TiXmlNode *pParent);
-    void create_machineItem(MachineItem &nemMachine, TiXmlNode *pParent);
+    void create_paramItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
+    void create_rosparamItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
+    void create_envItem(EnvItem &newEnv,TiXmlNode * pParent,int &x, int &y);
+    void create_argItem(ArgItem &newArg,TiXmlNode * pParent,int &x, int &y);
+    void create_remapItem(RemapItem &newRemap, TiXmlNode * pParent,int &x, int &y);
+    void create_includeFileItem(IncludeFileItem &newInclude,TiXmlNode *pParent,int &x, int &y);
+    void create_machineItem(MachineItem &nemMachine, TiXmlNode *pParent,int &x, int &y);
     void prepare_nodeOrTest(TiXmlNode *nodeNode,QString &nodePackage, QString &nodeType,QStringList &nodeSubs,
-                            QStringList &nodePubs,QStringList &nodeArgs,QStringList &nodeSrvs, int &x, int &y);
-    void create_nodeorTestItem(NodeItem &newNode, int nodeOrTest,TiXmlNode * pParent);
+                            QStringList &nodePubs,QStringList &nodeArgs,QStringList &nodeSrvs);
+    void create_nodeorTestItem(NodeItem &newNode, int nodeOrTest,TiXmlNode * pParent,int &x, int &y);
     void on_pushButton_remap_clicked();
     void beginParsing(TiXmlNode *pParent);
-
-    void on_actionLoad_Project_triggered();
-
-    void on_actionSave_Project_triggered();
-
+    QPoint getCoords(TiXmlNode *node);
+    void getGroupDim(TiXmlNode *node,int &width, int &height);
     void on_pushButton_refreshNodes_clicked();
 
 
