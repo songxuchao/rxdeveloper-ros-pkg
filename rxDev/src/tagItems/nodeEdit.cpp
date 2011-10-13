@@ -75,12 +75,17 @@ NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui
 
     int paramCount=0;
     int rosparamCount=0;
-
+    QList<int> paramItemsList;          //List of parameterItems
+    QList<int> rosparamItemsList;          //List of rosparamItems
     for (int row = 0; row < item->paramItems.count(); row++) {
-        if (item->paramItems.at(row)->getStandardParameter()<3)
-            paramCount++;
-        else
-            rosparamCount++;
+        if (item->paramItems.at(row)->getStandardParameter()<3){
+            paramItemsList<<row;
+            qDebug()<<"param"<<row;
+        }
+        else{
+            rosparamItemsList<<row;
+            qDebug()<<"rosparam"<<row;
+        }
     }
     paramModel = new QStandardItemModel(paramCount,5);
     paramModel->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
@@ -97,37 +102,33 @@ NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui
     rosparamModel->setHeaderData(4,Qt::Horizontal,QObject::tr("if"));
     rosparamModel->setHeaderData(5,Qt::Horizontal,QObject::tr("unless"));
 
-    for (int row = 0; row < item->paramItems.count(); row++) {
-        if (item->paramItems.at(row)->getStandardParameter()<3){
-
-            QStandardItem *item0 = new QStandardItem(QString(item->paramItems.at(row)->getName()));
+    for (int row = 0; row < paramItemsList.count(); row++) {
+        qDebug()<<paramItemsList;
+            QStandardItem *item0 = new QStandardItem(QString(item->paramItems.at(paramItemsList.at(row))->getName()));
             paramModel->setItem(row,0,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getType()));
+            item0 = new QStandardItem(QString(item->paramItems.at(paramItemsList.at(row))->getType()));
             paramModel->setItem(row,1,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getValue()));
+            item0 = new QStandardItem(QString(item->paramItems.at(paramItemsList.at(row))->getValue()));
             paramModel->setItem(row,2,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getIf()));
+            item0 = new QStandardItem(QString(item->paramItems.at(paramItemsList.at(row))->getIf()));
             paramModel->setItem(row,3,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getUnless()));
+            item0 = new QStandardItem(QString(item->paramItems.at(paramItemsList.at(row))->getUnless()));
             paramModel->setItem(row,4,item0);
-        }
-    }
-    for (int row = 0; row < item->paramItems.count(); row++) {
-        if (item->paramItems.at(row)->getStandardParameter()==3){
-            QStandardItem *item0 = new QStandardItem(QString(item->paramItems.at(row)->getName()));
+            }
+    for (int row = 0; row < rosparamItemsList.count(); row++) {
+                qDebug()<<paramItemsList;
+            QStandardItem *item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getName()));
             rosparamModel->setItem(row,2,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getType()));
+            item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getType()));
             rosparamModel->setItem(row,0,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getValue()));
+            item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getValue()));
             rosparamModel->setItem(row,1,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getNamespace()));
+            item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getNamespace()));
             rosparamModel->setItem(row,3,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getIf()));
+            item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getIf()));
             rosparamModel->setItem(row,4,item0);
-            item0 = new QStandardItem(QString(item->paramItems.at(row)->getUnless()));
+            item0 = new QStandardItem(QString(item->paramItems.at(rosparamItemsList.at(row))->getUnless()));
             rosparamModel->setItem(row,5,item0);
-
-        }
     }
     ui->tableView_paramItems->setModel(paramModel);
 
