@@ -15,7 +15,7 @@ public:
     QStringList nodeInput;
     QStringList nodeOutput;
     QStringList nodeServices;
-    QStringList nodeArguments;
+    QStringList nodeParameters;
 
 };
 

@@ -413,3 +413,4 @@ void RxDev::on_actionSettings_triggered()
 
     }
 }
+

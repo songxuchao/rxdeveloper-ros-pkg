@@ -29,9 +29,10 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
 
     //create tags for the scene items
     QList<int> paramItems;          //List of parameterItems
-    for (int i = 0; i < list.size(); i++) {
-        switch (list.at(i)->type()){
+    for (int i = list.size()-1; i > 0; i--) {
 
+
+        switch (list.at(i)->type()){
         case NodeItem::Type:
             if (list.at(i)->parentItem()==0)
                 create_nodeTag(*launchTag,*list.at(i));
