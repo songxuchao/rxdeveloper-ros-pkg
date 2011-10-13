@@ -4,6 +4,7 @@
 #include <QDebug>
 
 MachineEdit::MachineEdit(MachineItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::MachineEdit) {
+    myItem=item;
     ui->setupUi(this);
     ui->lineEdit_name->setText(item->getName());
     ui->lineEdit_address->setText(item->getAddress());
@@ -21,18 +22,31 @@ MachineEdit::MachineEdit(MachineItem *item, QWidget *parent) : QDialog(parent), 
     envModel->setHeaderData(1,Qt::Horizontal,QObject::tr("value"));
     envModel->setHeaderData(2,Qt::Horizontal,QObject::tr("if"));
     envModel->setHeaderData(3,Qt::Horizontal,QObject::tr("unless"));
-    for (int row = 0; row < item->envItems.count(); ++row) {
-        QStandardItem *item0 = new QStandardItem(QString(item->envItems.at(row)->getName()));
+    fillEnvModel();
+    ui->tableView_envItems->setModel(envModel);
+    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_envItems(const QModelIndex &)));
+
+
+}
+void MachineEdit::selectionHandle_envItems(const QModelIndex & index)
+{
+    EnvItem *env=myItem->envItems.at(index.row());
+    env->getEnvData();
+    fillEnvModel();
+}
+
+void MachineEdit::fillEnvModel(){
+    for (int row = 0; row < myItem->envItems.count(); ++row) {
+        QStandardItem *item0 = new QStandardItem(QString(myItem->envItems.at(row)->getName()));
         envModel->setItem(row,0,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getValue()));
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getValue()));
         envModel->setItem(row,1,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getIf()));
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getIf()));
         envModel->setItem(row,2,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getUnless()));
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getUnless()));
         envModel->setItem(row,3,item0);
 
         }
-    ui->tableView_envItems->setModel(envModel);
 
 }
 

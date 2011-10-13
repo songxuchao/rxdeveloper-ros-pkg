@@ -27,6 +27,10 @@ public:
     QString getLaunch_prefix();
     QString getIf();
     QString getUnless();
+    void fillEnvModel();
+    void fillRemapModel();
+    void fillParameterModel();
+    void fillRosparamModel();
     int getRequired();
     int getRespawn();
     int getClear_params();
@@ -39,16 +43,23 @@ public slots:
     void accept();
 
 private slots:
-
+    void selectionHandle_parameterItems(const QModelIndex & index);
+    void selectionHandle_rosparamItems(const QModelIndex & index);
+    void selectionHandle_envItems(const QModelIndex & index);
+    void selectionHandle_remapItems(const QModelIndex & index);
 private:
     Ui::NodeEdit *ui;
     QStandardItemModel *envModel;
     QStandardItemModel *paramModel;
     QStandardItemModel *rosparamModel;
     QStandardItemModel *remapModel;
+    NodeItem *myItem;
+    QList<int> paramItemsList;          //List of parameterItems
+    QList<int> rosparamItemsList;          //List of rosparamItems
+
+signals:
 
 private slots:
-
     void on_radioButton_testNode_clicked();
     void on_radioButton_standardNode_clicked();
 };
