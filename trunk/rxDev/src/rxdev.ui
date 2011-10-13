@@ -177,6 +177,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="separator"/>
+    <addaction name="actionNew_Launchfile"/>
     <addaction name="actionLoad_Launchfile"/>
     <addaction name="actionSave_as_Launchfile"/>
     <addaction name="separator"/>
@@ -478,6 +479,15 @@
    </property>
    <property name="text">
     <string>Available Tags</string>
+   </property>
+  </action>
+  <action name="actionNew_Launchfile">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/document-new.png</normaloff>:/icons/icons/document-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Launchfile</string>
    </property>
   </action>
  </widget>

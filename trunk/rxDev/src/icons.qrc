@@ -17,5 +17,6 @@
         <file>icons/draw-smudge.png</file>
         <file>icons/node-delete.png</file>
         <file>icons/segment-line.png</file>
+        <file>icons/document-new.png</file>
     </qresource>
 </RCC>

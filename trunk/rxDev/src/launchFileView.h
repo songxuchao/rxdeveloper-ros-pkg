@@ -79,7 +79,7 @@ public:
     QStringList selectedNodeSubscriptions;
     QStringList selectedNodePublications;
     QStringList selectedNodeServices;
-    QStringList selectedNodeArguments;
+    QStringList selectedNodeParameters;
 
 protected:
 

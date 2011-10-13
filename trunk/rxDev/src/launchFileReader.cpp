@@ -316,7 +316,7 @@ void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
             nodeSubs = node.nodeInput;
             nodePubs = node.nodeOutput;
             nodeSrvs = node.nodeServices;
-            nodeArgs = node.nodeArguments;
+            nodeArgs = node.nodeParameters;
             break;
         }
     }

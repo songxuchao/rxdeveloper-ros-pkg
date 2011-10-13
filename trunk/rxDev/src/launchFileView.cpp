@@ -93,7 +93,7 @@ void LaunchFileView::dragEnterEvent(QDragEnterEvent *event) {
 void LaunchFileView::dropEvent(QDropEvent *event) {
     NodeItem * newNode;
     newNode = new NodeItem(selectedNodeName,selectedNodePackage,selectedNodeSubscriptions,
-                           selectedNodePublications,selectedNodeServices,selectedNodeArguments);
+                           selectedNodePublications,selectedNodeServices,selectedNodeParameters);
     newNode->setLocation(mapToScene(event->pos()));
 
     newNode->setPos(mapToScene(event->pos()));

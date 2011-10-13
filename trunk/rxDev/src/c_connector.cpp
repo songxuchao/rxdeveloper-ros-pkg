@@ -62,6 +62,22 @@ void RxDev::availableNodes() {
             this, SLOT(selectionHandle_availableNodes(const QItemSelection &,const QItemSelection &)));
 
 }
+
+void RxDev::on_actionNew_Launchfile_triggered()
+{
+    QMessageBox::StandardButton button = QMessageBox::warning(this, QString(),
+                                                              tr("Did you save your progress?\nDo you really want to create a new File?"),
+                                                              QMessageBox::Yes | QMessageBox::Cancel);
+    if (button == QMessageBox::Yes){
+        QList<QGraphicsItem *> list;
+        list=scene->items();
+        for (int i = 0; i < list.size(); i++) {
+            scene->removeItem(list.at(i));
+        }
+    }
+}
+
+
 void RxDev::on_pushButton_refreshNodes_clicked()
 {
     ui->statusBar->showMessage(tr("refreshing nodelist...please wait!"));
@@ -262,10 +278,10 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile){
     }
     group->appendRow(child);
 
-    child = new QStandardItem(QString("arguments"));
-    for (int j = 0; j<node.nodeArguments.count(); j++)
+    child = new QStandardItem(QString("parameters"));
+    for (int j = 0; j<node.nodeParameters.count(); j++)
     {
-        item = new QStandardItem(QString("%1").arg(node.nodeArguments[j]));
+        item = new QStandardItem(QString("%1").arg(node.nodeParameters[j]));
         child->appendRow(item);
     }
     group->appendRow(child);
@@ -300,7 +316,7 @@ void RxDev::nodeParser(QString nodeFile){
     node.nodeInput.clear();
     node.nodeOutput.clear();
     node.nodeServices.clear();
-    node.nodeArguments.clear();
+    node.nodeParameters.clear();
 
     //temp
     std::string nodePackage;
@@ -308,14 +324,14 @@ void RxDev::nodeParser(QString nodeFile){
     std::string nodeInput;
     std::string nodeOutput;
     std::string nodeServices;
-    std::string nodeArguments;
-//    if ((yamlNode = doc.FindValue("package"))) {
-//        *yamlNode >> nodePackage;
-//        if (nodePackage!="~"){
+    std::string nodeParameters;
+    //    if ((yamlNode = doc.FindValue("package"))) {
+    //        *yamlNode >> nodePackage;
+    //        if (nodePackage!="~"){
 
-//            node.nodeInput = QString::fromStdString(nodeInput).split(" ");
-//        }
-//    }
+    //            node.nodeInput = QString::fromStdString(nodeInput).split(" ");
+    //        }
+    //    }
 
 
     try {
@@ -356,9 +372,9 @@ void RxDev::nodeParser(QString nodeFile){
 
     }
     if ((yamlNode = doc.FindValue("arguments"))) {
-        *yamlNode >> nodeArguments;
-        if (nodeArguments!="~"){
-            node.nodeArguments = QString::fromStdString(nodeArguments).split(" ");
+        *yamlNode >> nodeParameters;
+        if (nodeParameters!="~"){
+            node.nodeParameters = QString::fromStdString(nodeParameters).split(" ");
         }
     }
 
@@ -444,7 +460,7 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
     gview->selectedNodeSubscriptions = node.nodeInput;
     gview->selectedNodePublications = node.nodeOutput;
     gview->selectedNodeServices = node.nodeServices;
-    gview->selectedNodeArguments = node.nodeArguments;
+    gview->selectedNodeParameters = node.nodeParameters;
     qDebug()<<QString("%1").arg(gview->selectedNodeName);
     qDebug()<<QString("%1").arg(gview->selectedNodePackage);
 

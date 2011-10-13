@@ -165,6 +165,8 @@ void openSpecFile();
 
     void on_actionSettings_triggered();
 
+    void on_actionNew_Launchfile_triggered();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
