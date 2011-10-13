@@ -30,7 +30,7 @@ private slots:
     void create_argTag(TiXmlElement &elem, ArgItem &arg);
 
     void create_remapTag(TiXmlElement &elem, QGraphicsItem &item);
-    //void create_remapTag(TiXmlElement &elem, RemapArrow &arrow);
+    void create_remapTag(TiXmlElement &elem, RemapItem &remap);
 
 };
 

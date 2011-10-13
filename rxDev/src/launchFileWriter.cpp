@@ -258,28 +258,11 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
     if (node->getNode_or_test()==0){
         nodeTag = new TiXmlElement( "node" );
         nodeTag->SetAttribute("name", node->getName().toStdString());
-        //optional
-        if (node->getMachine() != "")
-            nodeTag->SetAttribute("machine", node->getMachine().toStdString());
-        if (node->getRespawn() == 1)
-            nodeTag->SetAttribute("respawn", "true");
-        if (node->getRespawn() == 2)
-            nodeTag->SetAttribute("respawn", "false");
-        if (node->getOutput() == 1)
-            nodeTag->SetAttribute("output", "log");
-        else if (node->getOutput() == 2)
-            nodeTag->SetAttribute("output", "screen");
-        //end optional
+
     }else{ //its a test node
         nodeTag = new TiXmlElement( "test" );
         //Todo::Check for env remap rosparam and param tags
         nodeTag->SetAttribute("test-name", node->getName().toStdString());
-        //optional
-        if (node->getTime_limit() != "")
-            nodeTag->SetAttribute("time-limit", node->getTime_limit().toStdString());
-        if (node->getRetry() != "")
-            nodeTag->SetAttribute("retry", node->getRetry().toStdString());
-        //end optional
     }
     nodeTag->SetAttribute("pkg", node->getPkg().toStdString());
     nodeTag->SetAttribute("type", node->getType().toStdString());
@@ -306,6 +289,22 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
         nodeTag->SetAttribute("if", node->getIf().toStdString());
     if (node->getUnless()!="")
         nodeTag->SetAttribute("unless", node->getUnless().toStdString());
+
+    if (node->getMachine() != "")
+        nodeTag->SetAttribute("machine", node->getMachine().toStdString());
+    if (node->getRespawn() == 1)
+        nodeTag->SetAttribute("respawn", "true");
+    if (node->getRespawn() == 2)
+        nodeTag->SetAttribute("respawn", "false");
+    if (node->getOutput() == 1)
+        nodeTag->SetAttribute("output", "log");
+    else if (node->getOutput() == 2)
+        nodeTag->SetAttribute("output", "screen");
+
+    if (node->getTime_limit() != "")
+        nodeTag->SetAttribute("time-limit", node->getTime_limit().toStdString());
+    if (node->getRetry() != "")
+        nodeTag->SetAttribute("retry", node->getRetry().toStdString());
     //end optional
 
     QString xCor,yCor;
@@ -316,7 +315,6 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
 
     //Check for embedded env tags
     for (int i = 0; i < node->envItems.size(); i++) {
-
         create_envTag(*nodeTag,*node->envItems.at(i));
     }
     //Check for embedded remap tags
@@ -365,6 +363,7 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
 
     }else{
         paramTag = new TiXmlElement( "rosparam" );
+        paramTag->SetAttribute("file", parameter->getValue().toStdString());
         if (parameter->getType() == "command load")
             paramTag->SetAttribute("command", "load");
         if (parameter->getType() == "command dump")
@@ -375,11 +374,10 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
         //        qDebug()<<"ns: "<<parameter->getNamespace();
         //        qDebug()<<"name: "<<parameter->getName();
         //        qDebug()<<"Value: "<<parameter->getValue();
-        paramTag->SetAttribute("file", parameter->getValue().toStdString());
         //optional
-        if (!parameter->getName().isEmpty())
+        if (parameter->getName()!="")
             paramTag->SetAttribute("param", parameter->getName().toStdString());
-        if (!parameter->getNamespace().isEmpty())
+        if (parameter->getNamespace()!="")
             paramTag->SetAttribute("ns", parameter->getNamespace().toStdString());
         //end optional
     }
@@ -427,24 +425,20 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter 
 
     }else{
         paramTag = new TiXmlElement( "rosparam" );
-        if (parameter.getName()!="")
-            paramTag->SetAttribute("param", parameter.getName().toStdString());
+        paramTag->SetAttribute("file", parameter.getValue().toStdString());
         if (parameter.getType() == "command load")
             paramTag->SetAttribute("command", "load");
         if (parameter.getType() == "command dump")
             paramTag->SetAttribute("command", "dump");
         if (parameter.getType() == "command delete")
             paramTag->SetAttribute("command", "delete");
-        qDebug()<<"type: "<<parameter.getType();
-        qDebug()<<"ns: "<<parameter.getNamespace();
-        qDebug()<<"name: "<<parameter.getName();
-        qDebug()<<"Value: "<<parameter.getValue();
-        paramTag->SetAttribute("file", parameter.getValue().toStdString());
-        paramTag->SetAttribute("param", parameter.getName().toStdString());
         //optional
-        paramTag->SetAttribute("ns", parameter.getNamespace().toStdString());
+        //optional
+        if (parameter.getName()!="")
+            paramTag->SetAttribute("param", parameter.getName().toStdString());
+        if (parameter.getNamespace()!="")
+            paramTag->SetAttribute("ns", parameter.getNamespace().toStdString());
         //end optional
-
     }
     if (parameter.getIf()!="")
         paramTag->SetAttribute("if", parameter.getIf().toStdString());
@@ -454,7 +448,7 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter 
     QString xCor,yCor;
     xCor = QString::number(parameter.pos().x());
     yCor = QString::number(parameter.pos().y());
-    create_commentTag(*paramTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+    //create_commentTag(*paramTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
 
     elem.LinkEndChild( paramTag );
@@ -505,7 +499,7 @@ void LaunchWriter::create_envTag(TiXmlElement &elem, EnvItem &env)
     QString xCor,yCor;
     xCor = QString::number(env.pos().x());
     yCor = QString::number(env.pos().y());
-    create_commentTag(*envTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+    //create_commentTag(*envTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
     elem.LinkEndChild( envTag );
 }
@@ -569,21 +563,32 @@ void LaunchWriter::create_argTag(TiXmlElement &elem, QGraphicsItem &item)
 }
 
 
-///*!\brief create <remap> tag
-// *
-// * Create the <remap> tag and sets the attributes.
-// */
-//void LaunchWriter::create_remapTag(TiXmlElement &elem, RemapArrow &arrow)
-//{
-//    TiXmlElement * remapTag = new TiXmlElement( "remap" );
-//    remapTag->SetAttribute("from", arrow.getFrom().toStdString());
-//    remapTag->SetAttribute("to", arrow.getTo().toStdString());
-//    elem.LinkEndChild( remapTag );
-//}
-
 /*!\brief create <remap> tag
  *
  * Create the <remap> tag in an other tag and sets the attributes.
+ */
+void LaunchWriter::create_remapTag(TiXmlElement &elem, RemapItem &remap)
+{
+    TiXmlElement * remapTag = new TiXmlElement( "remap" );
+    remapTag->SetAttribute("from", remap.getFrom().toStdString());
+    remapTag->SetAttribute("to", remap.getTo().toStdString());
+    //optional
+    if (remap.getIf()!="")
+        remapTag->SetAttribute("if", remap.getIf().toStdString());
+    if (remap.getUnless()!="")
+        remapTag->SetAttribute("unless", remap.getUnless().toStdString());
+    //end optional
+
+    QString xCor,yCor;
+    xCor = QString::number(remap.pos().x());
+    yCor = QString::number(remap.pos().y());
+
+    elem.LinkEndChild( remapTag );
+}
+
+/*!\brief create <remap> tag
+ *
+ * Create the <remap> tag and sets the attributes.
  */
 void LaunchWriter::create_remapTag(TiXmlElement &elem, QGraphicsItem &item)
 {
