@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::IncludeFileEdit) {
+    myItem=item;
     ui->setupUi(this);
     ui->lineEdit_file->setText(item->getFile());
     ui->lineEdit_namespace->setText(item->getNamespace());
@@ -14,63 +15,85 @@ IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDial
     envModel->setHeaderData(1,Qt::Horizontal,QObject::tr("value"));
     envModel->setHeaderData(2,Qt::Horizontal,QObject::tr("if"));
     envModel->setHeaderData(3,Qt::Horizontal,QObject::tr("unless"));
-    for (int row = 0; row < item->envItems.count(); ++row) {
-        QStandardItem *item0 = new QStandardItem(QString(item->envItems.at(row)->getName()));
-        envModel->setItem(row,0,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getValue()));
-        envModel->setItem(row,1,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getIf()));
-        envModel->setItem(row,2,item0);
-        item0 = new QStandardItem(QString(item->envItems.at(row)->getUnless()));
-        envModel->setItem(row,3,item0);
-
-    }
+    fillEnvModel();
     ui->tableView_envItems->setModel(envModel);
+
     argModel = new QStandardItemModel(item->argItems.count(),5);
     argModel->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     argModel->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     argModel->setHeaderData(2,Qt::Horizontal,QObject::tr("value"));
-    envModel->setHeaderData(3,Qt::Horizontal,QObject::tr("if"));
-    envModel->setHeaderData(4,Qt::Horizontal,QObject::tr("unless"));
-    for (int row = 0; row < item->argItems.count(); ++row) {
-        QStandardItem *item0 = new QStandardItem(QString(item->argItems.at(row)->getName()));
+    argModel->setHeaderData(3,Qt::Horizontal,QObject::tr("if"));
+    argModel->setHeaderData(4,Qt::Horizontal,QObject::tr("unless"));
+    fillArgModel();
+    ui->tableView_argItems->setModel(argModel);
+    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_envItems(const QModelIndex &)));
+        connect(ui->tableView_argItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_argItems(const QModelIndex &)));
+}
+void IncludeFileEdit::selectionHandle_envItems(const QModelIndex & index)
+{
+    EnvItem *env=myItem->envItems.at(index.row());
+    env->getEnvData();
+    fillEnvModel();
+}
+void IncludeFileEdit::selectionHandle_argItems(const QModelIndex & index)
+{
+    ArgItem *arg=myItem->argItems.at(index.row());
+    arg->getArgData();
+    fillArgModel();
+}
+
+void IncludeFileEdit::fillEnvModel(){
+    for (int row = 0; row < myItem->envItems.count(); ++row) {
+        QStandardItem *item0 = new QStandardItem(QString(myItem->envItems.at(row)->getName()));
+        envModel->setItem(row,0,item0);
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getValue()));
+        envModel->setItem(row,1,item0);
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getIf()));
+        envModel->setItem(row,2,item0);
+        item0 = new QStandardItem(QString(myItem->envItems.at(row)->getUnless()));
+        envModel->setItem(row,3,item0);
+
+    }
+}
+void IncludeFileEdit::fillArgModel(){
+
+    for (int row = 0; row < myItem->argItems.count(); ++row) {
+        QStandardItem *item0 = new QStandardItem(QString(myItem->argItems.at(row)->getName()));
         argModel->setItem(row,0,item0);
-        switch (item->argItems.at(row)->getValue_or_default()){
+        switch (myItem->argItems.at(row)->getValue_or_default()){
         //Todo: fix, the values don't get read correct
         case 0:
             item0 = new QStandardItem(QString("-"));
             argModel->setItem(row,1,item0);
             item0 = new QStandardItem(QString("-"));
             argModel->setItem(row,2,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getIf()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getIf()));
             argModel->setItem(row,3,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getUnless()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getUnless()));
             argModel->setItem(row,4,item0);
             break;
         case 1:
             item0 = new QStandardItem(QString("value"));
             argModel->setItem(row,1,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getValue()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getValue()));
             argModel->setItem(row,2,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getIf()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getIf()));
             argModel->setItem(row,3,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getUnless()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getUnless()));
             argModel->setItem(row,4,item0);
             break;
         case 2:
             item0 = new QStandardItem(QString("default"));
             argModel->setItem(row,1,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getValue()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getValue()));
             argModel->setItem(row,2,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getIf()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getIf()));
             argModel->setItem(row,3,item0);
-            item0 = new QStandardItem(QString(item->argItems.at(row)->getUnless()));
+            item0 = new QStandardItem(QString(myItem->argItems.at(row)->getUnless()));
             argModel->setItem(row,4,item0);
             break;
         }
     }
-    ui->tableView_argItems->setModel(argModel);
-
 }
 
 IncludeFileEdit::~IncludeFileEdit() {

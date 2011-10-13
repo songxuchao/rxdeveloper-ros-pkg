@@ -22,18 +22,22 @@ class IncludeFileEdit : public QDialog {
                 int getClearParam();
                 QString getIf();
                 QString getUnless();
+                void fillEnvModel();
+                void fillArgModel();
 
         public slots:
                 void reject();
                 void accept();
 
         private slots:
-
+            void selectionHandle_envItems(const QModelIndex & index);
+            void selectionHandle_argItems(const QModelIndex & index);
         private:
                 Ui::IncludeFileEdit *ui;
                 QStandardItemModel *envModel;
 
                 QStandardItemModel *argModel;
+                IncludeFileItem *myItem;
 
 };
 

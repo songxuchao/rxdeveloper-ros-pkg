@@ -28,16 +28,21 @@ public:
     QString getTimeout();
     QString getIf();
     QString getUnless();
+    void fillEnvModel();
 
 public slots:
     void reject();
     void accept();
 
 private slots:
+    void selectionHandle_envItems(const QModelIndex & index);
+
 
 private:
     Ui::MachineEdit *ui;
     QStandardItemModel *envModel;
+    MachineItem *myItem;
+
 };
 
 #endif
