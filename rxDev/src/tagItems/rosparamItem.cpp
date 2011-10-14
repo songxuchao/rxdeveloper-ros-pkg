@@ -1,11 +1,11 @@
 
-#include "parameterItem.h"
+#include "rosparamItem.h"
 #include <QDebug>
 #include "../rxdev.h"
-#include "parameterEdit.h"
+#include "rosparamEdit.h"
 #include "groupItem.h"
 
-ParameterItem::ParameterItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
+RosparamItem::RosparamItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     QGraphicsWidget(parent),
     //QGraphicsItem(parent, scene),
     _location(0,0),
@@ -14,8 +14,7 @@ ParameterItem::ParameterItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _outterborderColor(Qt::darkCyan),
     _outterborderPen(),
     _dragStart(0,0),
-    _height(50),
-    _parameter_type(1)
+    _height(70)
 {
     this->setHandlesChildEvents(true);
     _outterborderPen.setWidth(1);
@@ -26,11 +25,11 @@ ParameterItem::ParameterItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     this->setAcceptHoverEvents(true);
 
-    _paramTitle.setPos(-4,_height);
-    _paramTitle.setPlainText("PARAM");
-    _paramTitle.setParentItem(this);
-    _paramTitle.setRotation(-90);
-    _paramTitle.setDefaultTextColor(Qt::black);
+    _rosparamTitle.setPos(-4,_height+2);
+    _rosparamTitle.setPlainText("ROSPARAM");
+    _rosparamTitle.setParentItem(this);
+    _rosparamTitle.setRotation(-90);
+    _rosparamTitle.setDefaultTextColor(Qt::black);
 
     _name.setPos(10,0);
     _name.setTextWidth(_width);
@@ -47,81 +46,90 @@ ParameterItem::ParameterItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _type.setTextWidth(_width);
     _type.setDefaultTextColor(Qt::blue);
 
-    updateParameterItem();
+
+    _namespace.setPos(10,45);
+    _namespace.setParentItem(this);
+    _namespace.setTextWidth(_width);
+    _namespace.setDefaultTextColor(Qt::blue);
+
+    updateRosparamItem();
 
 }
 
 
 
-void ParameterItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void RosparamItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     setColor(Qt::red);
-    getParamData();
+    getRosparamData();
     setColor(Qt::darkCyan);
     event->setAccepted(true);
 }
-void ParameterItem::setStandardParameter(int set)
-{
-    _parameter_type=set;
-}
-int ParameterItem::getStandardParameter()
-{
-    return _parameter_type;
-}
 
-bool ParameterItem::getParamData()
+bool RosparamItem::getRosparamData()
 {
-    ParameterEdit param(this);
-    param.setWindowTitle("Parameter: "+getName());
+    RosparamEdit param(this);
+    param.setWindowTitle("Rosparam: "+getName());
     bool accept = param.exec();
     if (accept){
         setName(param.getName());
         setValue(param.getValue());
         setType(param.getType());
-        setStandardParameter(param.getParamType());
+        setNamespace(param.getNamespace());
+        updateRosparamItem();
         setIf(param.getIf());
         setUnless(param.getUnless());
-        updateParameterItem();
         return true;
     } else
         return false;
 }
 
-void ParameterItem::updateParameterItem()
+void RosparamItem::updateRosparamItem()
 {
-    _name.setHtml("<font size=\"-2\" color=\"black\">name: <font size=\"-2\" color=\"blue\">"+getName());
+    _name.setHtml("<font size=\"-2\" color=\"black\">param: <font size=\"-2\" color=\"blue\">"+getName());
     _value.setHtml("<font size=\"-2\" color=\"black\">value: <font size=\"-2\" color=\"blue\">"+getValue());
     _type.setHtml("<font size=\"-2\" color=\"black\">type: <font size=\"-2\" color=\"green\">"+getType());
+    _namespace.setHtml("<font size=\"-2\" color=\"black\">ns: <font size=\"-2\" color=\"red\">"+getNamespace());
 }
 
-QString ParameterItem::getName()
+QString RosparamItem::getName()
 {
     return _nameString;
 }
 
-void ParameterItem::setName(QString newName)
+void RosparamItem::setName(QString newName)
 {
     _nameString = newName;
 }
-QString ParameterItem::getValue()
+QString RosparamItem::getValue()
 {
     return _valueString;
 }
-void ParameterItem::setValue(QString newValue)
+void RosparamItem::setValue(QString newValue)
 {
     _valueString = newValue;
 }
 
-QString ParameterItem::getType()
+QString RosparamItem::getType()
 {
     return _typeString;
 }
-void ParameterItem::setType(QString newType)
+void RosparamItem::setType(QString newType)
 {
     _typeString = newType;
 }
 
-void ParameterItem::setLocation(QPointF point)
+QString RosparamItem::getNamespace()
+{
+    return _namespaceString;
+}
+void RosparamItem::setNamespace(QString newNamespace)
+{
+    _namespaceString = newNamespace;
+}
+
+
+void RosparamItem::setLocation(QPointF point)
 {
     _location=point;
 }
@@ -135,14 +143,14 @@ void NodeItem::mouseMoveEvent(QGraphicsSceneDragDropEvent *event)
 }
 
 
-void ParameterItem::mousePressEvent(QGraphicsSceneDragDropEvent *event)
+void RosparamItem::mousePressEvent(QGraphicsSceneDragDropEvent *event)
 {
 
     event->setAccepted(false);
 
 }
 */
-void ParameterItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
+void RosparamItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 {
 
     if (event->button() == Qt::LeftButton) {
@@ -168,14 +176,14 @@ void ParameterItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
             case NodeItem::Type:                                                         //Node or Test
                 NodeItem *node;
                 node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location-QPoint(1,1)));
-                node->addParamItem(this);
+                node->addRosparamItem(this);
                 scene()->removeItem(this);
                 break;
             case 8:                                                             //TextItem -> check for parent
                 if (scene()->itemAt(_location-QPoint(1,1))->parentItem()->type() ==NodeItem::Type){  //Node or Test
                     NodeItem *node;
                     node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location-QPoint(1,1))->parentItem());
-                    node->addParamItem(this);
+                    node->addRosparamItem(this);
                     scene()->removeItem(this);
                 }
                 break;
@@ -193,22 +201,19 @@ void ParameterItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
     }
 }
 
-void ParameterItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
+void RosparamItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 {
     // allow the user to drag the box, capture the starting position on mouse-down
 
     if (event->button() == Qt::LeftButton) {
         setColor(Qt::red);
         event->setAccepted(true);
-
     } else
         event->setAccepted(false);
-
-
 }
 
 
-void ParameterItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
+void RosparamItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 {
     // user have moved the mouse, move the location of the box
 
@@ -218,32 +223,32 @@ void ParameterItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     this->setPos(_location);
 }
 
-void ParameterItem::hoverEnterEvent ( QGraphicsSceneHoverEvent * )
+void RosparamItem::hoverEnterEvent ( QGraphicsSceneHoverEvent * )
 {
     setZValue(100);
 }
-void ParameterItem::hoverLeaveEvent ( QGraphicsSceneHoverEvent * )
+void RosparamItem::hoverLeaveEvent ( QGraphicsSceneHoverEvent * )
 {
     setZValue(0);
 }
 
 
 
-void ParameterItem::setColor(QColor color)
+void RosparamItem::setColor(QColor color)
 {
     _outterborderColor = color;
     this->update(0,0,_width,_height);
 }
 
-QRectF ParameterItem::boundingRect() const
+QRectF RosparamItem::boundingRect() const
 {
     qreal penWidth = 1;
     return QRectF(0 - penWidth / 2, 0 - penWidth / 2,
                   _width + penWidth, _height + penWidth);
 }
 
-void ParameterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                          QWidget *widget)
+void RosparamItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                         QWidget *widget)
 {
     _outterborderPen.setColor( _outterborderColor );
     _outterborderPen.setStyle(Qt::SolidLine);
@@ -260,31 +265,32 @@ void ParameterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->drawLine(_width,4,_width+5,4);
         painter->drawLine(_width,_height-2,_width+5,_height-2);
         painter->drawLine(_width,_height-4,_width+5,_height-4);
-
     }
+
     QBrush background (Qt::yellow);
+    background.setColor(Qt::gray);
     painter->setBackgroundMode(Qt::OpaqueMode);
     painter->setBrush( background);
     painter->drawRect(0, 0, _width,_height);
 
 }
 
-QString ParameterItem::getIf()
+QString RosparamItem::getIf()
 {
     return _ifString;
 }
 
-void ParameterItem::setIf(QString newIf)
+void RosparamItem::setIf(QString newIf)
 {
     _ifString=newIf;
 }
 
-QString ParameterItem::getUnless()
+QString RosparamItem::getUnless()
 {
     return _unlessString;
 }
 
-void ParameterItem::setUnless(QString newUnless)
+void RosparamItem::setUnless(QString newUnless)
 {
     _unlessString = newUnless;
 }

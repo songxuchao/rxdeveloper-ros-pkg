@@ -20,7 +20,6 @@ class ParameterEdit : public QDialog {
                 QString getName();
                 QString getValue();
                 QString getType();
-                QString getNamespace();
                 QString getIf();
                 QString getUnless();
                 int getParamType();
@@ -38,7 +37,6 @@ private slots:
 
                 void on_radioButton_file_clicked();
                 void on_radioButton_standard_clicked();
-                void on_radioButton_rosparam_clicked();
 };
 
 #endif

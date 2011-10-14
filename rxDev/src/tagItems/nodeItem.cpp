@@ -607,6 +607,28 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         if (index != -1)
             paramItems.removeAt(index);
     }
+    void NodeItem::removeRosparamItem(RosparamItem *rosparam)
+    {
+        int index = rosparamItems.indexOf(rosparam);
+
+        if (index != -1)
+            rosparamItems.removeAt(index);
+    }
+
+    void NodeItem::removeRosparamItems()
+    {
+        foreach (RosparamItem *rosparam, rosparamItems) {
+            removeRosparamItem(rosparam);
+            delete rosparam;
+        }
+    }
+
+    void NodeItem::addRosparamItem(RosparamItem *rosparam)
+    {
+        rosparamItems.append(rosparam);
+
+    }
+
     QString NodeItem::getIf()
     {
         return _ifString;

@@ -147,7 +147,7 @@ void openSpecFile();
     void loadDocument( TiXmlNode * pParent);
     void create_groupItem(TiXmlNode *pParent);
     void create_paramItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
-    void create_rosparamItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
+    void create_rosparamItem(RosparamItem &newRosparam, TiXmlNode * pParent,int &x, int &y);
     void create_envItem(EnvItem &newEnv,TiXmlNode * pParent,int &x, int &y);
     void create_argItem(ArgItem &newArg,TiXmlNode * pParent,int &x, int &y);
     void create_remapItem(RemapItem &newRemap, TiXmlNode * pParent,int &x, int &y);
@@ -166,6 +166,8 @@ void openSpecFile();
     void on_actionSettings_triggered();
 
     void on_actionNew_Launchfile_triggered();
+
+    void on_pushButton_rosparam_clicked();
 
 private:
     Ui::RxDev *ui;

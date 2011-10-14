@@ -1,6 +1,6 @@
 
-#ifndef PARAMETERITEM_H
-#define PARAMETERITEM_H
+#ifndef ROSPARAMITEM_H
+#define ROSPARAMITEM_H
 
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
@@ -33,36 +33,37 @@ QT_END_NAMESPACE
 
 
 
-class ParameterItem : public QGraphicsWidget
+class RosparamItem : public QGraphicsWidget
  {
     Q_OBJECT
 
  public:
-    enum { Type = UserType + 12 };
-     ParameterItem(QGraphicsRectItem *parent = 0, QGraphicsScene *scene = 0);
+    enum { Type = UserType + 13 };
+     RosparamItem(QGraphicsRectItem *parent = 0, QGraphicsScene *scene = 0);
     void setLocation(QPointF point);
     void setColor(QColor color);
     int type() const
         { return Type;}
-    QGraphicsTextItem _paramTitle;
+    QGraphicsTextItem _rosparamTitle;
     QGraphicsTextItem _name;    ///< sample text to go in the title area.
     QGraphicsTextItem _value;    ///< sample text to go in the title area.
     QGraphicsTextItem _type;    ///< sample text to go in the title area.
+    QGraphicsTextItem _namespace;
 
-    void setStandardParameter(int set);
-    int getStandardParameter();
     QString getName();
     void setName(QString newName);
     QString getType();
     void setType(QString newType);
     QString getValue();
     void setValue(QString newValue);
+    QString getNamespace();
+    void setNamespace(QString newNamespace);
     QString getIf();
     void setIf(QString newIf);
     QString getUnless();
     void setUnless(QString newUnless);
-    bool getParamData();
-    void updateParameterItem();
+    bool getRosparamData();
+    void updateRosparamItem();
 
  protected:
     QPointF _location;
@@ -87,10 +88,10 @@ private:
     QString _nameString;
     QString _valueString;
     QString _typeString;
-    int _parameter_type;
+    QString _namespaceString;
     QString _ifString;
     QString _unlessString;
  };
 
 
-#endif // PARAMETERITEM_H
+#endif // RosparamItem_H

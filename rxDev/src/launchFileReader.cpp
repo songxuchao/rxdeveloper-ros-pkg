@@ -101,16 +101,16 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="rosparam"){
-            ParameterItem * newParam = new ParameterItem;
+            RosparamItem * newRosparam = new RosparamItem;
             int x,y;
-            create_rosparamItem(*newParam,firstLevelNode,x,y);
-            scene->addItem(newParam);
+            create_rosparamItem(*newRosparam,firstLevelNode,x,y);
+            scene->addItem(newRosparam);
             if (x==0 &&y==0){
-                newParam->setPos(findSpace(QPoint(x,y)));
-                newParam->setLocation(newParam->pos());
+                newRosparam->setPos(findSpace(QPoint(x,y)));
+                newRosparam->setLocation(newRosparam->pos());
             } else{
-                newParam->setPos(QPoint(x,y));
-                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+                newRosparam->setPos(QPoint(x,y));
+                newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
@@ -409,9 +409,9 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             create_paramItem(*newParam,pChild,x,y);
             newNode.addParamItem(newParam);
         }else if (QString(pChild->Value())=="rosparam"){
-            ParameterItem* newParam = new ParameterItem;
-            create_rosparamItem(*newParam,pChild,x,y);
-            newNode.addParamItem(newParam);
+            RosparamItem* newRosparam = new RosparamItem;
+            create_rosparamItem(*newRosparam,pChild,x,y);
+            newNode.addRosparamItem(newRosparam);
         }else if (QString(pChild->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
             create_remapItem(*newRemap,pChild,x,y);
@@ -514,25 +514,24 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int
  *
  * get attributes for the object..
  */
-void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode, int &x, int &y)
+void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=rosparamNode->ToElement()->FirstAttribute();
     x=0,y=0;
     while (tagAttribute)
     {
-        newParam.setStandardParameter(3);
         if (QString(tagAttribute->Name())=="command"){
-            newParam.setType(QString("command "+QString(tagAttribute->Value())));
+            newRosparam.setType(QString("command "+QString(tagAttribute->Value())));
         }else if (QString(tagAttribute->Name())=="file"){
-            newParam.setValue(QString(tagAttribute->Value()));
+            newRosparam.setValue(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="param"){
-            newParam.setName(QString(tagAttribute->Value()));
+            newRosparam.setName(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="ns"){
-            newParam.setNamespace(QString(tagAttribute->Value()));
+            newRosparam.setNamespace(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="if"){
-            newParam.setIf(QString(tagAttribute->Value()));
+            newRosparam.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){
-            newParam.setUnless(QString(tagAttribute->Value()));
+            newRosparam.setUnless(QString(tagAttribute->Value()));
         }
         tagAttribute=tagAttribute->Next();
     }
@@ -546,7 +545,7 @@ void RxDev::create_rosparamItem(ParameterItem &newParam,TiXmlNode *rosparamNode,
         }
         qDebug()<<"x:"<<x<<" y:"<<y;
     }
-    newParam.updateParameterItem();
+    newRosparam.updateRosparamItem();
 }
 
 /*!\brief <env>-tag object
@@ -739,16 +738,16 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
 
             }
         }else if (QString(pChild->Value())=="rosparam"){
-            ParameterItem* newParam = new ParameterItem;
-            create_rosparamItem(*newParam,pChild,x,y);
-            newParam->setParentItem(newGroup);
-            scene->addItem(newParam);
+            RosparamItem* newRosparam = new RosparamItem;
+            create_rosparamItem(*newRosparam,pChild,x,y);
+            newRosparam->setParentItem(newGroup);
+            scene->addItem(newRosparam);
             if (x==0 &&y==0){
-                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
-                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+                newRosparam->setPos((findSpace(newRosparam->mapToParent(QPoint(x,y)))));
+                newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
             } else{
-                newParam->setPos(QPoint(x,y));
-                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+                newRosparam->setPos(QPoint(x,y));
+                newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
             }
         }else if (QString(pChild->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;

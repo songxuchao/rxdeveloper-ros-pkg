@@ -23,17 +23,6 @@ ParameterEdit::ParameterEdit(ParameterItem *item, QWidget *parent) : QDialog(par
             ui->comboBox_file->setCurrentIndex(1);
         }else
             ui->comboBox_file->setCurrentIndex(0);
-    }else {
-        on_radioButton_rosparam_clicked();
-        ui->lineEdit_param->setText(item->getName());
-        ui->lineEdit_paramFile->setText(item->getValue());
-        ui->lineEdit_namespace->setText(item->getNamespace());
-        if (item->getType() == "command delete"){
-            ui->comboBox_paramFile->setCurrentIndex(2);
-        }else if (item->getType() == "command dump"){
-            ui->comboBox_paramFile->setCurrentIndex(1);
-        }else
-            ui->comboBox_paramFile->setCurrentIndex(0);
     }
     ui->lineEdit_name->setFocus();
 }
@@ -43,16 +32,13 @@ ParameterEdit::~ParameterEdit() {
 }
 
 void ParameterEdit::reject() {
-    ui->lineEdit_name->setText("");
     QDialog::reject();
 }
 
 void ParameterEdit::accept() {
 
 
-    if ( (param_type==3 && (ui->lineEdit_paramFile->text()=="")) ||
-            (param_type<3 && (ui->lineEdit_name->text()==""
-                           || (ui->lineEdit_value->text()=="" && ui->lineEdit_file->text()=="" && ui->lineEdit_paramFile->text()=="")))  ){
+    if (  (ui->lineEdit_name->text()=="" || (ui->lineEdit_value->text()=="" && ui->lineEdit_file->text()=="")))  {
         QMessageBox::information(this, (QString::fromUtf8("Information")),
                                  QString::fromUtf8("<h2>Name or value missing</h2>"
                                                    "<p>Please insert the correct name and value!</p>"));
@@ -66,40 +52,27 @@ void ParameterEdit::accept() {
 }
 
 QString ParameterEdit::getName(){
-    if (param_type==3)
-        return ui->lineEdit_param->text();
-    else
         return ui->lineEdit_name->text();
 }
 QString ParameterEdit::getValue(){
     if (param_type==1)
         return ui->lineEdit_value->text();
-    else if (param_type==2)
-        return ui->lineEdit_file->text();
     else
-        return ui->lineEdit_paramFile->text();
+        return ui->lineEdit_file->text();
 }
 QString ParameterEdit::getType(){
     if (param_type==1)
         return ui->lineEdit_type->text();
-    else if (param_type==2)
-        return ui->comboBox_file->itemText(ui->comboBox_file->currentIndex());
     else
-        return ui->comboBox_paramFile->itemText(ui->comboBox_paramFile->currentIndex());
+        return ui->comboBox_file->itemText(ui->comboBox_file->currentIndex());
 }
-QString ParameterEdit::getNamespace(){
-    return ui->lineEdit_namespace->text();
-}
-
 
 void ParameterEdit::on_radioButton_standard_clicked()
 {
     ui->radioButton_standard->setChecked(true);
     ui->radioButton_file->setChecked(false);
-    ui->radioButton_rosparam->setChecked(false);
     ui->groupBox_standard->setEnabled(true);
     ui->groupBox_file->setEnabled(false);
-    ui->groupBox_rosparam->setEnabled(false);
     ui->lineEdit_name->setEnabled(true);
     param_type=1;
 }
@@ -109,27 +82,13 @@ void ParameterEdit::on_radioButton_file_clicked()
 {
     ui->radioButton_standard->setChecked(false);
     ui->radioButton_file->setChecked(true);
-    ui->radioButton_rosparam->setChecked(false);
     ui->groupBox_standard->setEnabled(false);
     ui->groupBox_file->setEnabled(true);
-    ui->groupBox_rosparam->setEnabled(false);
     ui->lineEdit_name->setEnabled(true);
     param_type=2;
 }
 
 
-
-void ParameterEdit::on_radioButton_rosparam_clicked()
-{
-    ui->radioButton_standard->setChecked(false);
-    ui->radioButton_file->setChecked(false);
-    ui->radioButton_rosparam->setChecked(true);
-    ui->groupBox_standard->setEnabled(false);
-    ui->groupBox_file->setEnabled(false);
-    ui->groupBox_rosparam->setEnabled(true);
-    ui->lineEdit_name->setEnabled(false);
-    param_type=3;
-}
 
 int ParameterEdit::getParamType()
 {

@@ -22,7 +22,9 @@
 #include <QList>
 #include "envItem.h"
 #include "parameterItem.h"
+#include "rosparamItem.h"
 #include "remapItem.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -135,6 +137,11 @@ public:
     void removeParamItems();
     QList<ParameterItem *> paramItems;
     void addParamItem(ParameterItem *param);
+
+    void removeRosparamItem(RosparamItem *rosparam);
+    void removeRosparamItems();
+    QList<RosparamItem *> rosparamItems;
+    void addRosparamItem(RosparamItem *rosparam);
 
 protected:
 
