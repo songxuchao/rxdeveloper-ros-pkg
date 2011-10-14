@@ -7,6 +7,16 @@
 NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::NodeEdit) {
     myItem=item;
     ui->setupUi(this);
+    selectedEnv=-1;
+    selectedRemap=-1;
+    selectedParameter=-1;
+    selectedRosparam=-1;
+    ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
+    ui->toolButton_deleteRemap->setDefaultAction(ui->actionDelete_remap);
+    ui->toolButton_deleteParam->setDefaultAction(ui->actionDelete_param);
+    ui->toolButton_deleteRosparam->setDefaultAction(ui->actionDelete_rosparam);
+    ui->toolButton_addParam->setDefaultAction(ui->actionAdd_param);
+
     ui->lineEdit_name->setText(item->getName());
     ui->lineEdit_pkg->setText(item->getPkg());
     ui->lineEdit_type->setText(item->getType());
@@ -68,37 +78,64 @@ NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui
     fillRosparamModel();
     ui->tableView_rosparamItems->setModel(rosparamModel);
 
-    connect(ui->tableView_paramItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_parameterItems(const QModelIndex &)));
-    connect(ui->tableView_rosparamItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_rosparamItems(const QModelIndex &)));
-    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_envItems(const QModelIndex &)));
-    connect(ui->tableView_remapItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_remapItems(const QModelIndex &)));
+    connect(ui->tableView_paramItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_parameterItems(const QModelIndex &)));
+    connect(ui->tableView_paramItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_parameterItems(const QModelIndex &)));
+    connect(ui->tableView_rosparamItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_rosparamItems(const QModelIndex &)));
+    connect(ui->tableView_rosparamItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_rosparamItems(const QModelIndex &)));
+    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_envItems(const QModelIndex &)));
+    connect(ui->tableView_envItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_envItems(const QModelIndex &)));
+    connect(ui->tableView_remapItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_remapItems(const QModelIndex &)));
+    connect(ui->tableView_remapItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_remapItems(const QModelIndex &)));
+
 }
 //Selection handler for the tableviews
-void NodeEdit::selectionHandle_rosparamItems(const QModelIndex & index)
+void NodeEdit::edit_rosparamItems(const QModelIndex & index)
 {
     RosparamItem *rosparam=myItem->rosparamItems.at(index.row());
     rosparam->getRosparamData();
     fillRosparamModel();
 }
-void NodeEdit::selectionHandle_parameterItems(const QModelIndex & index)
+void NodeEdit::selectionHandle_rosparamItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedRosparam=index.row();
+    }
+}
+void NodeEdit::edit_parameterItems(const QModelIndex & index)
 {
     ParameterItem *param=myItem->paramItems.at(index.row());
     param->getParamData();
     fillParameterModel();
 }
-
-void NodeEdit::selectionHandle_envItems(const QModelIndex & index)
+void NodeEdit::selectionHandle_parameterItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedParameter=index.row();
+    }
+}
+void NodeEdit::edit_envItems(const QModelIndex & index)
 {
     EnvItem *env=myItem->envItems.at(index.row());
     env->getEnvData();
     fillEnvModel();
 }
-
-void NodeEdit::selectionHandle_remapItems(const QModelIndex & index)
+void NodeEdit::selectionHandle_envItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedEnv=index.row();
+    }
+}
+void NodeEdit::edit_remapItems(const QModelIndex & index)
 {
     RemapItem *remap=myItem->remapItems.at(index.row());
     remap->getRemapData();
     fillRemapModel();
+}
+void NodeEdit::selectionHandle_remapItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedRemap=index.row();
+    }
 }
 void NodeEdit::fillRemapModel(){
     for (int row = 0; row < myItem->remapItems.count(); ++row) {
@@ -264,4 +301,43 @@ QString NodeEdit::getIf()
 QString NodeEdit::getUnless()
 {
     return ui->lineEdit_unless->text();
+}
+
+void NodeEdit::on_actionDelete_env_triggered()
+{
+    myItem->removeEnvItem(myItem->envItems.at(selectedEnv));
+    envModel->removeRow(selectedEnv);
+    fillEnvModel();
+}
+
+void NodeEdit::on_actionDelete_rosparam_triggered()
+{
+    myItem->removeRosparamItem(myItem->rosparamItems.at(selectedRosparam));
+    rosparamModel->removeRow(selectedRosparam);
+    fillRosparamModel();
+}
+
+void NodeEdit::on_actionDelete_param_triggered()
+{
+    myItem->removeParamItem(myItem->paramItems.at(selectedParameter));
+    paramModel->removeRow(selectedParameter);
+    fillParameterModel();
+}
+
+void NodeEdit::on_actionDelete_remap_triggered()
+{
+    myItem->removeRemapItem(myItem->remapItems.at(selectedRemap));
+    remapModel->removeRow(selectedRemap);
+    fillRemapModel();
+}
+
+void NodeEdit::on_actionAdd_param_triggered()
+{
+    ParameterItem * newParam;
+    newParam = new ParameterItem;
+    if (newParam->getParamData()==true){
+        myItem->addParamItem(newParam);
+    }
+    fillParameterModel();
+
 }

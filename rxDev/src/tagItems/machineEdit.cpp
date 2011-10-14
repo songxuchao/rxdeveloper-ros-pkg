@@ -6,6 +6,8 @@
 MachineEdit::MachineEdit(MachineItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::MachineEdit) {
     myItem=item;
     ui->setupUi(this);
+    selectedEnv=-1;
+    ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
     ui->lineEdit_name->setText(item->getName());
     ui->lineEdit_address->setText(item->getAddress());
     ui->lineEdit_ros_root->setText(item->getRos_root());
@@ -24,11 +26,17 @@ MachineEdit::MachineEdit(MachineItem *item, QWidget *parent) : QDialog(parent), 
     envModel->setHeaderData(3,Qt::Horizontal,QObject::tr("unless"));
     fillEnvModel();
     ui->tableView_envItems->setModel(envModel);
-    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_envItems(const QModelIndex &)));
-
-
+    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_envItems(const QModelIndex &)));
+    connect(ui->tableView_envItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_envItems(const QModelIndex &)));
 }
-void MachineEdit::selectionHandle_envItems(const QModelIndex & index)
+
+void MachineEdit::selectionHandle_envItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedEnv=index.row();
+    }
+}
+void MachineEdit::edit_envItems(const QModelIndex & index)
 {
     EnvItem *env=myItem->envItems.at(index.row());
     env->getEnvData();
@@ -122,4 +130,13 @@ QString MachineEdit::getIf()
 QString MachineEdit::getUnless()
 {
     return ui->lineEdit_unless->text();
+}
+
+
+
+void MachineEdit::on_actionDelete_env_triggered()
+{
+    myItem->removeEnvItem(myItem->envItems.at(selectedEnv));
+    envModel->removeRow(selectedEnv);
+    fillEnvModel();
 }

@@ -35,12 +35,16 @@ public slots:
     void accept();
 
 private slots:
+    void edit_envItems(const QModelIndex & index);
     void selectionHandle_envItems(const QModelIndex & index);
 
+
+    void on_actionDelete_env_triggered();
 
 private:
     Ui::MachineEdit *ui;
     QStandardItemModel *envModel;
+    int selectedEnv;
     MachineItem *myItem;
 
 };
