@@ -123,14 +123,23 @@ void RxDev::on_pushButton_refreshNodes_clicked()
             //qDebug()<<availableNodeList[i];
 
             //fetch nodespecs
+            try{
             nodeParser(availableNodeList[i]);
-
+            }catch(YAML::InvalidScalar &e){
+            qDebug()<<"Invalid scalar in"<<QString(availableNodeList[i]);
+            qDebug()<<e.what();
+            return;
+            }catch (YAML::ParserException&e){
+             qDebug()<<"Parser exception in"<<QString(availableNodeList[i]);
+             qDebug()<<e.what();
+             return;
+            }
             //Fill the model
             fillItemModel_availableNodes(availableNodeList[i]);
 
         }
     }
-    model_availableNodes->setHeaderData(0, Qt::Horizontal, tr("Nodes"));
+
     ui->statusBar->showMessage(tr("Nodelist updated!"),5000);
 
 }
@@ -387,7 +396,7 @@ void RxDev::nodeParser(QString nodeFile){
         }
 
     }
-    if ((yamlNode = doc.FindValue("arguments"))) {
+    if ((yamlNode = doc.FindValue("parameters"))) {
         *yamlNode >> nodeParameters;
         if (nodeParameters!="~"){
             node.nodeParameters = QString::fromStdString(nodeParameters).split(" ");
