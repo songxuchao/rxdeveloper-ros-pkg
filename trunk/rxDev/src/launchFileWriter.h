@@ -22,6 +22,8 @@ private slots:
     void create_nodeTag(TiXmlElement &elem, QGraphicsItem &item);
     void create_paramTag(TiXmlElement &elem, QGraphicsItem &item);
     void create_paramTag(TiXmlElement &elem, ParameterItem &item);
+    void create_rosparamTag(TiXmlElement &elem, QGraphicsItem &item);
+    void create_rosparamTag(TiXmlElement &elem, RosparamItem &rosparam);
 
     void create_envTag(TiXmlElement &elem, QGraphicsItem &item);
     void create_envTag(TiXmlElement &elem, EnvItem &env);

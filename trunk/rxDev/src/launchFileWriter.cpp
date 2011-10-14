@@ -1,6 +1,7 @@
 #include "rxdev.h"
 
 #include "tagItems/parameterItem.h"
+#include "tagItems/rosparamItem.h"
 #include "tagItems/includeFileItem.h"
 #include "tagItems/machineItem.h"
 #include "tagItems/argItem.h"
@@ -62,6 +63,10 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
             if (list.at(i)->parentItem()==0)
                 create_remapTag(*launchTag,*list.at(i));
             break;
+        case RosparamItem::Type:
+            if (list.at(i)->parentItem()==0)
+                create_rosparamTag(*launchTag,*list.at(i));
+            break;
         case ParameterItem::Type:
             paramItems<<i;                  //save parameteritems for later
             break;
@@ -72,7 +77,7 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
     //write parameter tags after everything else
     for (int i=0;i<paramItems.size();i++){
         if (list.at(paramItems.at(i))->parentItem()==0)
-        create_paramTag(*launchTag,*list.at(paramItems.at(i)));
+            create_paramTag(*launchTag,*list.at(paramItems.at(i)));
     }
 
     doc.SaveFile( file.toStdString() );
@@ -143,7 +148,9 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         case RemapItem::Type:
             create_remapTag(*groupTag,*list.at(i));
             break;
-
+        case RosparamItem::Type:
+            create_rosparamTag(*groupTag,*list.at(i));
+            break;
         case ParameterItem::Type:
             paramItems<<i;
             break;
@@ -262,7 +269,6 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
 
     }else{ //its a test node
         nodeTag = new TiXmlElement( "test" );
-        //Todo::Check for env remap rosparam and param tags
         nodeTag->SetAttribute("test-name", node->getName().toStdString());
     }
     nodeTag->SetAttribute("pkg", node->getPkg().toStdString());
@@ -322,7 +328,11 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
     for (int i = 0; i < node->remapItems.size(); i++) {
         create_remapTag(*nodeTag,*node->remapItems.at(i));
     }
-    //Check for embedded param or rosparam tags
+    //Check for embedded rosparam tags
+    for (int i = 0; i < node->rosparamItems.size(); i++) {
+        create_rosparamTag(*nodeTag,*node->rosparamItems.at(i));
+    }
+    //Check for embedded param tags
     for (int i = 0; i < node->paramItems.size(); i++) {
         create_paramTag(*nodeTag,*node->paramItems.at(i));
     }
@@ -332,27 +342,25 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
 
 }
 
-/*!\brief create <param> or <rosparam> tag
+/*!\brief create <param> tag
  *
- * Create the <param> or <rosparam> tag and sets the attributes.
+ * Create the <param> tag and sets the attributes.
  */
 void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
 {
     TiXmlElement * paramTag;
     ParameterItem *parameter = qgraphicsitem_cast<ParameterItem *>(&item);
+    paramTag = new TiXmlElement( "param" );
+    paramTag->SetAttribute("name", parameter->getName().toStdString());
     if (parameter->getStandardParameter()==1){
-        paramTag = new TiXmlElement( "param" );
-        paramTag->SetAttribute("name", parameter->getName().toStdString());
+
         //optional
         if (parameter->getValue()!="")
             paramTag->SetAttribute("value", parameter->getValue().toStdString());
         if (parameter->getType()!="")
             paramTag->SetAttribute("type", parameter->getType().toStdString());
         //end optional
-
-    } else if (parameter->getStandardParameter()==2){
-        paramTag = new TiXmlElement( "param" );
-        paramTag->SetAttribute("name", parameter->getName().toStdString());
+    } else {
         //optional
         if (parameter->getType()=="command")
             paramTag->SetAttribute("command", parameter->getValue().toStdString());
@@ -362,31 +370,13 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
             paramTag->SetAttribute("binfile", parameter->getValue().toStdString());
         //end optional
 
-    }else{
-        paramTag = new TiXmlElement( "rosparam" );
-        paramTag->SetAttribute("file", parameter->getValue().toStdString());
-        if (parameter->getType() == "command load")
-            paramTag->SetAttribute("command", "load");
-        if (parameter->getType() == "command dump")
-            paramTag->SetAttribute("command", "dump");
-        if (parameter->getType() == "command delete")
-            paramTag->SetAttribute("command", "delete");
-        //        qDebug()<<"type: "<<parameter->getType();
-        //        qDebug()<<"ns: "<<parameter->getNamespace();
-        //        qDebug()<<"name: "<<parameter->getName();
-        //        qDebug()<<"Value: "<<parameter->getValue();
-        //optional
-        if (parameter->getName()!="")
-            paramTag->SetAttribute("param", parameter->getName().toStdString());
-        if (parameter->getNamespace()!="")
-            paramTag->SetAttribute("ns", parameter->getNamespace().toStdString());
-        //end optional
     }
+    //optional
     if (parameter->getIf()!="")
         paramTag->SetAttribute("if", parameter->getIf().toStdString());
     if (parameter->getUnless()!="")
         paramTag->SetAttribute("unless", parameter->getUnless().toStdString());
-
+    //end optional
     QString xCor,yCor;
     xCor = QString::number(parameter->pos().x());
     yCor = QString::number(parameter->pos().y());
@@ -395,26 +385,23 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, QGraphicsItem &item )
     elem.LinkEndChild( paramTag );
 }
 
-/*!\brief create <param> or <rosparam> tag
+/*!\brief create <param> tag
  *
- * Create the <param> or <rosparam> tag in an other tag and sets the attributes.
+ * Create the <param> tag in an other tag and sets the attributes.
  */
 void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter )
 {
     TiXmlElement * paramTag;
+    paramTag = new TiXmlElement( "param" );
+    paramTag->SetAttribute("name", parameter.getName().toStdString());
     if (parameter.getStandardParameter()==1){
-        paramTag = new TiXmlElement( "param" );
-        paramTag->SetAttribute("name", parameter.getName().toStdString());
         //optional
         if (parameter.getValue()!="")
             paramTag->SetAttribute("value", parameter.getValue().toStdString());
         if (parameter.getType()!="")
             paramTag->SetAttribute("type", parameter.getType().toStdString());
         //end optional
-
-    } else if (parameter.getStandardParameter()==2){
-        paramTag = new TiXmlElement( "param" );
-        paramTag->SetAttribute("name", parameter.getName().toStdString());
+    } else{
         //optional
         if (parameter.getType()=="command")
             paramTag->SetAttribute("command", parameter.getValue().toStdString());
@@ -423,36 +410,90 @@ void LaunchWriter::create_paramTag(TiXmlElement &elem, ParameterItem &parameter 
         else if (parameter.getType()=="binfile")
             paramTag->SetAttribute("binfile", parameter.getValue().toStdString());
         //end optional
-
-    }else{
-        paramTag = new TiXmlElement( "rosparam" );
-        paramTag->SetAttribute("file", parameter.getValue().toStdString());
-        if (parameter.getType() == "command load")
-            paramTag->SetAttribute("command", "load");
-        if (parameter.getType() == "command dump")
-            paramTag->SetAttribute("command", "dump");
-        if (parameter.getType() == "command delete")
-            paramTag->SetAttribute("command", "delete");
-        //optional
-        //optional
-        if (parameter.getName()!="")
-            paramTag->SetAttribute("param", parameter.getName().toStdString());
-        if (parameter.getNamespace()!="")
-            paramTag->SetAttribute("ns", parameter.getNamespace().toStdString());
-        //end optional
     }
+    //optional
     if (parameter.getIf()!="")
         paramTag->SetAttribute("if", parameter.getIf().toStdString());
     if (parameter.getUnless()!="")
         paramTag->SetAttribute("unless", parameter.getUnless().toStdString());
-
+    //end optional
     QString xCor,yCor;
     xCor = QString::number(parameter.pos().x());
     yCor = QString::number(parameter.pos().y());
     //create_commentTag(*paramTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
-
     elem.LinkEndChild( paramTag );
+}
+/*!\brief create <rosparam> tag
+ *
+ * Create the <rosparam> tag and sets the attributes.
+ */
+void LaunchWriter::create_rosparamTag(TiXmlElement &elem, QGraphicsItem &item )
+{
+    TiXmlElement * rosparamTag;
+    RosparamItem *rosparam = qgraphicsitem_cast<RosparamItem *>(&item);
+    rosparamTag = new TiXmlElement( "rosparam" );
+    rosparamTag->SetAttribute("file", rosparam->getValue().toStdString());
+    if (rosparam->getType() == "command load")
+        rosparamTag->SetAttribute("command", "load");
+    if (rosparam->getType() == "command dump")
+        rosparamTag->SetAttribute("command", "dump");
+    if (rosparam->getType() == "command delete")
+        rosparamTag->SetAttribute("command", "delete");
+    //optional
+    if (rosparam->getName()!="")
+        rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
+    if (rosparam->getNamespace()!="")
+        rosparamTag->SetAttribute("ns", rosparam->getNamespace().toStdString());
+
+    if (rosparam->getIf()!="")
+        rosparamTag->SetAttribute("if", rosparam->getIf().toStdString());
+    if (rosparam->getUnless()!="")
+        rosparamTag->SetAttribute("unless", rosparam->getUnless().toStdString());
+    //end optional
+
+    QString xCor,yCor;
+    xCor = QString::number(rosparam->pos().x());
+    yCor = QString::number(rosparam->pos().y());
+    create_commentTag(*rosparamTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
+    elem.LinkEndChild( rosparamTag );
+}
+
+/*!\brief create <rosparam> tag
+ *
+ * Create the<rosparam> tag in an other tag and sets the attributes.
+ */
+void LaunchWriter::create_rosparamTag(TiXmlElement &elem, RosparamItem &rosparam )
+{
+    TiXmlElement * rosparamTag;
+
+    rosparamTag = new TiXmlElement( "rosparam" );
+    rosparamTag->SetAttribute("file", rosparam.getValue().toStdString());
+    if (rosparam.getType() == "command load")
+        rosparamTag->SetAttribute("command", "load");
+    if (rosparam.getType() == "command dump")
+        rosparamTag->SetAttribute("command", "dump");
+    if (rosparam.getType() == "command delete")
+        rosparamTag->SetAttribute("command", "delete");
+    //optional
+    if (rosparam.getName()!="")
+        rosparamTag->SetAttribute("param", rosparam.getName().toStdString());
+    if (rosparam.getNamespace()!="")
+        rosparamTag->SetAttribute("ns", rosparam.getNamespace().toStdString());
+
+    if (rosparam.getIf()!="")
+        rosparamTag->SetAttribute("if", rosparam.getIf().toStdString());
+    if (rosparam.getUnless()!="")
+        rosparamTag->SetAttribute("unless", rosparam.getUnless().toStdString());
+    //end optional
+    QString xCor,yCor;
+    xCor = QString::number(rosparam.pos().x());
+    yCor = QString::number(rosparam.pos().y());
+    //create_commentTag(*rosparamTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
+
+
+    elem.LinkEndChild( rosparamTag );
 }
 
 /*!\brief create <env> tag

@@ -280,7 +280,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>216</width>
+     <width>312</width>
      <height>171</height>
     </size>
    </property>
@@ -339,14 +339,21 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="pushButton_Param">
+         <property name="text">
+          <string>&lt;parameter&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pushButton_rosparam">
+         <property name="text">
+          <string>&lt;rosparam&gt;</string>
+         </property>
+        </widget>
+       </item>
       </layout>
-     </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton_Param">
-       <property name="text">
-        <string>&lt;parameter&gt; or &lt;rosparam&gt;</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </widget>

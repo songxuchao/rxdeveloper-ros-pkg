@@ -54,8 +54,6 @@ private:
     QStandardItemModel *rosparamModel;
     QStandardItemModel *remapModel;
     NodeItem *myItem;
-    QList<int> paramItemsList;          //List of parameterItems
-    QList<int> rosparamItemsList;          //List of rosparamItems
 
 signals:
 

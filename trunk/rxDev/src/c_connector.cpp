@@ -2,6 +2,7 @@
 #include "ui_rxdev.h"
 #include "c_connector.h"
 #include "tagItems/parameterItem.h"
+#include "tagItems/rosparamItem.h"
 #include "tagItems/includeFileItem.h"
 #include "tagItems/groupItem.h"
 #include "tagItems/machineItem.h"
@@ -184,6 +185,7 @@ void RxDev::on_pushButton_machine_clicked()
 
 }
 
+
 void RxDev::on_pushButton_Param_clicked()
 {
     ParameterItem * newParam;
@@ -194,6 +196,20 @@ void RxDev::on_pushButton_Param_clicked()
         scene->addItem(newParam);
     }
 }
+
+
+void RxDev::on_pushButton_rosparam_clicked()
+{
+    RosparamItem * newParam;
+    newParam = new RosparamItem;
+    newParam->setPos(findSpace(QPoint(0,0)));
+    newParam->setLocation(findSpace(QPoint(0,55)));
+    if (newParam->getRosparamData()==true){
+        scene->addItem(newParam);
+    }
+}
+
+
 void RxDev::on_pushButton_remap_clicked()
 {
     RemapItem* newRemap;
