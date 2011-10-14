@@ -5,7 +5,7 @@
 #include <QDialog>
 #include "includeFileItem.h"
 #include <QStandardItemModel>
-
+#include <QItemSelection>
 
 namespace Ui {
     class IncludeFileEdit;
@@ -30,12 +30,19 @@ class IncludeFileEdit : public QDialog {
                 void accept();
 
         private slots:
-            void selectionHandle_envItems(const QModelIndex & index);
+            void edit_envItems(const QModelIndex & index);
+            void edit_argItems(const QModelIndex & index);
             void selectionHandle_argItems(const QModelIndex & index);
-        private:
+            void selectionHandle_envItems(const QModelIndex & index);
+            void on_actionDelete_env_triggered();
+
+            void on_actionDelete_arg_triggered();
+
+private:
                 Ui::IncludeFileEdit *ui;
                 QStandardItemModel *envModel;
-
+                int selectedArg;
+                int selectedEnv;
                 QStandardItemModel *argModel;
                 IncludeFileItem *myItem;
 

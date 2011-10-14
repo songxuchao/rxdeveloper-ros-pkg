@@ -1,10 +1,14 @@
 #include "ui_includeFileEdit.h"
 #include "includeFileEdit.h"
 #include <QMessageBox>
-
+#include <QDebug>
 IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::IncludeFileEdit) {
     myItem=item;
     ui->setupUi(this);
+    selectedEnv=-1;
+    selectedArg=-1;
+    ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
+    ui->toolButton_deleteArg->setDefaultAction(ui->actionDelete_arg);
     ui->lineEdit_file->setText(item->getFile());
     ui->lineEdit_namespace->setText(item->getNamespace());
     ui->lineEdit_if->setText(item->getIf());
@@ -26,16 +30,33 @@ IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDial
     argModel->setHeaderData(4,Qt::Horizontal,QObject::tr("unless"));
     fillArgModel();
     ui->tableView_argItems->setModel(argModel);
-    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_envItems(const QModelIndex &)));
-        connect(ui->tableView_argItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(selectionHandle_argItems(const QModelIndex &)));
+    connect(ui->tableView_envItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_envItems(const QModelIndex &)));
+    connect(ui->tableView_envItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_envItems(const QModelIndex &)));
+    connect(ui->tableView_argItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_argItems(const QModelIndex &)));
+    connect(ui->tableView_argItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_argItems(const QModelIndex &)));
 }
-void IncludeFileEdit::selectionHandle_envItems(const QModelIndex & index)
+
+void IncludeFileEdit::selectionHandle_envItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedEnv=index.row();
+    }
+}
+
+void IncludeFileEdit::edit_envItems(const QModelIndex & index)
 {
     EnvItem *env=myItem->envItems.at(index.row());
     env->getEnvData();
     fillEnvModel();
 }
-void IncludeFileEdit::selectionHandle_argItems(const QModelIndex & index)
+
+void IncludeFileEdit::selectionHandle_argItems(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedArg=index.row();
+    }
+}
+void IncludeFileEdit::edit_argItems(const QModelIndex & index)
 {
     ArgItem *arg=myItem->argItems.at(index.row());
     arg->getArgData();
@@ -139,4 +160,19 @@ QString IncludeFileEdit::getIf()
 QString IncludeFileEdit::getUnless()
 {
     return ui->lineEdit_unless->text();
+}
+
+
+void IncludeFileEdit::on_actionDelete_env_triggered()
+{
+    myItem->removeEnvItem(myItem->envItems.at(selectedEnv));
+    envModel->removeRow(selectedEnv);
+    fillEnvModel();
+}
+
+void IncludeFileEdit::on_actionDelete_arg_triggered()
+{
+    myItem->removeArgItem(myItem->argItems.at(selectedArg));
+    argModel->removeRow(selectedArg);
+    fillEnvModel();
 }

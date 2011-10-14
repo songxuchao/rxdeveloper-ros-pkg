@@ -43,10 +43,15 @@ public slots:
     void accept();
 
 private slots:
-    void selectionHandle_parameterItems(const QModelIndex & index);
-    void selectionHandle_rosparamItems(const QModelIndex & index);
+    void edit_parameterItems(const QModelIndex & index);
+    void edit_rosparamItems(const QModelIndex & index);
+    void edit_envItems(const QModelIndex & index);
+    void edit_remapItems(const QModelIndex & index);
     void selectionHandle_envItems(const QModelIndex & index);
     void selectionHandle_remapItems(const QModelIndex & index);
+    void selectionHandle_parameterItems(const QModelIndex & index);
+    void selectionHandle_rosparamItems(const QModelIndex & index);
+
 private:
     Ui::NodeEdit *ui;
     QStandardItemModel *envModel;
@@ -54,12 +59,21 @@ private:
     QStandardItemModel *rosparamModel;
     QStandardItemModel *remapModel;
     NodeItem *myItem;
+    int selectedEnv;
+    int selectedRemap;
+    int selectedParameter;
+    int selectedRosparam;
 
 signals:
 
 private slots:
     void on_radioButton_testNode_clicked();
     void on_radioButton_standardNode_clicked();
+    void on_actionDelete_env_triggered();
+    void on_actionDelete_rosparam_triggered();
+    void on_actionDelete_param_triggered();
+    void on_actionDelete_remap_triggered();
+    void on_actionAdd_param_triggered();
 };
 
 #endif
