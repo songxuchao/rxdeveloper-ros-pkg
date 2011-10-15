@@ -712,25 +712,27 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
     {
 
         if (QString(pChild->Value())=="env"){
+            int x,y;
             EnvItem* newEnv = new EnvItem;
             create_envItem(*newEnv,pChild,x,y);
             newEnv->setParentItem(newGroup);
             scene->addItem(newEnv);
 
             if (x==0 &&y==0){
-                newEnv->setPos((findSpace(newEnv->mapToParent(QPoint(x,y)))));
+                newEnv->setPos(((newEnv->mapToParent(QPoint(x,y)))));
                 newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
             } else{
                 newEnv->setPos(QPoint(x,y));
                 newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
             }
         }else if (QString(pChild->Value())=="param"){
+            int x,y;
             ParameterItem* newParam = new ParameterItem;
             create_paramItem(*newParam,pChild,x,y);
             newParam->setParentItem(newGroup);
             scene->addItem(newParam);
             if (x==0 &&y==0){
-                newParam->setPos((findSpace(newParam->mapToParent(QPoint(x,y)))));
+                newParam->setPos(((newParam->mapToParent(QPoint(x,y)))));
                 newParam->setLocation(newParam->mapToParent(newParam->pos()));
             } else{
                 newParam->setPos(QPoint(x,y));
@@ -738,29 +740,32 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
 
             }
         }else if (QString(pChild->Value())=="rosparam"){
+            int x,y;
             RosparamItem* newRosparam = new RosparamItem;
             create_rosparamItem(*newRosparam,pChild,x,y);
             newRosparam->setParentItem(newGroup);
             scene->addItem(newRosparam);
             if (x==0 &&y==0){
-                newRosparam->setPos((findSpace(newRosparam->mapToParent(QPoint(x,y)))));
+                newRosparam->setPos(((newRosparam->mapToParent(QPoint(x,y)))));
                 newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
             } else{
                 newRosparam->setPos(QPoint(x,y));
                 newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
             }
         }else if (QString(pChild->Value())=="remap"){
+            int x,y;
             RemapItem* newRemap = new RemapItem;
             create_remapItem(*newRemap,pChild,x,y);
             newRemap->setParentItem(newGroup);
             scene->addItem(newRemap);
             if (x==0 &&y==0){
-                newRemap->setPos((findSpace(newRemap->mapToParent(QPoint(x,y)))));
+                newRemap->setPos((((QPoint(x,y)))));
                 newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
             } else{
                 newRemap->setPos(QPoint(x,y));
                 newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
             }
+
         }else if (QString(pChild->Value())=="arg"){
             int x,y;
             ArgItem* newArg = new ArgItem;
@@ -768,7 +773,7 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
             newArg->setParentItem(newGroup);
             scene->addItem(newArg);
             if (x==0 &&y==0){
-                newArg->setPos((findSpace(newArg->mapToParent(QPoint(x,y)))));
+                newArg->setPos(((newArg->mapToParent(QPoint(x,y)))));
                 newArg->setLocation(newArg->mapToParent(newArg->pos()));
             } else{
                 newArg->setPos(QPoint(x,y));
@@ -782,19 +787,21 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
             newIncludeFile->setParentItem(newGroup);
             scene->addItem(newIncludeFile);
             if (x==0 &&y==0){
-                newIncludeFile->setPos((findSpace(newIncludeFile->mapToParent(QPoint(x,y)))));
+                newIncludeFile->setPos((newIncludeFile->mapToParent(QPoint(x,y))));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             } else{
                 newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             }
+
         }else if (QString(pChild->Value())=="machine"){
+            int x,y;
             MachineItem* newMachine = new MachineItem;
             create_machineItem(*newMachine,pChild,x,y);
             newMachine->setParentItem(newGroup);
             scene->addItem(newMachine);
             if (x==0 &&y==0){
-                newMachine->setPos((findSpace(newMachine->mapToParent(QPoint(x,y)))));
+                newMachine->setPos(((newMachine->mapToParent(QPoint(x,y)))));
                 newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
             } else{
                 newMachine->setPos(QPoint(x,y));
