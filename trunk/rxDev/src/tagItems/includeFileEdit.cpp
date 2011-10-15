@@ -8,7 +8,10 @@ IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDial
     selectedEnv=-1;
     selectedArg=-1;
     ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
+    ui->toolButton_addEnv->setDefaultAction(ui->actionAdd_env);
     ui->toolButton_deleteArg->setDefaultAction(ui->actionDelete_arg);
+    ui->toolButton_addArg->setDefaultAction(ui->actionAdd_arg);
+
     ui->lineEdit_file->setText(item->getFile());
     ui->lineEdit_namespace->setText(item->getNamespace());
     ui->lineEdit_if->setText(item->getIf());
@@ -175,4 +178,24 @@ void IncludeFileEdit::on_actionDelete_arg_triggered()
     myItem->removeArgItem(myItem->argItems.at(selectedArg));
     argModel->removeRow(selectedArg);
     fillEnvModel();
+}
+
+void IncludeFileEdit::on_actionAdd_arg_triggered()
+{
+    ArgItem* newArg;
+      newArg = new ArgItem;
+      if (newArg->getArgData()==true){
+          myItem->addArgItem(newArg);
+      }
+      fillArgModel();
+}
+
+void IncludeFileEdit::on_actionAdd_env_triggered()
+{
+    EnvItem* newEnv;
+      newEnv = new EnvItem;
+      if (newEnv->getEnvData()==true){
+          myItem->addEnvItem(newEnv);
+      }
+      fillEnvModel();
 }

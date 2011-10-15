@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>758</width>
-    <height>567</height>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -462,6 +462,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QToolButton" name="toolButton_addRemap">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -513,6 +520,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QToolButton" name="toolButton_addRosparam">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -558,6 +572,13 @@
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <widget class="QToolButton" name="toolButton_deleteEnv">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="toolButton_addEnv">
              <property name="text">
               <string>...</string>
              </property>
@@ -660,6 +681,42 @@
    </property>
   </action>
   <action name="actionAdd_param">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/list-add.png</normaloff>:/icons/icons/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>add</string>
+   </property>
+   <property name="shortcut">
+    <string>Ins</string>
+   </property>
+  </action>
+  <action name="actionAdd_env">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/list-add.png</normaloff>:/icons/icons/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>add</string>
+   </property>
+   <property name="shortcut">
+    <string>Ins</string>
+   </property>
+  </action>
+  <action name="actionAdd_remap">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/list-add.png</normaloff>:/icons/icons/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>add</string>
+   </property>
+   <property name="shortcut">
+    <string>Ins</string>
+   </property>
+  </action>
+  <action name="actionAdd_rosparam">
    <property name="icon">
     <iconset resource="../icons.qrc">
      <normaloff>:/icons/icons/list-add.png</normaloff>:/icons/icons/list-add.png</iconset>

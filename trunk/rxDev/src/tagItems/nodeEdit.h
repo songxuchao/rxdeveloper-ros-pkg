@@ -74,6 +74,9 @@ private slots:
     void on_actionDelete_param_triggered();
     void on_actionDelete_remap_triggered();
     void on_actionAdd_param_triggered();
+    void on_actionAdd_env_triggered();
+    void on_actionAdd_remap_triggered();
+    void on_actionAdd_rosparam_triggered();
 };
 
 #endif

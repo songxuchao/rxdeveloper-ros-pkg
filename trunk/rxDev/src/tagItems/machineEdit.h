@@ -40,6 +40,7 @@ private slots:
 
 
     void on_actionDelete_env_triggered();
+    void on_actionAdd_env_triggered();
 
 private:
     Ui::MachineEdit *ui;

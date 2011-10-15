@@ -16,6 +16,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/includeFileEdit.h
     tagItems/parameterItem.h
     tagItems/parameterEdit.h
+    tagItems/nodeParamEdit.h
     tagItems/rosparamItem.h
     tagItems/rosparamEdit.h
     tagItems/groupEdit.h
@@ -32,6 +33,7 @@ qt4_wrap_ui(UI_HEADERS
     settings.ui
     tagItems/parameterEdit.ui
     tagItems/rosparamEdit.ui
+    tagItems/nodeParamEdit.ui
     tagItems/includeFileEdit.ui
     tagItems/machineEdit.ui
     tagItems/argEdit.ui
@@ -56,6 +58,7 @@ set( CPP
     tagItems/envEdit.cpp
     tagItems/includeFileItem.cpp
     tagItems/includeFileEdit.cpp
+    tagItems/nodeParamEdit.cpp
     tagItems/parameterItem.cpp
     tagItems/parameterEdit.cpp
     tagItems/rosparamItem.cpp

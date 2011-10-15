@@ -2,6 +2,7 @@
 #include "nodeEdit.h"
 #include <QMessageBox>
 #include <QDebug>
+#include "nodeParamEdit.h"
 
 
 NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::NodeEdit) {
@@ -12,10 +13,13 @@ NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui
     selectedParameter=-1;
     selectedRosparam=-1;
     ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
+    ui->toolButton_addEnv->setDefaultAction(ui->actionAdd_env);
     ui->toolButton_deleteRemap->setDefaultAction(ui->actionDelete_remap);
+    ui->toolButton_addRemap->setDefaultAction(ui->actionAdd_remap);
     ui->toolButton_deleteParam->setDefaultAction(ui->actionDelete_param);
-    ui->toolButton_deleteRosparam->setDefaultAction(ui->actionDelete_rosparam);
     ui->toolButton_addParam->setDefaultAction(ui->actionAdd_param);
+    ui->toolButton_deleteRosparam->setDefaultAction(ui->actionDelete_rosparam);
+    ui->toolButton_addRosparam->setDefaultAction(ui->actionAdd_rosparam);
 
     ui->lineEdit_name->setText(item->getName());
     ui->lineEdit_pkg->setText(item->getPkg());
@@ -333,11 +337,60 @@ void NodeEdit::on_actionDelete_remap_triggered()
 
 void NodeEdit::on_actionAdd_param_triggered()
 {
-    ParameterItem * newParam;
-    newParam = new ParameterItem;
-    if (newParam->getParamData()==true){
-        myItem->addParamItem(newParam);
+    NodeParamEdit nodeParam(myItem->getParameters());
+    bool accept = nodeParam.exec();
+    if (accept){
+        QStringList tempList;
+        QString topicString,typeString,defaultString;
+        tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp("[\{\[]"));
+        topicString=tempList.at(0);
+        typeString=tempList.at(1);
+        typeString.chop(1);
+        if (tempList.count()==3){
+            defaultString=tempList.at(2);
+            defaultString.chop(1);
+        }else
+            defaultString="";
+        ParameterItem * newParam;
+      newParam = new ParameterItem;
+      newParam->setName(topicString);
+      newParam->setType(typeString);
+      newParam->setValue(defaultString);
+      if (newParam->getParamData()==true){
+          myItem->addParamItem(newParam);
+      }
+      fillParameterModel();
     }
-    fillParameterModel();
+
+}
+
+void NodeEdit::on_actionAdd_env_triggered()
+{
+    EnvItem * newEnv;
+    newEnv = new EnvItem;
+    if (newEnv->getEnvData()==true){
+        myItem->addEnvItem(newEnv);
+    }
+    fillEnvModel();
+ }
+
+void NodeEdit::on_actionAdd_remap_triggered()
+{
+    RemapItem * newRemap;
+    newRemap = new RemapItem;
+    if (newRemap->getRemapData()==true){
+        myItem->addRemapItem(newRemap);
+    }
+    fillRemapModel();
+}
+
+void NodeEdit::on_actionAdd_rosparam_triggered()
+{
+    RosparamItem * newRosparam;
+    newRosparam = new RosparamItem;
+    if (newRosparam->getRosparamData()==true){
+        myItem->addRosparamItem(newRosparam);
+    }
+    fillRosparamModel();
 
 }

@@ -38,6 +38,10 @@ class IncludeFileEdit : public QDialog {
 
             void on_actionDelete_arg_triggered();
 
+            void on_actionAdd_arg_triggered();
+
+            void on_actionAdd_env_triggered();
+
 private:
                 Ui::IncludeFileEdit *ui;
                 QStandardItemModel *envModel;
