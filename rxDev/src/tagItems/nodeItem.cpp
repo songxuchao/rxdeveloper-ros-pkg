@@ -15,7 +15,7 @@
 #include "math.h"
 #include "groupItem.h"
 
-NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStringList publications,QStringList services,QStringList arguments, QGraphicsPolygonItem *parent, QGraphicsScene *scene):
+NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStringList publications,QStringList services,QStringList parameters, QGraphicsPolygonItem *parent, QGraphicsScene *scene):
     QGraphicsPolygonItem(parent, scene),
     _title(),
     _name(),
@@ -65,7 +65,7 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _subscriptionsStringList=subscriptions;
     _publicationsStringList=publications;
     _servicesStringList=services;
-    _argumentsStringList=arguments;
+    _parametersStringList=parameters;
     updateNodeItem();
 
 
@@ -550,9 +550,9 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         return _servicesStringList;
     }
 
-    QStringList NodeItem::getArguments()
+    QStringList NodeItem::getParameters()
     {
-        return _argumentsStringList;
+        return _parametersStringList;
     }
 
     QPointF NodeItem::getLocation()

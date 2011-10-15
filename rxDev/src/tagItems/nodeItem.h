@@ -96,7 +96,7 @@ public:
     QStringList getSubscriptions();
     QStringList getPublications();
     QStringList getServices();
-    QStringList getArguments();
+    QStringList getParameters();
     QString getNamespace();
     void setNamespace(QString newNamespace);
     QString getArgs();
@@ -183,7 +183,7 @@ private:
     QStringList _subscriptionsStringList;
     QStringList _publicationsStringList;
     QStringList _servicesStringList;
-    QStringList _argumentsStringList;
+    QStringList _parametersStringList;
     QString _argsString;
     QString _namespaceString;
     QString _machineString;

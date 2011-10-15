@@ -8,6 +8,8 @@ MachineEdit::MachineEdit(MachineItem *item, QWidget *parent) : QDialog(parent), 
     ui->setupUi(this);
     selectedEnv=-1;
     ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
+    ui->toolButton_addEnv->setDefaultAction(ui->actionAdd_env);
+
     ui->lineEdit_name->setText(item->getName());
     ui->lineEdit_address->setText(item->getAddress());
     ui->lineEdit_ros_root->setText(item->getRos_root());
@@ -139,4 +141,14 @@ void MachineEdit::on_actionDelete_env_triggered()
     myItem->removeEnvItem(myItem->envItems.at(selectedEnv));
     envModel->removeRow(selectedEnv);
     fillEnvModel();
+}
+
+void MachineEdit::on_actionAdd_env_triggered()
+{
+    EnvItem* newEnv;
+      newEnv = new EnvItem;
+      if (newEnv->getEnvData()==true){
+          myItem->addEnvItem(newEnv);
+      }
+      fillEnvModel();
 }
