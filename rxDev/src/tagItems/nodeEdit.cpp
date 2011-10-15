@@ -337,30 +337,33 @@ void NodeEdit::on_actionDelete_remap_triggered()
 
 void NodeEdit::on_actionAdd_param_triggered()
 {
-    NodeParamEdit nodeParam(myItem->getParameters());
-    bool accept = nodeParam.exec();
-    if (accept){
-        QStringList tempList;
-        QString topicString,typeString,defaultString;
-        tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp("[\{\[]"));
-        topicString=tempList.at(0);
-        typeString=tempList.at(1);
-        typeString.chop(1);
-        if (tempList.count()==3){
-            defaultString=tempList.at(2);
-            defaultString.chop(1);
-        }else
-            defaultString="";
-        ParameterItem * newParam;
-      newParam = new ParameterItem;
-      newParam->setName(topicString);
-      newParam->setType(typeString);
-      newParam->setValue(defaultString);
-      if (newParam->getParamData()==true){
-          myItem->addParamItem(newParam);
-      }
-      fillParameterModel();
+    QString topicString="",typeString="",defaultString="";
+    if (!myItem->getParameters().isEmpty()){
+        NodeParamEdit nodeParam(myItem->getParameters());
+        bool accept = nodeParam.exec();
+        if (accept){
+            QStringList tempList;
+            tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp("[\{\[]"));
+            topicString=tempList.at(0);
+            typeString=tempList.at(1);
+            typeString.chop(1);
+            if (tempList.count()==3){
+                defaultString=tempList.at(2);
+                defaultString.chop(1);
+
+            }
+        }
     }
+    ParameterItem * newParam;
+    newParam = new ParameterItem;
+    newParam->setName(topicString);
+    newParam->setType(typeString);
+    newParam->setValue(defaultString);
+    if (newParam->getParamData()==true){
+        myItem->addParamItem(newParam);
+    }
+    fillParameterModel();
+
 
 }
 
@@ -372,7 +375,7 @@ void NodeEdit::on_actionAdd_env_triggered()
         myItem->addEnvItem(newEnv);
     }
     fillEnvModel();
- }
+}
 
 void NodeEdit::on_actionAdd_remap_triggered()
 {
