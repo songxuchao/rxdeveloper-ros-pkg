@@ -151,22 +151,31 @@ void ArgItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         else
             _location.setY( ( static_cast<int>(_location.y()) / _gridSpace) * _gridSpace );
 
-        if (scene()->itemAt(_location-QPoint(1,1))){
-            switch (scene()->itemAt(_location-QPoint(1,1))->type()){
-            case GroupItem::Type:                                                         //Group
-                setParentItem(scene()->itemAt(_location-QPoint(1,1)));
-                this->setPos(_location-(this->parentItem()->pos()));
-                break;
+        foreach (QGraphicsItem *item, collidingItems()) {
+
+                if (item->type() ==GroupItem::Type){
+
+                    this->setPos(mapToItem(item,0,0));
+                        setParentItem(item);
+
+                } else {
+                    this->setPos(mapToScene(0,0));
+                    this->setParentItem(0);
+                }
+            }
+
+        if (scene()->itemAt(_location)){
+            switch (scene()->itemAt(_location)->type()){
             case IncludeFileItem::Type:                                                         //IncludeFile
                 IncludeFileItem *includeFile;
-                includeFile=qgraphicsitem_cast<IncludeFileItem *>(scene()->itemAt(_location-QPoint(1,1)));
+                includeFile=qgraphicsitem_cast<IncludeFileItem *>(scene()->itemAt(_location));
                 includeFile->addArgItem(this);
                 scene()->removeItem(this);
                 break;
             case 8:                                                             //TextItem -> check for parent
-                if (scene()->itemAt(_location-QPoint(1,1))->parentItem()->type() ==IncludeFileItem::Type){  //includeFile
+                if (scene()->itemAt(_location)->parentItem()->type() ==IncludeFileItem::Type){  //includeFile
                     IncludeFileItem *includeFile;
-                    includeFile=qgraphicsitem_cast<IncludeFileItem *>(scene()->itemAt(_location-QPoint(1,1))->parentItem());
+                    includeFile=qgraphicsitem_cast<IncludeFileItem *>(scene()->itemAt(_location)->parentItem());
                     includeFile->addArgItem(this);
                     scene()->removeItem(this);
                 }
@@ -175,13 +184,6 @@ void ArgItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 
                 break;
             }
-        }else{
-            if (this->parentItem()){
-                this->setPos(_location+(this->parentItem()->pos()));
-                this->setParentItem(0);
-            }else
-                this->setPos(mapToScene(0,0));
-
         }
     }
 }

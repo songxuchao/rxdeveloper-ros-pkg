@@ -144,22 +144,18 @@ void IncludeFileItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         else
             _location.setY( ( static_cast<int>(_location.y()) / _gridSpace) * _gridSpace );
 
-        if (scene()->itemAt(_location-QPoint(0,2))){
-            if (scene()->itemAt(_location-QPoint(0,2))->type() ==GroupItem::Type){
-                setParentItem(scene()->itemAt(_location-QPoint(0,2)));
-                this->setPos(_location-(this->parentItem()->pos()));
-            } else {
-                this->setPos(mapToScene(0,0));
-                this->setParentItem(0);
-            }
-        }else{
-            if (this->parentItem()){
-                this->setPos(_location+(this->parentItem()->pos()));
-                this->setParentItem(0);
-            }else
-                this->setPos(mapToScene(0,0));
+        foreach (QGraphicsItem *item, collidingItems()) {
 
-        }
+                if (item->type() ==GroupItem::Type){
+
+                    this->setPos(mapToItem(item,0,0));
+                        setParentItem(item);
+
+                } else {
+                    this->setPos(mapToScene(0,0));
+                    this->setParentItem(0);
+                }
+            }
 
         event->setAccepted(true);// tell the base class we are handling this event
 

@@ -121,23 +121,31 @@ void RemapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         else
             _location.setY( ( static_cast<int>(_location.y()) / _gridSpace) * _gridSpace );
 
-        if (scene()->itemAt(_location-QPoint(1,1))){
-            switch (scene()->itemAt(_location-QPoint(1,1))->type()){
-            case GroupItem::Type:                                                         //Group
-                setParentItem(scene()->itemAt(_location-QPoint(1,1)));
-                this->setPos(_location-(this->parentItem()->pos()));
-                break;
+        foreach (QGraphicsItem *item, collidingItems()) {
+
+                if (item->type() ==GroupItem::Type){
+
+                    this->setPos(mapToItem(item,0,0));
+                        setParentItem(item);
+
+                } else {
+                    this->setPos(mapToScene(0,0));
+                    this->setParentItem(0);
+                }
+            }
+        if (scene()->itemAt(_location)){
+            switch (scene()->itemAt(_location)->type()){
             case NodeItem::Type:                                                         //Node or Test
                 NodeItem *node;
-                node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location-QPoint(1,1)));
+                node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location));
                 node->addRemapItem(this);
                 //Todo: create a remapArrow
                 scene()->removeItem(this);
                 break;
             case 8:                                                             //TextItem -> check for parent
-                if (scene()->itemAt(_location-QPoint(1,1))->parentItem()->type() ==NodeItem::Type){  //Node or Test
+                if (scene()->itemAt(_location)->parentItem()->type() ==NodeItem::Type){  //Node or Test
                     NodeItem *node;
-                    node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location-QPoint(1,1))->parentItem());
+                    node=qgraphicsitem_cast<NodeItem *>(scene()->itemAt(_location)->parentItem());
                     node->addRemapItem(this);
                     //Todo: create a remapArrow
                     scene()->removeItem(this);
@@ -145,13 +153,6 @@ void RemapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
                 break;
 
             }
-        }else{
-            if (this->parentItem()){
-                this->setPos(_location+(this->parentItem()->pos()));
-                this->setParentItem(0);
-            }else
-                this->setPos(mapToScene(0,0));
-
         }
 
             event->setAccepted(true);// tell the base class we are handling this event
