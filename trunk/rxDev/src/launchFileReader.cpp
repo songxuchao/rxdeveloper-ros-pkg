@@ -45,11 +45,11 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
             scene->addItem(newMachine);
             if (x==0 &&y==0){
                 newMachine->setPos((findSpace(newMachine->mapToParent(QPoint(x,y)))));
-                newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+                newMachine->setLocation((newMachine->pos()));
 
             } else{
                 newMachine->setPos(QPoint(x,y));
-                newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+                newMachine->setLocation((newMachine->pos()));
             }
 
         }else if (QString(firstLevelNode->Value())=="group"){
@@ -69,7 +69,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newNode->setLocation(newNode->pos());
             } else{
                 newNode->setPos(QPoint(x,y));
-                newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                newNode->setLocation((newNode->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="test"){
             NodeItem *newNode;
@@ -86,7 +86,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newNode->setLocation(newNode->pos());
             } else{
                 newNode->setPos(QPoint(x,y));
-                newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                newNode->setLocation((newNode->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="param"){
             ParameterItem * newParam = new ParameterItem;
@@ -98,7 +98,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newParam->setLocation(newParam->pos());
             } else{
                 newParam->setPos(QPoint(x,y));
-                newParam->setLocation(newParam->mapToParent(newParam->pos()));
+                newParam->setLocation((newParam->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="rosparam"){
             RosparamItem * newRosparam = new RosparamItem;
@@ -110,7 +110,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newRosparam->setLocation(newRosparam->pos());
             } else{
                 newRosparam->setPos(QPoint(x,y));
-                newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
+                newRosparam->setLocation((newRosparam->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="remap"){
             RemapItem* newRemap = new RemapItem;
@@ -122,7 +122,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newRemap->setLocation(newRemap->pos());
             } else{
                 newRemap->setPos(QPoint(x,y));
-                newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
+                newRemap->setLocation((newRemap->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="include"){
             IncludeFileItem* newIncludeFile = new IncludeFileItem;
@@ -134,7 +134,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newIncludeFile->setLocation(newIncludeFile->pos());
             } else{
                 newIncludeFile->setPos(QPoint(x,y));
-                newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
+                newIncludeFile->setLocation((newIncludeFile->pos()));
             }
         }else if (QString(firstLevelNode->Value())=="env"){
             EnvItem * newEnv = new EnvItem;
@@ -146,7 +146,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newEnv->setLocation(newEnv->pos());
             } else{
                 newEnv->setPos(QPoint(x,y));
-                newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
+                newEnv->setLocation((newEnv->pos()));
             }
 
         }else if (QString(firstLevelNode->Value())=="arg"){
@@ -159,7 +159,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newArg->setLocation(newArg->pos());
             } else{
                 newArg->setPos(QPoint(x,y));
-                newArg->setLocation(newArg->mapToParent(newArg->pos()));
+                newArg->setLocation((newArg->pos()));
             }
         }
         break;

@@ -196,8 +196,11 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         QPointF newPos = event->pos() ;
         _location += (newPos - _dragStart);
 
+        foreach (RemapArrow *arrow, arrows)
+            arrow->updatePosition();
 
         this->setPos(_location);
+
         event->setAccepted(true);
 
 
@@ -336,14 +339,6 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
             setIf(nodeEdit.getIf());
             setUnless(nodeEdit.getUnless());
             //Todo: update all arrowtitles if the ns or the group-ns is changed
-            /*foreach (RemapArrow *arrow, arrows)
-                arrow->updateArrowData();
-        */
-
-
-
-
-
             updateNodeItem();
             return true;
         } else
