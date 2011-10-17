@@ -94,8 +94,18 @@ QPainterPath RemapArrow::shape() const
 void RemapArrow::updatePosition()
 {
     QPoint inclPos;
-    QLineF line(myStartItem->getLocation()+QPoint(nodeDimension/2, nodeDimension/2),
-                (myEndItem->getLocation()+QPoint(nodeDimension/2, nodeDimension/2)));
+    QPoint startParent(0,0);
+    QPoint endParent(0,0);
+    if (myStartItem->parentItem()){
+        startParent.setX(myStartItem->parentItem()->pos().x());
+        startParent.setY(myStartItem->parentItem()->pos().y());
+    }
+    if (myEndItem->parentItem()){
+        endParent.setX(myEndItem->parentItem()->pos().x());
+        endParent.setY(myEndItem->parentItem()->pos().y());
+    }
+    QLineF line(startParent+myStartItem->pos()+QPoint(nodeDimension/2, nodeDimension/2),
+                (endParent+myEndItem->pos()+QPoint(nodeDimension/2, nodeDimension/2)));
     setLine(line);
     if (line.p2().x()-line.p1().x()>0){
         textPos.setX(line.p1().x()+nodeDimension/2+5);
@@ -132,19 +142,27 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->setPen(myPen);
     painter->setBrush(myColor);
     //! [4] //! [5]
-
-
-    QLineF centerLine(myStartItem->getLocation()+QPoint(nodeDimension/2,nodeDimension/2),
-                      myEndItem->getLocation()+QPoint(nodeDimension/2,nodeDimension/2));
+    QPoint startParent(0,0);
+    QPoint endParent(0,0);
+    if (myStartItem->parentItem()){
+        startParent.setX(myStartItem->parentItem()->pos().x());
+        startParent.setY(myStartItem->parentItem()->pos().y());
+    }
+    if (myEndItem->parentItem()){
+        endParent.setX(myEndItem->parentItem()->pos().x());
+        endParent.setY(myEndItem->parentItem()->pos().y());
+    }
+    QLineF centerLine(startParent+myStartItem->pos()+QPoint(nodeDimension/2,nodeDimension/2),
+                      endParent+myEndItem->pos()+QPoint(nodeDimension/2,nodeDimension/2));
 
     QPolygonF endPolygon;
     QPointF p1, p2, intersectPoint;
     QLineF polyLine;
     if (_subToPub){
         endPolygon = myEndItem->polygon();
-        p1 = endPolygon.first() + myEndItem->getLocation();
+        p1 = endPolygon.first() + endParent+myEndItem->pos();
         for (int i = 1; i < endPolygon.count(); ++i) {
-            p2 = endPolygon.at(i) + myEndItem->getLocation();
+            p2 = endPolygon.at(i) + endParent+myEndItem->pos();
             polyLine = QLineF(p1, p2);
             QLineF::IntersectType intersectType =
                     polyLine.intersect(centerLine, &intersectPoint);
@@ -152,7 +170,7 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                 break;
             p1 = p2;
         }
-        setLine(QLineF(intersectPoint, myStartItem->getLocation()+QPoint(nodeDimension/2,nodeDimension/2)));
+        setLine(QLineF(intersectPoint, startParent+myStartItem->pos()+QPoint(nodeDimension/2,nodeDimension/2)));
         double angle = ::acos(line().dx() / line().length());
         if (line().dy() >= 0)
             angle = (Pi * 2) - angle;
@@ -167,9 +185,9 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
     } else{
         endPolygon = myStartItem->polygon();
-        p1 = endPolygon.first() + myStartItem->getLocation();
+        p1 = endPolygon.first() + startParent+myStartItem->pos();
         for (int i = 1; i < endPolygon.count(); ++i) {
-            p2 = endPolygon.at(i) + myStartItem->getLocation();
+            p2 = endPolygon.at(i) + startParent+myStartItem->pos();
             polyLine = QLineF(p2, p1);
             QLineF::IntersectType intersectType =
                     polyLine.intersect(centerLine, &intersectPoint);
@@ -177,7 +195,7 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                 break;
             p1 = p2;
         }
-        setLine(QLineF(intersectPoint, myEndItem->getLocation()+QPoint(nodeDimension/2,nodeDimension/2)));
+        setLine(QLineF(intersectPoint, endParent+myEndItem->pos()+QPoint(nodeDimension/2,nodeDimension/2)));
         double angle = ::acos(line().dx() / line().length());
         if (line().dy() >= 0)
             angle = (Pi * 2) - angle;
