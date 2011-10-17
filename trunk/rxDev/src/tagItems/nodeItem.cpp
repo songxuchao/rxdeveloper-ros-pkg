@@ -241,7 +241,7 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 
     QRectF NodeItem::boundingRect() const
     {
-        return QRectF(0,0,_width,_height);
+        return QRectF(-6,0,_width+15,_height);
     }
 
     void NodeItem::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

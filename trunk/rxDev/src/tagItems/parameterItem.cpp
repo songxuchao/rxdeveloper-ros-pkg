@@ -237,9 +237,7 @@ void ParameterItem::setColor(QColor color)
 
 QRectF ParameterItem::boundingRect() const
 {
-    qreal penWidth = 1;
-    return QRectF(0 - penWidth / 2, 0 - penWidth / 2,
-                  _width + penWidth, _height + penWidth);
+  return QRectF(-6,0,_width+15,_height);
 }
 
 void ParameterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
