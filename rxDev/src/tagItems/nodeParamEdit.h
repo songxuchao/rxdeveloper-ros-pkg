@@ -23,6 +23,7 @@ class NodeParamEdit : public QDialog {
 
         private slots:
                 void selectionHandle_paramItem(const QModelIndex & index);
+                void selectionHandle_paramItem_accepted(const QModelIndex & index);
 
 
         private:
