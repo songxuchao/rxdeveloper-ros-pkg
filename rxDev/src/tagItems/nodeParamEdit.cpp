@@ -21,7 +21,7 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
         tempString.chop(1);
         item0 = new QStandardItem(QString(tempString));
         paramModel->setItem(row,1,item0);
-        if (tempList.count()==3){
+        if (tempList.count()>2){
             tempString=tempList.at(2);
             tempString.chop(1);
             item0 = new QStandardItem(QString(tempString));
