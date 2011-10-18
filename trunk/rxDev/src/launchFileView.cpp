@@ -152,10 +152,13 @@ void LaunchFileView::mousePressEvent(QMouseEvent *event)
                 break;
                 //! [6] //! [7]
             case InsertLine:
-                line = new QGraphicsLineItem(QLineF(mapToScene(event->pos()),
-                                                    mapToScene(event->pos())));
+                if (itemAt((event->pos()))->type() == NodeItem::Type || (itemAt(event->pos())->type() == 8 && itemAt(event->pos())->parentItem()->type() == NodeItem::Type)) {
+                    line = new QGraphicsLineItem(QLineF(mapToScene(event->pos()),
+                                                        mapToScene(event->pos())));
 
-                scene()->addItem(line);
+                    scene()->addItem(line);
+                }
+
                 event->setAccepted(true);// tell the base class we are handling this event
 
                 QGraphicsView::mousePressEvent(event);
@@ -230,7 +233,6 @@ void LaunchFileView::mouseMoveEvent(QMouseEvent *event)
  * ...
  */
 void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
-/// @todo fix crash after pointing a line somewhere
 {
 
     if (_handScrolling) {
@@ -273,7 +275,8 @@ void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
             event->setAccepted(true);// tell the base class we are handling this event
 
 
-        }else if (line != 0 && myMode == InsertLine) {
+        }
+    }if (line != 0 && myMode == InsertLine) {
 
             QList<QGraphicsItem *> startItems = scene()->items(line->line().p1());
             if (startItems.count() && startItems.first() == line)
@@ -318,7 +321,7 @@ void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
                 }
             }
         }
-    }
+
     //! [12] //! [13]
     line = 0;
 
