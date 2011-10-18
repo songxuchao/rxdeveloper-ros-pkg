@@ -33,11 +33,21 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
 
     ui->tableView_nodeParam->setModel(paramModel);
     connect(ui->tableView_nodeParam,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_paramItem(const QModelIndex &)));
+    connect(ui->tableView_nodeParam,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(selectionHandle_paramItem_accepted(const QModelIndex &)));
+
 
 }
 
 NodeParamEdit::~NodeParamEdit() {
     delete ui;
+}
+
+void NodeParamEdit::selectionHandle_paramItem_accepted(const QModelIndex &index)
+{
+    if (index.isValid()){   //prevents index out of bounds errors
+        selectedParam=index.row();
+        QDialog::accept();
+    }
 }
 void NodeParamEdit::selectionHandle_paramItem(const QModelIndex &index)
 {
@@ -67,5 +77,7 @@ void NodeParamEdit::accept() {
 
 int NodeParamEdit::getParam(){
 
-        return selectedParam;
+    return selectedParam;
 }
+
+

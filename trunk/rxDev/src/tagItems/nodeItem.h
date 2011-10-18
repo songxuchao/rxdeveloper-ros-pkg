@@ -44,21 +44,6 @@ QT_END_NAMESPACE
 class RemapArrow;
 
 
-/**
-  * \class StateBox
-  *  This is short example/demonstration of creating a custom QGraphicsItem.
-  *  Example usage of a custom QGraphicsItem in a QGraphicsScene with examples of mouse hover events.
-  *
-  *  My goal was to create a simpe box, in the shape of a UML State/Class box, with a title
-  *  area seprated from a main arear below by line.
-  *
-  *  This sample class inherits from QGraphicsItem, and must reimplement boundingRect() and paint()
-  *  from the base class.
-  *
-  *  To learn about handling mouse events in a QGraphicsScene, I wanted my box to turn red when the mouse moves inside, and black
-  *  when the mouse moves out. I also allow the user to drag the box around the scene.
-  */
-
 class NodeItem : public QObject, public QGraphicsPolygonItem
 {
     Q_OBJECT
