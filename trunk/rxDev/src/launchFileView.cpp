@@ -97,7 +97,7 @@ void LaunchFileView::dropEvent(QDropEvent *event) {
     newNode->setLocation(mapToScene(event->pos()));
 
     newNode->setPos(mapToScene(event->pos()));
-    /// @todo the first drop always leeds to the item position (0,0) <- fix it
+
     if (newNode->getNodeData()==true){
         scene()->addItem(newNode);
     }

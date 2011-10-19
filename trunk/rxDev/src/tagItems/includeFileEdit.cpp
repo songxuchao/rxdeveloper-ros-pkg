@@ -2,6 +2,10 @@
 #include "includeFileEdit.h"
 #include <QMessageBox>
 #include <QDebug>
+#include <QProcess>
+#include <QDesktopServices>
+#include <QUrl>
+
 IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::IncludeFileEdit) {
     myItem=item;
     ui->setupUi(this);
@@ -198,4 +202,22 @@ void IncludeFileEdit::on_actionAdd_env_triggered()
           myItem->addEnvItem(newEnv);
       }
       fillEnvModel();
+}
+void IncludeFileEdit::on_pushButton_tryOpen_clicked()
+{
+    QString file = ui->lineEdit_file->text();
+    if (file.startsWith("$(find ")){
+        file.remove("$(find ");
+        QStringList tempList;
+        tempList<<file.split(")");
+        QProcess findPath;
+        findPath.start(QString("rospack find "+tempList.at(0)));
+        findPath.waitForFinished(-1);
+        QByteArray output = findPath.readAllStandardOutput();
+        file = output.trimmed();
+        file.append(tempList.at(1));
+    }else{
+    }
+    QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+
 }
