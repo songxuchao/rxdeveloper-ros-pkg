@@ -34,6 +34,7 @@ class IncludeFileEdit : public QDialog {
             void edit_argItems(const QModelIndex & index);
             void selectionHandle_argItems(const QModelIndex & index);
             void selectionHandle_envItems(const QModelIndex & index);
+            void on_pushButton_tryOpen_clicked();
             void on_actionDelete_env_triggered();
 
             void on_actionDelete_arg_triggered();

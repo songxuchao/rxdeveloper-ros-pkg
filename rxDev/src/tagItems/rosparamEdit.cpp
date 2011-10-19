@@ -1,6 +1,10 @@
 #include "ui_rosparamEdit.h"
 #include "rosparamEdit.h"
 #include <QMessageBox>
+#include <QDebug>
+#include <QProcess>
+#include <QDesktopServices>
+#include <QUrl>
 
 RosparamEdit::RosparamEdit(RosparamItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::RosparamEdit) {
     ui->setupUi(this);
@@ -46,13 +50,13 @@ void RosparamEdit::accept() {
 }
 
 QString RosparamEdit::getName(){
-        return ui->lineEdit_param->text();
+    return ui->lineEdit_param->text();
 }
 QString RosparamEdit::getValue(){
-        return ui->lineEdit_paramFile->text();
+    return ui->lineEdit_paramFile->text();
 }
 QString RosparamEdit::getType(){
-        return ui->comboBox_paramFile->itemText(ui->comboBox_paramFile->currentIndex());
+    return ui->comboBox_paramFile->itemText(ui->comboBox_paramFile->currentIndex());
 }
 QString RosparamEdit::getNamespace(){
     return ui->lineEdit_namespace->text();
@@ -66,4 +70,23 @@ QString RosparamEdit::getIf()
 QString RosparamEdit::getUnless()
 {
     return ui->lineEdit_unless->text();
+}
+
+void RosparamEdit::on_pushButton_tryOpen_clicked()
+{
+    QString file = ui->lineEdit_paramFile->text();
+    if (file.startsWith("$(find ")){
+        file.remove("$(find ");
+        QStringList tempList;
+        tempList<<file.split(")");
+        QProcess findPath;
+        findPath.start(QString("rospack find "+tempList.at(0)));
+        findPath.waitForFinished(-1);
+        QByteArray output = findPath.readAllStandardOutput();
+        file = output.trimmed();
+        file.append(tempList.at(1));
+    }else{
+    }
+    QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+
 }

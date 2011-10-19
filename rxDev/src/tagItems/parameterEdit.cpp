@@ -1,6 +1,9 @@
 #include "ui_parameterEdit.h"
 #include "parameterEdit.h"
 #include <QMessageBox>
+#include <QProcess>
+#include <QDesktopServices>
+#include <QUrl>
 
 ParameterEdit::ParameterEdit(ParameterItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::ParameterEdit) {
     ui->setupUi(this);
@@ -103,4 +106,22 @@ QString ParameterEdit::getIf()
 QString ParameterEdit::getUnless()
 {
     return ui->lineEdit_unless->text();
+}
+void ParameterEdit::on_pushButton_tryOpen_clicked()
+{
+    QString file = ui->lineEdit_file->text();
+    if (file.startsWith("$(find ")){
+        file.remove("$(find ");
+        QStringList tempList;
+        tempList<<file.split(")");
+        QProcess findPath;
+        findPath.start(QString("rospack find "+tempList.at(0)));
+        findPath.waitForFinished(-1);
+        QByteArray output = findPath.readAllStandardOutput();
+        file = output.trimmed();
+        file.append(tempList.at(1));
+    }else{
+    }
+    QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+
 }

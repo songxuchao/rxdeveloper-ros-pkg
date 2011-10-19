@@ -232,14 +232,15 @@ bool RemapArrow::getArrowData()
     if ((accept)){
         QStringList temp_name = remapEdit.getFrom().split("{");
         _subToPub=remapEdit.getSubToPub();
+        //setFrom(myStartItem->getName()+"/"+temp_name.at(0));
         setFrom(temp_name.at(0));
         temp_name.clear();
         temp_name = remapEdit.getTo().split(QRegExp("[{/]"));
         QString target =temp_name.at(0);
-
+        //qDebug()<<"name"<<temp_name.count();
+        //target = endItem()->getName().append("/").append(target);
         if (endItem()->getNamespace() != ""){
             target = endItem()->getNamespace().append("/").append(target);
-
         }
         if (endItem()->parentItem()){
             GroupItem *group = qgraphicsitem_cast<GroupItem *>(endItem()->parentItem());

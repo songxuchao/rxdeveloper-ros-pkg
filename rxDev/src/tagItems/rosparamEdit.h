@@ -29,6 +29,7 @@ class RosparamEdit : public QDialog {
                 void accept();
 
         private slots:
+                void on_pushButton_tryOpen_clicked();
 
         private:
                 Ui::RosparamEdit *ui;

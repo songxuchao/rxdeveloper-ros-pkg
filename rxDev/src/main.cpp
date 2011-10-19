@@ -18,7 +18,6 @@
 #include <QtGui/QApplication>
 #include <QDesktopWidget>
 
-//todo: das gruppen zugehörigkeitszeug über 'collides with' lösen, müsste sauberer sein
 using namespace std;
 
 /*!\brief wrong arguments handling
