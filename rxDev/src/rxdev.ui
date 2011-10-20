@@ -450,7 +450,7 @@
     <string>remap</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+M</string>
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionDrag_Drop">
@@ -465,7 +465,7 @@
     <string>Drag&amp;Drop</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="actionDelete_Item">
@@ -501,6 +501,9 @@
    </property>
    <property name="text">
     <string>New Launchfile</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

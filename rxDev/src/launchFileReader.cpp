@@ -167,7 +167,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
     case TiXmlNode::TINYXML_COMMENT:{                        // ignored <tag>
         printf( "Comment: \"%s\"", firstLevelNode->Value());
         QPoint coords =getCoords(firstLevelNode);
-        qDebug()<<coords;
+        //qDebug()<<coords;
         break;
     }
 
@@ -422,7 +422,7 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
 }
 
@@ -470,7 +470,7 @@ void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode,i
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
 
     newParam.updateParameterItem();
@@ -505,7 +505,7 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
     newRemap.updateRemapItem();
 }
@@ -543,7 +543,7 @@ void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNod
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
     newRosparam.updateRosparamItem();
 }
@@ -577,7 +577,7 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
 
     newEnv.updateEnvItem();
@@ -617,7 +617,7 @@ void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode,int &x, int &y)
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
     }
     newArg.updateArgItem();
 }
@@ -665,7 +665,7 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
             x=coords.x();
             y=coords.y();
         }
-        qDebug()<<"x:"<<x<<" y:"<<y;
+        //qDebug()<<"x:"<<x<<" y:"<<y;
 
     }
 

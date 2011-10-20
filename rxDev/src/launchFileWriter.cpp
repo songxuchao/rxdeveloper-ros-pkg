@@ -30,9 +30,25 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
 
     //create tags for the scene items
     QList<int> paramItems;          //List of parameterItems
+    QList<int> machineItems;        //List of machineItems
     for (int i = list.size()-1; i > 0; i--) {
+        switch (list.at(i)->type()){
+        case MachineItem::Type:
+                machineItems<<i;                  //save machineItems for later
+            break;
+        case ParameterItem::Type:
+            paramItems<<i;                  //save parameteritems for later
+            break;
+        default:
+            break;
+        }
+    }
+    for (int i=0;i<machineItems.size();i++){
+        if (list.at(machineItems.at(i))->parentItem()==0)
+            create_machineTag(*launchTag,*list.at(machineItems.at(i)));
+    }
 
-
+    for (int i = list.size()-1; i > 0; i--) {
         switch (list.at(i)->type()){
         case NodeItem::Type:
             if (list.at(i)->parentItem()==0)
@@ -41,11 +57,6 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
         case GroupItem::Type:
             if (list.at(i)->parentItem()==0)
                 create_groupTag(*launchTag,*list.at(i));
-
-            break;
-        case MachineItem::Type:
-            if (list.at(i)->parentItem()==0)
-                create_machineTag(*launchTag,*list.at(i));
             break;
         case EnvItem::Type:
             if (list.at(i)->parentItem()==0)
@@ -58,10 +69,6 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
         case IncludeFileItem::Type:
             if (list.at(i)->parentItem()==0)
                 create_includeTag(*launchTag,*list.at(i));
-            break;
-        case RemapItem::Type:
-            if (list.at(i)->parentItem()==0)
-                create_remapTag(*launchTag,*list.at(i));
             break;
         case RosparamItem::Type:
             if (list.at(i)->parentItem()==0)
@@ -177,7 +184,7 @@ void LaunchWriter::create_machineTag(TiXmlElement &elem, QGraphicsItem &item)
     MachineItem *machine = qgraphicsitem_cast<MachineItem *>(&item);
 
     machineTag->SetAttribute("name", machine->getName().toStdString());
-    machineTag->SetAttribute("adress", machine->getAddress().toStdString());
+    machineTag->SetAttribute("address", machine->getAddress().toStdString());
     //optional
     if (machine->getRos_root()!="")
         machineTag->SetAttribute("ros-root", machine->getRos_root().toStdString());

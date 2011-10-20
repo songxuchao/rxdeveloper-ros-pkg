@@ -160,7 +160,6 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
                         setParentItem(item);
 
                 } else {
-                    qDebug()<<"Parent pos: "<<item->pos();
                     this->setPos(mapToScene(0,0));
                     this->setParentItem(0);
                 }
