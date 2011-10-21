@@ -1,0 +1,23 @@
+type: turtlesim_node 
+package:
+  turtlesim
+subscriptions: 
+  turtle1/command_velocity{turtlesim/Velocity/}
+publications:
+  rosout{rosgraph_msgs/Log/}
+  turtle1/color_sensor{turtlesim/Color/}
+  turtle1/pose{turtlesim/Pose/}
+services:
+  /turtle1/teleport_absolute
+  /turtlesim/get_loggers
+  /turtlesim/set_logger_level
+  /reset
+  /spawn
+  /clear
+  /turtle1/set_pen
+  /turtle1/teleport_relative
+  /kill
+parameters:
+ ~background_b{int}[255]
+ ~background_g{int}[86]
+ ~background_r{int}[69]

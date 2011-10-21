@@ -1,0 +1,12 @@
+type: map_server
+package:
+  map_server
+subscriptions: 
+publications:
+  map_metadata{nav_msgs/MapMetaData}
+  map{nav_msgs/OccupancyGrid}
+services:
+  static_map{nav_msgs/GetMap}
+parameters:
+  ~frame_id{string}[map]
+

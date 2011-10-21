@@ -1,0 +1,18 @@
+type: roomrider_driver
+package:
+  roomrider_driver
+subscriptions:
+  /cmd_vel{geometry_msgs/Twist}
+  /led{roomrider_driver/Led}
+publications:
+  /power{roomrider_driver/Power}
+  /lightsensor{roomrider_driver/Lightsensor}
+  /bumper{roomrider_driver/Bumper}
+  /wheeldrop{roomrider_driver/Wheeldrop}
+  /infrared{roomrider_driver/Infrared}
+  /odom{nav_msgs/Odometry}
+parameters:
+  ~safe_mode{int}[1]
+  ~debug_mode{int}[0]
+  ~serial_port{string}["/dev/roomba"]
+
