@@ -55,6 +55,16 @@ class QGraphicsSceneMouseEvent;
 class QPainterPath;
 QT_END_NAMESPACE
 
+//Datastructure
+class remapArrowData {
+public:
+    QPointF startNode;
+    QPointF endNode;
+    QString from;
+    QString to;
+    QString ifString;
+    QString unlessString;
+};
 //! [0]
 class RemapArrow : public QGraphicsLineItem
 {

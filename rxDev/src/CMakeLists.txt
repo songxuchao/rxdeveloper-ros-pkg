@@ -85,8 +85,6 @@ set( CPP
 
 
 #set( HEADERS
-#    c_connector.h
-#    gridlines.h
 #    remapArrow.h
     #diagramscene.h
     #diagramitem.h

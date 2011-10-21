@@ -1,6 +1,5 @@
 #include "rxdev.h"
 #include "ui_rxdev.h"
-#include "c_connector.h"
 #include "tagItems/parameterItem.h"
 #include "tagItems/rosparamItem.h"
 #include "tagItems/includeFileItem.h"
@@ -13,8 +12,9 @@
 #include <yaml-cpp/yaml.h>
 #include "launchFileView.h"
 #include "launchFileScene.h"
-#include <QUrl>
 
+#include <fstream>
+#include <QUrl>
 
 QPoint menuPoint_availableNodes;
 
@@ -350,13 +350,6 @@ void RxDev::nodeParser(QString nodeFile){
     std::string nodeOutput;
     std::string nodeServices;
     std::string nodeParameters;
-    //    if ((yamlNode = doc.FindValue("package"))) {
-    //        *yamlNode >> nodePackage;
-    //        if (nodePackage!="~"){
-
-    //            node.nodeInput = QString::fromStdString(nodeInput).split(" ");
-    //        }
-    //    }
 
 
     try {
@@ -486,8 +479,8 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
     gview->selectedNodePublications = node.nodeOutput;
     gview->selectedNodeServices = node.nodeServices;
     gview->selectedNodeParameters = node.nodeParameters;
-    qDebug()<<QString("%1").arg(gview->selectedNodeName);
-    qDebug()<<QString("%1").arg(gview->selectedNodePackage);
+    //qDebug()<<QString("%1").arg(gview->selectedNodeName);
+    //qDebug()<<QString("%1").arg(gview->selectedNodePackage);
 
     //if (selected == ))
     Q_UNUSED(deselected);

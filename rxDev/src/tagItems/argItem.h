@@ -10,9 +10,6 @@
 #include <QPainter>
 #include <QPen>
 #include <QPointF>
-//#include "c_connector.h"
-//#include <QGraphicsPixmapItem>
-//#include <QList>
 #include <QGraphicsWidget>
 
 QT_BEGIN_NAMESPACE

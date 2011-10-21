@@ -89,7 +89,6 @@ void IncludeFileEdit::fillArgModel(){
         QStandardItem *item0 = new QStandardItem(QString(myItem->argItems.at(row)->getName()));
         argModel->setItem(row,0,item0);
         switch (myItem->argItems.at(row)->getValue_or_default()){
-        //Todo: fix, the values don't get read correct
         case 0:
             item0 = new QStandardItem(QString("-"));
             argModel->setItem(row,1,item0);

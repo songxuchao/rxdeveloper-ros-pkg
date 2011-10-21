@@ -160,13 +160,5 @@ void RxDev::on_pushButton_createPackage_clicked()
     rosCreatePackage.setProcessChannelMode(QProcess::MergedChannels);
     rosCreatePackage.start(QString("roscreate-pkg "+ui->lineEdit_packageName->text()+" "+ui->lineEdit_packageDependencies->text()));
     rosCreatePackage.waitForFinished(-1);
-
-//    QByteArray output = rosCreatePackage.readAll();
-//    QStringList list = QString(output).split("\n");
-//    foreach (QString line, list)
-//        ui->textBrowser_debug->append(line);
-//    QTextCursor c = ui->textBrowser_debug->textCursor();
-//    c.movePosition(QTextCursor::End);
-//    ui->textBrowser_debug->setTextCursor(c);
     ui->lineEdit_packageName->setText("");
 }

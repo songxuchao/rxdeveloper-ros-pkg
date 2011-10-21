@@ -599,8 +599,6 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
 
 
     }
-    qDebug()<< scene->items(arrowdata->startNode);
-    qDebug()<< scene->items(arrowdata->endNode);
     foreach(QGraphicsItem *item, scene->items(arrowdata->endNode)){
         qDebug()<<item->type();
         if (item->type()==65540){

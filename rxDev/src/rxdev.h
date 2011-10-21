@@ -24,7 +24,6 @@
 #include <QSettings>
 
 #include <QStandardItemModel>
-#include "c_connector.h"
 
 #include "launchFileView.h"
 #include "launchFileScene.h"
@@ -32,12 +31,25 @@
 #include "tinyxml.h"
 #include "tagItems/argItem.h"
 #include "tagItems/remapItem.h"
+#include "tagItems/remapArrow.h"
 #include "tagItems/includeFileItem.h"
 #include "tagItems/machineItem.h"
 #include "tagItems/groupItem.h"
 
 class LaunchFileScene;
 class LaunchFileView;
+
+//Datastructure for specfile data
+class rosNode {
+public:
+    QString nodeType;
+    QString nodePackage;
+    QStringList nodeInput;
+    QStringList nodeOutput;
+    QStringList nodeServices;
+    QStringList nodeParameters;
+};
+
 
 
 namespace Ui {
