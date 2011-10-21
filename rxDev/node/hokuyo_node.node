@@ -1,0 +1,23 @@
+type: hokuyo_node
+package: hokuyo_node
+subscriptions: #input
+publications: #output
+  scan{sensor_msgs/LaserScan}
+  diagnostics{diagnostic_msgs/DiagnosticStatus} #Diagnostic status information.
+services:
+  ~self_test{diagnostic_msgs/SelfTest} #Starts the Hokuyo self test, which runs a series of tests on the device. The laser stops publishing scans during the test, which takes about a minute. The result of the test is in the response returned by this service. At the conclusion of the test, the laser is returned to its normal operating mode.
+parameters:
+  ~min_ang{double}[-pi/2]
+  ~max_ang{double}[pi/2]
+  ~intensity{bool}[false]
+  ~cluster{int}[1]
+  ~skip{int}[0]
+  ~port{string}["/dev/ttyACM0"]
+  ~calibrate_time{bool}[true]
+  ~frame_id{string}[laser]
+  ~time_offset{double}[0.0]
+  ~allow_unsafe_settings{bool}[False]
+  ~max_ang_limit{double}
+  ~max_ang_limit{double}
+  ~min_range{double}
+  ~max_range{double}

@@ -1,0 +1,7 @@
+type: talker.py
+package: test_ros
+subscriptions: #input
+publications: #output
+  chatter{std_msgs/String}
+services:
+parameters:

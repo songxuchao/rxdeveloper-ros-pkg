@@ -1,0 +1,30 @@
+type: move_base
+package:
+  move_base
+subscriptions:
+  move_base/goal{move_base_msgs/MoveBaseActionGoal}
+  move_base/cancel{actionlib_msgs/GoalID}
+  move_base_simple/goal{geometry_msgs/PoseStamped}
+publications:
+  move_base/feedback{move_base_msgs/MoveBaseActionFeedback}
+  move_base/status{actionlib_msgs/GoalStatusArray}
+  move_base/result{move_base_msgs/MoveBaseActionResult}
+  cmd_vel{geometry_msgs/Twist}
+services:
+  ~make_plan{nav_msgs/GetPlan}
+  ~clear_unknown_space{std_srvs/Empty}
+  ~clear_costmaps{std_srvs/Empty}
+parameters:
+  ~base_global_planner{string}["navfn/NavfnROS"]
+  ~base_local_planner{string}["base_local_planner/TrajectoryPlannerROS"]
+  ~recovery_behaviors{list} 
+  ~controller_frequency{double}[20.0]
+  ~planner_patience{double}[5.0]
+  ~controller_patience{double}[15.0)
+  ~conservative_reset_dist{double}[3.0)
+  ~recovery_behavior_enabled{bool}[true)
+  ~clearing_rotation_allowed{bool}[true)
+  ~shutdown_costmaps{bool}[false)
+  ~oscillation_timeout{double}[0.0)
+  ~oscillation_distance{double}[0.5)
+

@@ -1,0 +1,56 @@
+type: amcl
+package:
+  amcl
+subscriptions:
+  scan{sensor_msgs/LaserScan}
+  tf{tf/tfMessage}
+  initialpose{geometry_msgs/PoseWithCovarianceStamped}
+  map{nav_msgs/OccupancyGrid]
+publications}:
+  amcl_pose{geometry_msgs/PoseWithCovarianceStamped}
+  particlecloud{geometry_msgs/PoseArray}
+  tf{tf/tfMessage}
+services:
+  global_localization{std_srvs/Empty}
+  static_map{nav_msgs/GetMap}
+parameters:
+  ~min_particles{int}[100]
+  ~max_particles{int}[5000]
+  ~kld_err{double}[0.01]
+  ~kld_z{double}[0.99]
+  ~update_min_d{double}[0.2]
+  ~update_min_a{double}[π/6.0]
+  ~resample_interval{int}[2]
+  ~transform_tolerance{double}[0.1]
+  ~recovery_alpha_slow{double}[0.0{disabled]]
+  ~recovery_alpha_fast{double}[0.0{disabled]]
+  ~initial_pose_x{double}[0.0]
+  ~initial_pose_y{double}[0.0]
+  ~initial_pose_a{double}[0.0]
+  ~initial_cov_xx{double}[0.5*0.5]
+  ~initial_cov_yy{double}[0.5*0.5]
+  ~initial_cov_aa{double}[(π/12)*(π/12)]
+  ~gui_publish_rate{double}[-1.0]
+  ~save_pose_rate{double}[0.5]
+  ~use_map_topic{bool}[false]
+  ~first_map_only{bool}[false]
+  ~laser_min_range{double}[-1.0]
+  ~laser_max_range{double}[-1.0]
+  ~laser_max_beams{int}[30]
+  ~laser_z_hit{double}[0.95]
+  ~laser_z_short{double}[0.1]
+  ~laser_z_max{double}[0.05]
+  ~laser_z_rand{double}[0.05]
+  ~laser_sigma_hit{double}[0.2]
+  ~laser_lambda_short{double}[0.1]
+  ~laser_likelihood_max_dist{double}[2.0]
+  ~laser_model_type{string}["likelihood_field"]
+  ~odom_model_type{string}["diff"]
+  ~odom_alpha1{double}[0.2]
+  ~odom_alpha2{double}[0.2]
+  ~odom_alpha3{double}[0.2]
+  ~odom_alpha4{double}[0.2]
+  ~odom_alpha5{double}[0.2]
+  ~odom_frame_id{string}["odom"]
+  ~base_frame_id{string}["base_link"]
+  ~global_frame_id{string}["map"]

@@ -1,0 +1,19 @@
+type: sick300_driver
+package:
+  sicks300
+subscriptions:
+publications:
+  /laserscan{sensor_msgs/LaserScan}
+services:
+  ~make_plan{nav_msgs/GetPlan}
+  ~clear_unknown_space{std_srvs/Empty}
+  ~clear_costmaps{std_srvs/Empty}
+parameters:
+  ~frame{String}["base_laser_link"]
+  ~send_transform{int}[1]
+  ~tf_x{double}[0.115]
+  ~tf_y{double}[0.0]
+  ~tf_z{double}[0.21]
+  ~reduced_fov{int}[0]
+  ~devicename{String}["/dev/sick300"]
+  ~baudrate{int}[500000]
