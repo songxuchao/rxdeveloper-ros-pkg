@@ -4,7 +4,7 @@
 #include "tagItems/includeFileItem.h"
 #include "tagItems/groupItem.h"
 #include "tagItems/remapItem.h"
-
+#include "tagItems/remapArrow.h"
 
 /*!\brief find <launch> tag
  *
@@ -14,7 +14,6 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
 {
     if ( !documentNode ) return;
     TiXmlNode * pChild;
-
     for ( pChild = documentNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
 
@@ -28,12 +27,14 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
     }
 }
 
+QList<remapArrowData>arrowList;
+
 /*!\brief First-level file parsing
  *
  * Parses the launch file for tags that are children of the <launch>-tag.
  */
 void RxDev::beginParsing(TiXmlNode *firstLevelNode){
-
+    arrowList.clear();
     switch ( firstLevelNode->Type() )
     {
     case TiXmlNode::TINYXML_ELEMENT:                        // case with the important <tags>
@@ -165,8 +166,8 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
         break;
 
     case TiXmlNode::TINYXML_COMMENT:{                        // ignored <tag>
-        printf( "Comment: \"%s\"", firstLevelNode->Value());
-        QPoint coords =getCoords(firstLevelNode);
+        //printf( "Comment: \"%s\"", firstLevelNode->Value());
+        //QPoint coords =getCoords(firstLevelNode);
         //qDebug()<<coords;
         break;
     }
@@ -182,6 +183,9 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
         break;
     }
     printf( "\n" );
+    for (int i=0;i<arrowList.count();i++){
+        create_remapArrow(&arrowList.at(i));
+    }
 
 }
 
@@ -268,6 +272,7 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,i
     }
 
     newMachine.updateMachineItem();
+    int includeX,includeY;      //needed as fakepositions
 
     //check for env-items
     TiXmlNode * pChild;
@@ -276,7 +281,7 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,i
         printf( "child" );
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild,x,y);
+            create_envItem(*newEnv,pChild,includeX,includeY);
             newMachine.addEnvItem(newEnv);
         }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
@@ -395,29 +400,98 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
 
     newNode.updateNodeItem();
 
-    //check for env, param and rosparam items
+    //check for env, param, rosparam and remap items
     TiXmlNode * pChild;
     for ( pChild = nodeOrTestNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
+        int includeX,includeY;      //needed as fakepositions
+
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild,x,y);
+            create_envItem(*newEnv,pChild,includeX,includeY);
             newNode.addEnvItem(newEnv);
 
         }else if (QString(pChild->Value())=="param"){
             ParameterItem* newParam = new ParameterItem;
-            create_paramItem(*newParam,pChild,x,y);
+            create_paramItem(*newParam,pChild,includeX,includeY);
             newNode.addParamItem(newParam);
         }else if (QString(pChild->Value())=="rosparam"){
             RosparamItem* newRosparam = new RosparamItem;
-            create_rosparamItem(*newRosparam,pChild,x,y);
+            create_rosparamItem(*newRosparam,pChild,includeX,includeY);
             newNode.addRosparamItem(newRosparam);
         }else if (QString(pChild->Value())=="remap"){
-            RemapItem* newRemap = new RemapItem;
-            create_remapItem(*newRemap,pChild,x,y);
-            newNode.addRemapItem(newRemap);
+            TiXmlNode * pChildChild;
+            qreal startItemX=0,startItemY=0;
+            qreal endItemX=0,endItemY=0;
+            for ( pChildChild = pChild->FirstChild(); pChildChild != 0; pChildChild = pChildChild->NextSibling())
+            {
+                if (pChildChild->Type()==TiXmlNode::TINYXML_COMMENT){
 
-        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+                    if (QString(pChildChild->Value())!=""){
+                        QString stringToParse;
+                        stringToParse = pChildChild->Value();
+                        if (stringToParse.contains("startX=\"")){
+                            int beginn = stringToParse.indexOf("startX=\"")+8;
+                            int end = stringToParse.indexOf("\"", beginn+1);
+                            if (end!=-1){
+                                startItemX=(stringToParse.mid(beginn,end-beginn)).toDouble();
+                            }
+
+                        }
+                        if (stringToParse.contains("startY=\"")){
+                            int beginn = stringToParse.indexOf("startY=\"")+8;
+                            int end = stringToParse.indexOf("\"", beginn+1);
+                            if (end!=-1){
+                                startItemY=(stringToParse.mid(beginn,end-beginn)).toDouble();
+                            }
+                        }
+                        if (stringToParse.contains("endX=\"")){
+                            int beginn = stringToParse.indexOf("endX=\"")+6;
+                            int end = stringToParse.indexOf("\"", beginn+1);
+                            if (end!=-1){
+                                endItemX=(stringToParse.mid(beginn,end-beginn)).toDouble();
+                            }
+
+                        }
+                        if (stringToParse.contains("endY=\"")){
+                            int beginn = stringToParse.indexOf("endY=\"")+6;
+                            int end = stringToParse.indexOf("\"", beginn+1);
+                            if (end!=-1){
+                                endItemY=(stringToParse.mid(beginn,end-beginn)).toDouble();
+                            }
+                        }
+                    }
+                }
+            }
+            if (startItemX ==0||startItemY==0||endItemX ==0||endItemY==0){
+                RemapItem* newRemap = new RemapItem;
+                create_remapItem(*newRemap,pChild,includeX,includeY);
+                newNode.addRemapItem(newRemap);
+            }else{
+
+                TiXmlAttribute* tagAttribute=pChild->ToElement()->FirstAttribute();
+
+                remapArrowData *remapData=new remapArrowData;
+                while (tagAttribute)
+                {
+                    if (QString(tagAttribute->Name())=="from"){
+                        remapData->from=(QString(tagAttribute->Value()));
+                    }else if (QString(tagAttribute->Name())=="to"){
+                        remapData->to= (QString(tagAttribute->Value()));
+                    }else if (QString(tagAttribute->Name())=="if"){
+                        remapData->ifString= (QString(tagAttribute->Value()));
+                    }else if (QString(tagAttribute->Name())=="unless"){
+                        remapData->unlessString= (QString(tagAttribute->Value()));
+                    }
+                    tagAttribute=tagAttribute->Next();
+                }
+
+                remapData->startNode =QPoint(startItemX,startItemY);
+                remapData->endNode =QPoint(endItemX,endItemY);
+                arrowList.append(*remapData);
+            }
+        }
+        else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -508,6 +582,46 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int
         //qDebug()<<"x:"<<x<<" y:"<<y;
     }
     newRemap.updateRemapItem();
+}
+
+void RxDev::create_remapArrow(const remapArrowData *arrowdata)
+{
+
+    NodeItem *startNode;
+    NodeItem *endNode;
+    int checkSuccess=0;
+    foreach(QGraphicsItem *item, scene->items(arrowdata->startNode)){
+        qDebug()<<item->type();
+        if (item->type()==65540){
+            startNode= qgraphicsitem_cast<NodeItem *>(item);
+            checkSuccess++;
+        }
+
+
+    }
+    qDebug()<< scene->items(arrowdata->startNode);
+    qDebug()<< scene->items(arrowdata->endNode);
+    foreach(QGraphicsItem *item, scene->items(arrowdata->endNode)){
+        qDebug()<<item->type();
+        if (item->type()==65540){
+            endNode= qgraphicsitem_cast<NodeItem *>(item);
+            checkSuccess++;
+        }
+    }
+    if (checkSuccess==2){
+        RemapArrow *arrow = new RemapArrow(startNode, endNode);
+        arrow->setTo(arrowdata->to);
+        arrow->setFrom(arrowdata->from);
+        arrow->setIf(arrowdata->ifString);
+        arrow->setUnless(arrowdata->unlessString);
+        startNode->addArrow(arrow);
+        endNode->addArrow(arrow);
+        arrow->setZValue(-20);
+        scene->addItem(arrow);
+        arrow->updatePosition();
+
+    }
+
 }
 
 /*!\brief <rosparam>-tag object
@@ -644,6 +758,7 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
         }
         tagAttribute=tagAttribute->Next();
     }
+    int includeX,includeY;      //needed as fakepositions
 
     newIncludeFile.updateIncludeFileItem();
     //check for env and arg items
@@ -652,12 +767,12 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
     {
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
-            create_envItem(*newEnv,pChild,x,y);
+            create_envItem(*newEnv,pChild,includeX,includeY);
             newIncludeFile.addEnvItem(newEnv);
 
         }else if (QString(pChild->Value())=="arg"){
             ArgItem* newArg = new ArgItem;
-            create_argItem(*newArg,pChild,x,y);
+            create_argItem(*newArg,pChild,includeX,includeY);
             newIncludeFile.addArgItem(newArg);
 
         } else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){

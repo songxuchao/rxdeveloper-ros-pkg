@@ -124,6 +124,7 @@ void RemapArrow::updatePosition()
     }
     incl.setPos(inclPos);
     title.setPos(textPos);
+    title.setHtml("<center><font size=\"-2\" color=\"blue\">"+getTo()+"</center>");
     //incl.setPos((centerLine.p2().x()-centerLine.p1().x()).length(),centerLine.p1().y()-20);
 
 }
@@ -257,14 +258,11 @@ bool RemapArrow::getArrowData()
         remap->setTo(this->getTo());
         remap->setIf(this->getIf());
         remap->setUnless(this->getUnless());
-        myStartItem->addRemapItem(remap);
-
-
-        title.setHtml("<center><font size=\"-2\" color=\"blue\">"+target+"</center>");
         return true;
     } else
         return false;
 }
+
 void RemapArrow::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     getArrowData();
