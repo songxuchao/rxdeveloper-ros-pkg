@@ -11,9 +11,6 @@
 #include <QPainter>
 #include <QPen>
 #include <QPointF>
-//#include "c_connector.h"
-//#include <QGraphicsPixmapItem>
-//#include <QList>
 #include <QGraphicsWidget>
 #include "argItem.h"
 #include "envItem.h"
