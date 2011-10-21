@@ -154,492 +154,491 @@ void NodeItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
         setColor(Qt::blue);
         foreach (QGraphicsItem *item, collidingItems()) {
 
-                if (item->type() ==GroupItem::Type){
+            if (item->type() ==GroupItem::Type){
 
-                    this->setPos(mapToItem(item,0,0));
-                        setParentItem(item);
+                this->setPos(mapToItem(item,0,0));
+                setParentItem(item);
 
-                } else {
-                    this->setPos(mapToScene(0,0));
-                    this->setParentItem(0);
-                }
+            } else {
+                this->setPos(mapToScene(0,0));
+                this->setParentItem(0);
             }
-                    event->setAccepted(true);// tell the base class we are handling this event
-
         }
+        event->setAccepted(true);// tell the base class we are handling this event
     }
+}
 
-    void NodeItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
-    {
-        // allow the user to drag the box, capture the starting position on mouse-down
-        if (event->button() == Qt::LeftButton) {
+void NodeItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
+{
+    // allow the user to drag the box, capture the starting position on mouse-down
+    if (event->button() == Qt::LeftButton) {
 
-            setColor(Qt::red);
+        setColor(Qt::red);
 
-            _dragStart = event->pos();
-            qDebug()<< getNamespace();
-
-            event->setAccepted(true);
-
-        } else
-            event->setAccepted(false);
-
-
-    }
-
-
-    void NodeItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
-    {
-        // user have moved the mouse, move the location of the box
-
-        QPointF newPos = event->pos() ;
-        _location += (newPos - _dragStart);
-
-        foreach (RemapArrow *arrow, arrows)
-            arrow->updatePosition();
-
-        this->setPos(_location);
+        _dragStart = event->pos();
+        qDebug()<< getNamespace();
 
         event->setAccepted(true);
 
+    } else
+        event->setAccepted(false);
+
+
+}
+
+
+void NodeItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
+{
+    // user have moved the mouse, move the location of the box
+
+    QPointF newPos = event->pos() ;
+    _location += (newPos - _dragStart);
+
+    foreach (RemapArrow *arrow, arrows)
+        arrow->updatePosition();
+
+    this->setPos(_location);
+
+    event->setAccepted(true);
+
+
+}
+void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button()==Qt::LeftButton){
+
+        qDebug()<<"Pfeile "<<arrows;
+        setColor(Qt::yellow);
+        getNodeData();
 
     }
-    void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-    {
-        if (event->button()==Qt::LeftButton){
+    event->setAccepted(true);
 
-            qDebug()<<"Pfeile "<<arrows;
-            setColor(Qt::yellow);
-            getNodeData();
+}
 
-        }
-        event->setAccepted(true);
+void NodeItem::hoverLeaveEvent ( QGraphicsSceneHoverEvent * )
+{
+    // return the box color to black when the mouse is no longer hovering
 
-    }
+}
 
-    void NodeItem::hoverLeaveEvent ( QGraphicsSceneHoverEvent * )
-    {
-        // return the box color to black when the mouse is no longer hovering
-
-    }
-
-    void NodeItem::hoverEnterEvent ( QGraphicsSceneHoverEvent * )
-    {
-        // draw the box in blue if the mouse is hovering over it
+void NodeItem::hoverEnterEvent ( QGraphicsSceneHoverEvent * )
+{
+    // draw the box in blue if the mouse is hovering over it
 
 
-    }
-    void NodeItem::setColor(QColor color)
-    {
-        _outterborderColor = color;
-        this->update(0,0,_width,_height);
-    }
+}
+void NodeItem::setColor(QColor color)
+{
+    _outterborderColor = color;
+    this->update(0,0,_width,_height);
+}
 
-    // boundingRect must be re-implemented from the base class to provide the scene with
-    // size info about this custom GraphicsItem
+// boundingRect must be re-implemented from the base class to provide the scene with
+// size info about this custom GraphicsItem
 
-    QRectF NodeItem::boundingRect() const
-    {
-        return QRectF(-6,0,_width+15,_height);
-    }
+QRectF NodeItem::boundingRect() const
+{
+    return QRectF(-6,0,_width+15,_height);
+}
 
-    void NodeItem::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-    {
+void NodeItem::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
 
 
 
-        // draw the outter box
+    // draw the outter box
 
-        _outterborderPen.setColor( _outterborderColor );
-        _outterborderPen.setStyle(Qt::SolidLine);
+    _outterborderPen.setColor( _outterborderColor );
+    _outterborderPen.setStyle(Qt::SolidLine);
 
-        painter->setPen(_outterborderPen);
-        QBrush background (QColor::fromRgb(218,218,255,255), Qt::SolidPattern);
-        if (_node_or_testInt==1)
-            background.setStyle(Qt::DiagCrossPattern);
-        if (parentItem()) {
-            painter->drawLine(0,10,-5,10);
-            painter->drawLine(0,6,-5,6);
-            painter->drawLine(0,_height-10,-5,_height-10);
-            painter->drawLine(0,_height-6,-5,_height-6);
-            painter->drawLine(_width,10,_width+5,10);
-            painter->drawLine(_width,6,_width+5,6);
-            painter->drawLine(_width,_height-10,_width+5,_height-10);
-            painter->drawLine(_width,_height-6,_width+5,_height-6);
-
-        }
-        painter->setBackgroundMode(Qt::OpaqueMode);
-        painter->setBrush( background);
-
-        //draw upper left corner
-
-        QPointF topLeft (0, 0);
-        QPointF bottomRight ( _width, _height );
-
-        QRectF rect (topLeft, bottomRight);
-        painter->drawRoundRect(rect,25,25);
-        painter->drawLine(0,34,_width,34);
-
+    painter->setPen(_outterborderPen);
+    QBrush background (QColor::fromRgb(218,218,255,255), Qt::SolidPattern);
+    if (_node_or_testInt==1)
+        background.setStyle(Qt::DiagCrossPattern);
+    if (parentItem()) {
+        painter->drawLine(0,10,-5,10);
+        painter->drawLine(0,6,-5,6);
+        painter->drawLine(0,_height-10,-5,_height-10);
+        painter->drawLine(0,_height-6,-5,_height-6);
+        painter->drawLine(_width,10,_width+5,10);
+        painter->drawLine(_width,6,_width+5,6);
+        painter->drawLine(_width,_height-10,_width+5,_height-10);
+        painter->drawLine(_width,_height-6,_width+5,_height-6);
 
     }
-    void NodeItem::addRemapItem(RemapItem *remap)
-    {
-        remapItems.append(remap);
-        if (remapItems.count()!=0)
-           _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
-        else
-            _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
+    painter->setBackgroundMode(Qt::OpaqueMode);
+    painter->setBrush( background);
+
+    //draw upper left corner
+
+    QPointF topLeft (0, 0);
+    QPointF bottomRight ( _width, _height );
+
+    QRectF rect (topLeft, bottomRight);
+    painter->drawRoundRect(rect,25,25);
+    painter->drawLine(0,34,_width,34);
 
 
+}
+void NodeItem::addRemapItem(RemapItem *remap)
+{
+    remapItems.append(remap);
+    if (remapItems.count()!=0)
+        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
+    else
+        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
+
+
+}
+
+void NodeItem::removeRemapItems()
+{
+    foreach (RemapItem *remap, remapItems) {
+        removeRemapItem(remap);
+        delete remap;
     }
 
-    void NodeItem::removeRemapItems()
-    {
-        foreach (RemapItem *remap, remapItems) {
-            removeRemapItem(remap);
-            delete remap;
-        }
+}
 
-    }
+void NodeItem::removeRemapItem(RemapItem *remap)
+{
+    int index = remapItems.indexOf(remap);
 
-    void NodeItem::removeRemapItem(RemapItem *remap)
-    {
-        int index = remapItems.indexOf(remap);
+    if (index != -1)
+        remapItems.removeAt(index);
+    if (remapItems.count()!=0)
+        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
+    else
+        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
 
-        if (index != -1)
-            remapItems.removeAt(index);
-        if (remapItems.count()!=0)
-           _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
-        else
-            _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
-
-    }
+}
 
 
-    bool NodeItem::getNodeData()
-    {
-        NodeEdit nodeEdit(this);
-        nodeEdit.setWindowTitle("Node: "+getName());
-        bool accept = nodeEdit.exec();
-        if ((accept)){
-            setName(nodeEdit.getName());
-            setArgs(nodeEdit.getArgs());
-            setNamespace(nodeEdit.getNamespace());
-            setMachine(nodeEdit.getMachine());
-            setTime_limit(nodeEdit.getTime_limit());
-            setRetry(nodeEdit.getRetry());
-            setLaunch_prefix(nodeEdit.getLaunch_prefix());
-            setRequired(nodeEdit.getRequired());
-            setRespawn(nodeEdit.getRespawn());
-            setClear_params(nodeEdit.getClear_params());
-            setOutput(nodeEdit.getOutput());
-            setCwd(nodeEdit.getCwd());
-            setNode_or_test(nodeEdit.node_or_test);
-            setIf(nodeEdit.getIf());
-            setUnless(nodeEdit.getUnless());
-            //Todo: update all arrowtitles if the ns or the group-ns is changed
-            updateNodeItem();
-            return true;
-        } else
-            return false;
-    }
-    void NodeItem::updateNodeItem()
-    {
-        _name.setHtml("<font size=\"-2\" color=\"black\">name: <font size=\"-2\" color=\"blue\">"+getName());
-        _namespace.setHtml("<font size=\"-2\" color=\"black\">ns: <font size=\"-2\" color=\"red\">"+getNamespace());
-    }
+bool NodeItem::getNodeData()
+{
+    NodeEdit nodeEdit(this);
+    nodeEdit.setWindowTitle("Node: "+getName());
+    bool accept = nodeEdit.exec();
+    if ((accept)){
+        setName(nodeEdit.getName());
+        setArgs(nodeEdit.getArgs());
+        setNamespace(nodeEdit.getNamespace());
+        setMachine(nodeEdit.getMachine());
+        setTime_limit(nodeEdit.getTime_limit());
+        setRetry(nodeEdit.getRetry());
+        setLaunch_prefix(nodeEdit.getLaunch_prefix());
+        setRequired(nodeEdit.getRequired());
+        setRespawn(nodeEdit.getRespawn());
+        setClear_params(nodeEdit.getClear_params());
+        setOutput(nodeEdit.getOutput());
+        setCwd(nodeEdit.getCwd());
+        setNode_or_test(nodeEdit.node_or_test);
+        setIf(nodeEdit.getIf());
+        setUnless(nodeEdit.getUnless());
+        //Todo: update all arrowtitles if the ns or the group-ns is changed
+        updateNodeItem();
+        return true;
+    } else
+        return false;
+}
+void NodeItem::updateNodeItem()
+{
+    _name.setHtml("<font size=\"-2\" color=\"black\">name: <font size=\"-2\" color=\"blue\">"+getName());
+    _namespace.setHtml("<font size=\"-2\" color=\"black\">ns: <font size=\"-2\" color=\"red\">"+getNamespace());
+}
 
 
-    QPixmap NodeItem::image() const
-    {
-        QPixmap pixmap(250, 250);
-        pixmap.fill(Qt::transparent);
-        QPainter painter(&pixmap);
-        painter.setPen(QPen(Qt::black, 8));
-        painter.translate(125, 125);
-        painter.drawPolyline(myPolygon);
+QPixmap NodeItem::image() const
+{
+    QPixmap pixmap(250, 250);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    painter.setPen(QPen(Qt::black, 8));
+    painter.translate(125, 125);
+    painter.drawPolyline(myPolygon);
 
-        return pixmap;
-    }
+    return pixmap;
+}
 
 
-    QVariant NodeItem::itemChange(GraphicsItemChange change,
-                                  const QVariant &value)
-    {
+QVariant NodeItem::itemChange(GraphicsItemChange change,
+                              const QVariant &value)
+{
 
-        if (change == QGraphicsItem::ItemPositionChange) {
-            foreach (RemapArrow *arrow, arrows) {
-                arrow->updatePosition();
-            }
-        }
-        //hier aktuelles item
-
-        return value;
-    }
-    //! [1]
-    void NodeItem::removeArrow(RemapArrow *arrow)
-    {
-        int index = arrows.indexOf(arrow);
-
-        if (index != -1)
-            arrows.removeAt(index);
-
-    }
-    //! [1]
-
-    //! [2]
-    void NodeItem::removeArrows()
-    {
+    if (change == QGraphicsItem::ItemPositionChange) {
         foreach (RemapArrow *arrow, arrows) {
-            arrow->startItem()->removeArrow(arrow);
-            arrow->endItem()->removeArrow(arrow);
-            scene()->removeItem(arrow);
-            delete arrow;
+            arrow->updatePosition();
         }
     }
-    //! [2]
+    //hier aktuelles item
 
-    //! [3]
-    void NodeItem::addArrow(RemapArrow *arrow)
-    {
-        arrows.append(arrow);
+    return value;
+}
+//! [1]
+void NodeItem::removeArrow(RemapArrow *arrow)
+{
+    int index = arrows.indexOf(arrow);
+
+    if (index != -1)
+        arrows.removeAt(index);
+
+}
+//! [1]
+
+//! [2]
+void NodeItem::removeArrows()
+{
+    foreach (RemapArrow *arrow, arrows) {
+        arrow->startItem()->removeArrow(arrow);
+        arrow->endItem()->removeArrow(arrow);
+        scene()->removeItem(arrow);
+        delete arrow;
+    }
+}
+//! [2]
+
+//! [3]
+void NodeItem::addArrow(RemapArrow *arrow)
+{
+    arrows.append(arrow);
+}
+
+int NodeItem::getNode_or_test()
+{
+    return _node_or_testInt;
+}
+
+QString NodeItem::getType()
+{
+    return _typeString;
+
+}
+
+QString NodeItem::getPkg()
+{
+    return _pkgString;
+
+}
+
+QString NodeItem::getArgs()
+{
+    return _argsString;
+
+}
+
+void NodeItem::setArgs(QString newArgs)
+{
+    _argsString = newArgs;
+}
+
+QString NodeItem::getMachine()
+{
+    return _machineString;
+}
+
+void NodeItem::setMachine(QString newMachine)
+{
+    _machineString = newMachine;
+}
+
+QString NodeItem::getTime_limit()
+{
+    return _time_limitString;
+}
+
+void NodeItem::setTime_limit(QString newTime_limit)
+{
+    _time_limitString = newTime_limit;
+}
+
+QString NodeItem::getRetry()
+{
+    return _retryString;
+}
+
+void NodeItem::setRetry(QString newRetry)
+{
+    _retryString = newRetry;
+}
+
+QString NodeItem::getLaunch_prefix()
+{
+    return _launch_prefixString;
+}
+
+void NodeItem::setLaunch_prefix(QString newLaunch_prefix)
+{
+    _launch_prefixString = newLaunch_prefix;
+}
+
+int NodeItem::getRequired()
+{
+    return _requiredInt;
+}
+
+void NodeItem::setRequired(int required)
+{
+    _requiredInt = required;
+}
+
+int NodeItem::getRespawn()
+{
+    return _respawnInt;
+}
+
+void NodeItem::setRespawn(int respawn)
+{
+    _respawnInt = respawn;
+}
+
+int NodeItem::getClear_params()
+{
+    return _clear_paramsInt;
+}
+
+void NodeItem::setClear_params(int clear)
+{
+    _clear_paramsInt = clear;
+}
+
+int NodeItem::getOutput()
+{
+    return _outputInt;
+}
+
+void NodeItem::setOutput(int output)
+{
+    _outputInt = output;
+}
+
+int NodeItem::getCwd()
+{
+    return _cwdInt;
+}
+
+void NodeItem::setCwd(int cwd)
+{
+    _cwdInt = cwd;
+}
+
+void NodeItem::setNode_or_test(int set)
+{
+    _node_or_testInt=set;
+
+}
+
+QStringList NodeItem::getPublications()
+{
+    return _publicationsStringList;
+}
+
+QStringList NodeItem::getSubscriptions()
+{
+    return _subscriptionsStringList;
+}
+
+QStringList NodeItem::getServices()
+{
+    return _servicesStringList;
+}
+
+QStringList NodeItem::getParameters()
+{
+    return _parametersStringList;
+}
+
+QPointF NodeItem::getLocation()
+{
+    return _location;
+}
+//! [3]
+
+void NodeItem::addEnvItem(EnvItem *env)
+{
+    envItems.append(env);
+
+}
+
+void NodeItem::removeEnvItems()
+{
+    foreach (EnvItem *env, envItems) {
+        removeEnvItem(env);
+        delete env;
     }
 
-    int NodeItem::getNode_or_test()
-    {
-        return _node_or_testInt;
+}
+
+void NodeItem::removeEnvItem(EnvItem *env)
+{
+    int index = envItems.indexOf(env);
+
+    if (index != -1)
+        envItems.removeAt(index);
+}
+
+
+void NodeItem::addParamItem(ParameterItem *param)
+{
+    paramItems.append(param);
+
+}
+
+void NodeItem::removeParamItems()
+{
+    foreach (ParameterItem *param, paramItems) {
+        removeParamItem(param);
+        delete param;
     }
 
-    QString NodeItem::getType()
-    {
-        return _typeString;
+}
 
+void NodeItem::removeParamItem(ParameterItem *param)
+{
+    int index = paramItems.indexOf(param);
+
+    if (index != -1)
+        paramItems.removeAt(index);
+}
+void NodeItem::removeRosparamItem(RosparamItem *rosparam)
+{
+    int index = rosparamItems.indexOf(rosparam);
+
+    if (index != -1)
+        rosparamItems.removeAt(index);
+}
+
+void NodeItem::removeRosparamItems()
+{
+    foreach (RosparamItem *rosparam, rosparamItems) {
+        removeRosparamItem(rosparam);
+        delete rosparam;
     }
+}
 
-    QString NodeItem::getPkg()
-    {
-        return _pkgString;
+void NodeItem::addRosparamItem(RosparamItem *rosparam)
+{
+    rosparamItems.append(rosparam);
 
-    }
+}
 
-    QString NodeItem::getArgs()
-    {
-        return _argsString;
+QString NodeItem::getIf()
+{
+    return _ifString;
+}
 
-    }
+void NodeItem::setIf(QString newIf)
+{
+    _ifString=newIf;
+}
 
-    void NodeItem::setArgs(QString newArgs)
-    {
-        _argsString = newArgs;
-    }
+QString NodeItem::getUnless()
+{
+    return _unlessString;
+}
 
-    QString NodeItem::getMachine()
-    {
-        return _machineString;
-    }
-
-    void NodeItem::setMachine(QString newMachine)
-    {
-        _machineString = newMachine;
-    }
-
-    QString NodeItem::getTime_limit()
-    {
-        return _time_limitString;
-    }
-
-    void NodeItem::setTime_limit(QString newTime_limit)
-    {
-        _time_limitString = newTime_limit;
-    }
-
-    QString NodeItem::getRetry()
-    {
-        return _retryString;
-    }
-
-    void NodeItem::setRetry(QString newRetry)
-    {
-        _retryString = newRetry;
-    }
-
-    QString NodeItem::getLaunch_prefix()
-    {
-        return _launch_prefixString;
-    }
-
-    void NodeItem::setLaunch_prefix(QString newLaunch_prefix)
-    {
-        _launch_prefixString = newLaunch_prefix;
-    }
-
-    int NodeItem::getRequired()
-    {
-        return _requiredInt;
-    }
-
-    void NodeItem::setRequired(int required)
-    {
-        _requiredInt = required;
-    }
-
-    int NodeItem::getRespawn()
-    {
-        return _respawnInt;
-    }
-
-    void NodeItem::setRespawn(int respawn)
-    {
-        _respawnInt = respawn;
-    }
-
-    int NodeItem::getClear_params()
-    {
-        return _clear_paramsInt;
-    }
-
-    void NodeItem::setClear_params(int clear)
-    {
-        _clear_paramsInt = clear;
-    }
-
-    int NodeItem::getOutput()
-    {
-        return _outputInt;
-    }
-
-    void NodeItem::setOutput(int output)
-    {
-        _outputInt = output;
-    }
-
-    int NodeItem::getCwd()
-    {
-        return _cwdInt;
-    }
-
-    void NodeItem::setCwd(int cwd)
-    {
-        _cwdInt = cwd;
-    }
-
-    void NodeItem::setNode_or_test(int set)
-    {
-        _node_or_testInt=set;
-
-    }
-
-    QStringList NodeItem::getPublications()
-    {
-        return _publicationsStringList;
-    }
-
-    QStringList NodeItem::getSubscriptions()
-    {
-        return _subscriptionsStringList;
-    }
-
-    QStringList NodeItem::getServices()
-    {
-        return _servicesStringList;
-    }
-
-    QStringList NodeItem::getParameters()
-    {
-        return _parametersStringList;
-    }
-
-    QPointF NodeItem::getLocation()
-    {
-        return _location;
-    }
-    //! [3]
-
-    void NodeItem::addEnvItem(EnvItem *env)
-    {
-        envItems.append(env);
-
-    }
-
-    void NodeItem::removeEnvItems()
-    {
-        foreach (EnvItem *env, envItems) {
-            removeEnvItem(env);
-            delete env;
-        }
-
-    }
-
-    void NodeItem::removeEnvItem(EnvItem *env)
-    {
-        int index = envItems.indexOf(env);
-
-        if (index != -1)
-            envItems.removeAt(index);
-    }
-
-
-    void NodeItem::addParamItem(ParameterItem *param)
-    {
-        paramItems.append(param);
-
-    }
-
-    void NodeItem::removeParamItems()
-    {
-        foreach (ParameterItem *param, paramItems) {
-            removeParamItem(param);
-            delete param;
-        }
-
-    }
-
-    void NodeItem::removeParamItem(ParameterItem *param)
-    {
-        int index = paramItems.indexOf(param);
-
-        if (index != -1)
-            paramItems.removeAt(index);
-    }
-    void NodeItem::removeRosparamItem(RosparamItem *rosparam)
-    {
-        int index = rosparamItems.indexOf(rosparam);
-
-        if (index != -1)
-            rosparamItems.removeAt(index);
-    }
-
-    void NodeItem::removeRosparamItems()
-    {
-        foreach (RosparamItem *rosparam, rosparamItems) {
-            removeRosparamItem(rosparam);
-            delete rosparam;
-        }
-    }
-
-    void NodeItem::addRosparamItem(RosparamItem *rosparam)
-    {
-        rosparamItems.append(rosparam);
-
-    }
-
-    QString NodeItem::getIf()
-    {
-        return _ifString;
-    }
-
-    void NodeItem::setIf(QString newIf)
-    {
-        _ifString=newIf;
-    }
-
-    QString NodeItem::getUnless()
-    {
-        return _unlessString;
-    }
-
-    void NodeItem::setUnless(QString newUnless)
-    {
-        _unlessString = newUnless;
-    }
+void NodeItem::setUnless(QString newUnless)
+{
+    _unlessString = newUnless;
+}
 

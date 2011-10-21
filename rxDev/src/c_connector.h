@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <QPoint>
 
 //Datastructure
 class rosNode {
@@ -16,6 +16,19 @@ public:
     QStringList nodeOutput;
     QStringList nodeServices;
     QStringList nodeParameters;
+
+};
+
+class remapArrowData {
+
+public:
+    QPointF startNode;
+    QPointF endNode;
+    QString from;
+    QString to;
+    QString ifString;
+    QString unlessString;
+
 
 };
 

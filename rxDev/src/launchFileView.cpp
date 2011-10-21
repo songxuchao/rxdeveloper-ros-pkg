@@ -293,7 +293,6 @@ void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
 
 
             scene()->removeItem(line); //remove temporary line
-            //Todo: Remove bug, that you can draw lines that don't get destroyed
             delete line;
             //! [11] //! [12]
 

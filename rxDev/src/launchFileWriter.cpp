@@ -54,6 +54,10 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
             if (list.at(i)->parentItem()==0)
                 create_nodeTag(*launchTag,*list.at(i));
             break;
+        case RemapItem::Type:
+            if (list.at(i)->parentItem()==0)
+                create_remapTag(*launchTag,*list.at(i));
+            break;
         case GroupItem::Type:
             if (list.at(i)->parentItem()==0)
                 create_groupTag(*launchTag,*list.at(i));
@@ -303,7 +307,6 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
         nodeTag->SetAttribute("if", node->getIf().toStdString());
     if (node->getUnless()!="")
         nodeTag->SetAttribute("unless", node->getUnless().toStdString());
-
     if (node->getMachine() != "")
         nodeTag->SetAttribute("machine", node->getMachine().toStdString());
     if (node->getRespawn() == 1)
@@ -326,7 +329,11 @@ void LaunchWriter::create_nodeTag(TiXmlElement &elem, QGraphicsItem &item)
     yCor = QString::number(node->pos().y());
     create_commentTag(*nodeTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
-
+    //Check for embedded remapArrows
+    for (int i = 0; i < node->arrows.size(); i++) {
+        if (node->arrows.at(i)->startItem()==node)
+            create_remapArrowTag(*nodeTag,*node->arrows.at(i));
+    }
     //Check for embedded env tags
     for (int i = 0; i < node->envItems.size(); i++) {
         create_envTag(*nodeTag,*node->envItems.at(i));
@@ -659,4 +666,29 @@ void LaunchWriter::create_remapTag(TiXmlElement &elem, QGraphicsItem &item)
     create_commentTag(*remapTag,QString("x=\"").append(xCor).append("\" y=\"").append(yCor).append("\""));
 
     elem.LinkEndChild( remapTag );
+}
+
+void LaunchWriter::create_remapArrowTag(TiXmlElement &nodeTag, RemapArrow &arrow)
+{
+    TiXmlElement * remapTag = new TiXmlElement( "remap" );
+    remapTag->SetAttribute("from", arrow.getFrom().toStdString());
+    remapTag->SetAttribute("to", arrow.getTo().toStdString());
+    //optional
+    if (arrow.getIf()!="")
+        remapTag->SetAttribute("if", arrow.getIf().toStdString());
+    if (arrow.getUnless()!="")
+        remapTag->SetAttribute("unless", arrow.getUnless().toStdString());
+    //end optional
+    qreal startX=arrow.startItem()->pos().x()+50; //+50 to get the center of node
+    qreal startY=arrow.startItem()->pos().y()+95; //+90 to get the center of node
+    qreal endX=arrow.endItem()->pos().x()+50; //+50 to get the center of node
+    qreal endY=arrow.endItem()->pos().y()+95; //+90 to get the center of node
+    create_commentTag(*remapTag,QString("startX=\"").append(QString::number(startX)).append("\" startY=\"").append(QString::number(startY)).append("\" ")
+                                        .append("endX=\"").append(QString::number(endX)).append("\" endY=\"").append(QString::number(endY)).append("\""));
+
+//    QString xCor,yCor;
+//    xCor = QString::number(remap.pos().x());
+//    yCor = QString::number(remap.pos().y());
+
+    nodeTag.LinkEndChild( remapTag );
 }

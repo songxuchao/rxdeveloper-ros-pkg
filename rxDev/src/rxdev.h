@@ -151,6 +151,7 @@ void openSpecFile();
     void create_envItem(EnvItem &newEnv,TiXmlNode * pParent,int &x, int &y);
     void create_argItem(ArgItem &newArg,TiXmlNode * pParent,int &x, int &y);
     void create_remapItem(RemapItem &newRemap, TiXmlNode * pParent,int &x, int &y);
+    void create_remapArrow(const remapArrowData *arrowData);
     void create_includeFileItem(IncludeFileItem &newInclude,TiXmlNode *pParent,int &x, int &y);
     void create_machineItem(MachineItem &nemMachine, TiXmlNode *pParent,int &x, int &y);
     void prepare_nodeOrTest(TiXmlNode *nodeNode,QString &nodePackage, QString &nodeType,QStringList &nodeSubs,
