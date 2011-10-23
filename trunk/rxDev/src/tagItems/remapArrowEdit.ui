@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
-    <height>603</height>
+    <width>806</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,14 +24,14 @@
       <string>Node that gets the remap tag</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>from subscription:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="7" column="0">
        <widget class="QListView" name="listView_startNode_subscribe">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -41,21 +41,21 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="9" column="0">
        <widget class="Line" name="line">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>from publication:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="11" column="0">
        <widget class="QListView" name="listView_startNode_publish">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -64,6 +64,31 @@
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QCheckBox" name="checkBox_startGroupNs">
+          <property name="text">
+           <string>add group ns</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_startNamespace">
+          <property name="text">
+           <string>add node ns</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_startName">
+          <property name="text">
+           <string>add nodename</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -109,14 +134,14 @@ or</string>
       <string>Target Node</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>to publication:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="4" column="0">
        <widget class="QListView" name="listView_endNode_publish">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -126,21 +151,21 @@ or</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="5" column="0">
        <widget class="Line" name="line_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>to subscription:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="7" column="0">
        <widget class="QListView" name="listView_endNode_subscribe">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -149,6 +174,31 @@ or</string>
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="checkBox_targetGroupNs">
+          <property name="text">
+           <string>add group ns</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_targetNamespace">
+          <property name="text">
+           <string>add node ns</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_targetName">
+          <property name="text">
+           <string>add nodename</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -166,21 +216,21 @@ or</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="2">
        <widget class="QLineEdit" name="lineEdit_if">
         <property name="placeholderText">
          <string>$(arg foo)</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="3">
        <widget class="QLabel" name="label_9">
         <property name="text">
          <string>unless:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="0" column="4">
        <widget class="QLineEdit" name="lineEdit_unless">
         <property name="placeholderText">
          <string>$(arg foo)</string>
@@ -190,13 +240,33 @@ or</string>
      </layout>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="4" column="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLineEdit" name="lineEdit_to"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLineEdit" name="lineEdit_from"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>From:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>To:</string>
      </property>
     </widget>
    </item>

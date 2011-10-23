@@ -21,7 +21,10 @@ class RemapArrowEdit : public QDialog {
                 QString getTo();
                 QString getIf();
                 QString getUnless();
+                void updateFrom();
+                void updateTo();
                 bool getSubToPub();
+
         public slots:
                 void reject();
                 void accept();
@@ -32,13 +35,34 @@ class RemapArrowEdit : public QDialog {
                 void selectionHandle_start_publish(const QItemSelection &selected, const QItemSelection &deselected);
                 void selectionHandle_end_subscribe(const QItemSelection &selected, const QItemSelection &deselected);
 
-        private:
+                void on_checkBox_startName_toggled(bool checked);
+
+                void on_checkBox_targetName_toggled(bool checked);
+
+                void on_checkBox_startNamespace_toggled(bool checked);
+
+                void on_checkBox_targetNamespace_toggled(bool checked);
+
+                void on_checkBox_startGroupNs_toggled(bool checked);
+
+                void on_checkBox_targetGroupNs_toggled(bool checked);
+
+private:
                 bool subToPub;
                 Ui::RemapArrowEdit *ui;
                 QStringListModel *model_start_subscribe;
                 QStringListModel *model_end_publish;
                 QStringListModel *model_start_publish;
                 QStringListModel *model_end_subscribe;
+                QString fromNode;
+                QString fromNodeNamespace;
+                QString fromGroupNamespace;
+                QString fromString;
+                QString toString;
+                QString toNode;
+                QString toNodeNamespace;
+                QString toGroupNamespace;
+                RemapArrow *myItem;
 //                QString _fromSubscription;
 //                QString _toPublication;
 

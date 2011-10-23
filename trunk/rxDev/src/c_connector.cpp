@@ -75,6 +75,7 @@ void RxDev::on_actionNew_Launchfile_triggered()
         for (int i = 0; i < list.size(); i++) {
             scene->removeItem(list.at(i));
         }
+        setWindowTitle("rxDeveloper - *new");
     }
 }
 
@@ -115,6 +116,7 @@ void RxDev::on_pushButton_refreshNodes_clicked()
         availableNodeList.append(QString(output).split("\n"));
     }
     availableNodeList.removeDuplicates();
+    availableNodeList.sort();
     //qDebug()<<availableNodeList;
 
     //parse all available specfiles
@@ -473,6 +475,7 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
 
     }
     nodeParser(seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString());
+    //  @todo Selected Node Datastructure
     gview->selectedNodeName = node.nodeType;
     gview->selectedNodePackage = node.nodePackage;
     gview->selectedNodeSubscriptions = node.nodeInput;

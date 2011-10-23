@@ -97,7 +97,7 @@ public slots:
     void setIf(QString newIf);
     QString getUnless();
     void setUnless(QString newUnless);
-
+    bool getSubToPub();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -116,6 +116,7 @@ private:
     QString _toString;
     QString _ifString;
     QString _unlessString;
+
 };
 //! [0]
 

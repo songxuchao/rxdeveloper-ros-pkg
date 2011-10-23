@@ -16,7 +16,7 @@ class NodeEdit : public QDialog {
     Q_OBJECT
 
 public:
-    explicit NodeEdit(NodeItem *item, QWidget *parent = 0);
+    explicit NodeEdit(NodeItem *item,bool blank, QWidget *parent = 0);
     ~NodeEdit();
     QString getName();
     QString getArgs();
@@ -63,6 +63,7 @@ private:
     int selectedRemap;
     int selectedParameter;
     int selectedRosparam;
+
 
 signals:
 

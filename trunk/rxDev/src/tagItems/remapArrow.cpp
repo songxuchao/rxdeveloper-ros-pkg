@@ -231,27 +231,29 @@ bool RemapArrow::getArrowData()
     RemapArrowEdit remapEdit(this);
     bool accept = remapEdit.exec();
     if ((accept)){
-        QStringList temp_name = remapEdit.getFrom().split("{");
+//        QStringList temp_name = remapEdit.getFrom().split("{");
         _subToPub=remapEdit.getSubToPub();
-        //setFrom(myStartItem->getName()+"/"+temp_name.at(0));
-        setFrom(temp_name.at(0));
-        temp_name.clear();
-        temp_name = remapEdit.getTo().split(QRegExp("[{/]"));
-        QString target =temp_name.at(0);
-        //qDebug()<<"name"<<temp_name.count();
+    setFrom(remapEdit.getFrom());
+    setTo(remapEdit.getTo());
+        //        setFrom(myStartItem->getName()+"/"+temp_name.at(0));
+//        setFrom(temp_name.at(0));
+//        temp_name.clear();
+//        temp_name = remapEdit.getTo().split(QRegExp("[{/]"));
+//        QString target =temp_name.at(0);
+//        //qDebug()<<"name"<<temp_name.count();
         //target = endItem()->getName().append("/").append(target);
-        if (endItem()->getNamespace() != ""){
-            target = endItem()->getNamespace().append("/").append(target);
-        }
-        if (endItem()->parentItem()){
-            GroupItem *group = qgraphicsitem_cast<GroupItem *>(endItem()->parentItem());
-            if (group->getNamespace() !="")
-                target = group->getNamespace().append("/").append(target);
+//        if (endItem()->getNamespace() != ""){
+//            target = endItem()->getNamespace().append("/").append(target);
+//        }
+//        if (endItem()->parentItem()){
+//            GroupItem *group = qgraphicsitem_cast<GroupItem *>(endItem()->parentItem());
+//            if (group->getNamespace() !="")
+//                target = group->getNamespace().append("/").append(target);
 
-        }
+//        }
+//        setTo(target);
         setIf(remapEdit.getIf());
         setUnless(remapEdit.getUnless());
-        setTo(target);
 
         RemapItem *remap=new RemapItem;
         remap->setFrom(this->getFrom());
@@ -266,7 +268,10 @@ bool RemapArrow::getArrowData()
 void RemapArrow::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     getArrowData();
+    this->updatePosition();
+
     event->setAccepted(true);
+
 }
 
 void RemapArrow::setFrom(QString newFrom)
@@ -307,4 +312,9 @@ QString RemapArrow::getUnless()
 void RemapArrow::setUnless(QString newUnless)
 {
     _unlessString = newUnless;
+}
+
+bool RemapArrow::getSubToPub()
+{
+    return _subToPub;
 }
