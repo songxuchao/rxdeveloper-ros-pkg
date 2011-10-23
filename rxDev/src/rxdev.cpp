@@ -333,6 +333,7 @@ void RxDev::on_actionSave_as_Launchfile_triggered()
         ui->statusBar->showMessage(tr("writing launchfile..."));
         launchFile->createDocument(file,list);
         ui->statusBar->showMessage(tr("Launchfile '%1' has been written").arg(file), 5000);
+        setWindowTitle("rxDeveloper - "+file);
         QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("Writing done")),
                                                                    QString::fromUtf8("<h2>Launchfile has been written!</h2>"
                                                                                      "<p>The file "+file.toUtf8()+" was created. Do you want to open this file?</p>"),
@@ -383,6 +384,7 @@ void RxDev::on_actionLoad_Launchfile_triggered()
         {
             ui->statusBar->showMessage(tr("opening launchfile..."));
             loadDocument( &doc );
+            setWindowTitle("rxDeveloper - "+file);
             ui->statusBar->showMessage(tr("Launchfile '%1' has been opened").arg(file), 5000);
         }
         else

@@ -81,6 +81,7 @@ void LaunchFileView::wheelEvent(QWheelEvent *event)
 
 
 void LaunchFileView::dragEnterEvent(QDragEnterEvent *event) {
+
     event->accept();
 }
 
@@ -170,23 +171,20 @@ void LaunchFileView::mousePressEvent(QMouseEvent *event)
 
                 if (itemAt((event->pos()))->type() == 65550) { //Arrowtype RemapArrow::Type
                     RemapArrow *arrow = qgraphicsitem_cast<RemapArrow *>(itemAt((event->pos())));
-                    RemapItem *item;
-                    for (int i=0; i< arrow->startItem()->remapItems.count();i++){
-                        item = arrow->startItem()->remapItems.at(i);
+//                    RemapItem *item;
+//                    for (int i=0; i< arrow->startItem()->remapItems.count();i++){
+//                        item = arrow->startItem()->remapItems.at(i);
 
 
-                        if (item->getFrom()==arrow->getFrom() && item->getTo()==arrow->getTo()){
-                            arrow->startItem()->removeRemapItem(item);
-                        }
+//                        if (item->getFrom()==arrow->getFrom() && item->getTo()==arrow->getTo()){
+//                            arrow->startItem()->removeRemapItem(item);
+//                        }
 
-                    }
+//                    }
                     arrow->startItem()->removeArrow(arrow);
                     arrow->endItem()->removeArrow(arrow);
                     scene()->removeItem(itemAt((event->pos())));
                     delete itemAt((event->pos()));
-                    qDebug()<<"Delete";
-
-
                 }
                 event->accept();
                 break;
@@ -306,7 +304,6 @@ void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
                         qgraphicsitem_cast<NodeItem *>(startItems.first());
                 NodeItem *endItem =
                         qgraphicsitem_cast<NodeItem *>(endItems.first());
-                qDebug()<<"Start:"<< startItem->getPublications().count()<<"\nEnd: "<<endItem->getSubscriptions().count();
 
 
                 RemapArrow *arrow = new RemapArrow(startItem, endItem);

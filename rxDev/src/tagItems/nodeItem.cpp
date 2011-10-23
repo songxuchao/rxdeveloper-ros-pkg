@@ -317,8 +317,13 @@ void NodeItem::removeRemapItem(RemapItem *remap)
 
 bool NodeItem::getNodeData()
 {
-    NodeEdit nodeEdit(this);
+    bool blank = false;
+    if (this->getType()=="_blank_node"){
+        blank=true;
+    }
+    NodeEdit nodeEdit(this, blank);
     nodeEdit.setWindowTitle("Node: "+getName());
+
     bool accept = nodeEdit.exec();
     if ((accept)){
         setName(nodeEdit.getName());

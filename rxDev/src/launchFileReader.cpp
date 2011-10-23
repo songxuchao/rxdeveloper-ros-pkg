@@ -10,8 +10,10 @@
  *
  * Parses the given file to find the important <launch>-tag and start the parsing of the tags
  */
+QList<remapArrowData>arrowList;
 void RxDev::loadDocument( TiXmlNode * documentNode)
 {
+    arrowList.clear();
     if ( !documentNode ) return;
     TiXmlNode * pChild;
     for ( pChild = documentNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
@@ -21,20 +23,35 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
             TiXmlNode * pChild2;
             for ( pChild2 = pChild->FirstChild(); pChild2 != 0; pChild2 = pChild2->NextSibling())
             {
+
                 beginParsing(pChild2);
+
             }
         }
     }
+    qDebug()<<"______________________________________________________";
+    foreach(QGraphicsItem *item, scene->items()){
+        if (item->type()==NodeItem::Type)
+            qDebug()<<item;
+    }
+    qDebug()<<arrowList.count();
+    qDebug()<<"______________________________________________________";
+
+    for (int i=0;i<arrowList.count();i++){
+        create_remapArrow(&arrowList.at(i));
+    }
+
+
+
 }
 
-QList<remapArrowData>arrowList;
 
 /*!\brief First-level file parsing
  *
  * Parses the launch file for tags that are children of the <launch>-tag.
  */
 void RxDev::beginParsing(TiXmlNode *firstLevelNode){
-    arrowList.clear();
+
     switch ( firstLevelNode->Type() )
     {
     case TiXmlNode::TINYXML_ELEMENT:                        // case with the important <tags>
@@ -183,9 +200,6 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
         break;
     }
     printf( "\n" );
-    for (int i=0;i<arrowList.count();i++){
-        create_remapArrow(&arrowList.at(i));
-    }
 
 }
 
@@ -450,6 +464,7 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
                             int end = stringToParse.indexOf("\"", beginn+1);
                             if (end!=-1){
                                 endItemX=(stringToParse.mid(beginn,end-beginn)).toDouble();
+
                             }
 
                         }
@@ -591,7 +606,7 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
     NodeItem *endNode;
     int checkSuccess=0;
     foreach(QGraphicsItem *item, scene->items(arrowdata->startNode)){
-        qDebug()<<item->type();
+        qDebug()<<"start"<<item->type();
         if (item->type()==65540){
             startNode= qgraphicsitem_cast<NodeItem *>(item);
             checkSuccess++;
@@ -599,12 +614,17 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
 
 
     }
-    foreach(QGraphicsItem *item, scene->items(arrowdata->endNode)){
-        qDebug()<<item->type();
+    QPointF target =arrowdata->endNode;
+//    if (startNode->parentItem()){
+//        target=target+startNode->parentItem()->pos();
+//    }
+    foreach(QGraphicsItem *item, (scene->items(target))){
+        qDebug()<<"end"<<item->type();
         if (item->type()==65540){
             endNode= qgraphicsitem_cast<NodeItem *>(item);
             checkSuccess++;
         }
+
     }
     if (checkSuccess==2){
         RemapArrow *arrow = new RemapArrow(startNode, endNode);

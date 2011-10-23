@@ -5,13 +5,17 @@
 #include "nodeParamEdit.h"
 
 
-NodeEdit::NodeEdit(NodeItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::NodeEdit) {
+NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent), ui(new Ui::NodeEdit) {
     myItem=item;
     ui->setupUi(this);
     selectedEnv=-1;
     selectedRemap=-1;
     selectedParameter=-1;
     selectedRosparam=-1;
+    if (blank){
+        ui->lineEdit_pkg->setReadOnly(false);
+        ui->lineEdit_type->setReadOnly(false);
+    }
     ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
     ui->toolButton_addEnv->setDefaultAction(ui->actionAdd_env);
     ui->toolButton_deleteRemap->setDefaultAction(ui->actionDelete_remap);
