@@ -257,15 +257,15 @@ void LaunchFileView::mouseReleaseEvent(QMouseEvent *event)
             }else if(itemAt(event->pos())->type() == GroupItem::Type) {
                 QList<QGraphicsItem *> list;
                 list=itemAt(event->pos())->childItems();
-                qDebug()<<"Begin group items->";
+                //qDebug()<<"Begin group items->";
 
                 for (int i = 0; i < list.size(); i++) {
                     if (list.at(i)->type() != 8)
 
                         (list.at(i))->setParentItem(0);
-                    qDebug()<<(list.at(i)->type());
+                  //  qDebug()<<(list.at(i)->type());
                 }
-                qDebug()<<"<-End group items";
+                //qDebug()<<"<-End group items";
                 scene()->removeItem(itemAt(event->pos()));
             }
 

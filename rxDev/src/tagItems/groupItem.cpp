@@ -60,12 +60,12 @@ void GroupItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
     QList<QGraphicsItem *> list;
     list=this->childItems();
-    qDebug()<<"Begin group items->";
-    for (int i = 0; i < list.size(); i++) {
-        if (list.at(i)->type() != 8)
-            qDebug()<<(list.at(i)->type())<<": "<<list.at(i)->pos()+this->pos();
-     }
-    qDebug()<<"<-End group items";
+//    qDebug()<<"Begin group items->";
+//    for (int i = 0; i < list.size(); i++) {
+//        if (list.at(i)->type() != 8)
+//            qDebug()<<(list.at(i)->type())<<": "<<list.at(i)->pos()+this->pos();
+//     }
+//    qDebug()<<"<-End group items";
     setColor(Qt::red);
     getGroupData();
     setColor(Qt::cyan);
@@ -93,7 +93,7 @@ bool GroupItem::getGroupData()
 
 void GroupItem::updateGroupItem()
 {
-    qDebug()<<"cp "<<_clear_paramsInt;
+    //qDebug()<<"cp "<<_clear_paramsInt;
     if (getNamespace().isEmpty())
         _namespace.setHtml("");
     else
@@ -180,7 +180,7 @@ void GroupItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     this->setPos(_location);
     QList<QGraphicsItem *> list;
     list=this->childItems();
-    qDebug()<<"Begin group items->";
+    //qDebug()<<"Begin group items->";
     for (int i = 0; i < list.size(); i++) {
         if (list.at(i)->type() == NodeItem::Type){
             NodeItem *item;

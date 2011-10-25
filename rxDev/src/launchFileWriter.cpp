@@ -679,16 +679,6 @@ void LaunchWriter::create_remapArrowTag(TiXmlElement &nodeTag, RemapArrow &arrow
     if (arrow.getUnless()!="")
         remapTag->SetAttribute("unless", arrow.getUnless().toStdString());
     //end optional
-    qreal startX=arrow.startItem()->pos().x()+50; //+50 to get the center of node
-    qreal startY=arrow.startItem()->pos().y()+95; //+90 to get the center of node
-    qreal endX=arrow.endItem()->pos().x()+50; //+50 to get the center of node
-    qreal endY=arrow.endItem()->pos().y()+95; //+90 to get the center of node
-    create_commentTag(*remapTag,QString("startX=\"").append(QString::number(startX)).append("\" startY=\"").append(QString::number(startY)).append("\" ")
-                                        .append("endX=\"").append(QString::number(endX)).append("\" endY=\"").append(QString::number(endY)).append("\""));
-
-//    QString xCor,yCor;
-//    xCor = QString::number(remap.pos().x());
-//    yCor = QString::number(remap.pos().y());
 
     nodeTag.LinkEndChild( remapTag );
 }

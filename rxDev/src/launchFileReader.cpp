@@ -11,9 +11,12 @@
  * Parses the given file to find the important <launch>-tag and start the parsing of the tags
  */
 QList<remapArrowData>arrowList;
+QStringList groups;
+
 void RxDev::loadDocument( TiXmlNode * documentNode)
 {
     arrowList.clear();
+    groups.clear();
     if ( !documentNode ) return;
     TiXmlNode * pChild;
     for ( pChild = documentNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
@@ -434,79 +437,33 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             create_rosparamItem(*newRosparam,pChild,includeX,includeY);
             newNode.addRosparamItem(newRosparam);
         }else if (QString(pChild->Value())=="remap"){
-            TiXmlNode * pChildChild;
-            qreal startItemX=0,startItemY=0;
-            qreal endItemX=0,endItemY=0;
-            for ( pChildChild = pChild->FirstChild(); pChildChild != 0; pChildChild = pChildChild->NextSibling())
+            RemapItem* newRemap = new RemapItem;
+            TiXmlAttribute* tagAttribute=pChild->ToElement()->FirstAttribute();
+            while (tagAttribute)
             {
-                if (pChildChild->Type()==TiXmlNode::TINYXML_COMMENT){
-
-                    if (QString(pChildChild->Value())!=""){
-                        QString stringToParse;
-                        stringToParse = pChildChild->Value();
-                        if (stringToParse.contains("startX=\"")){
-                            int beginn = stringToParse.indexOf("startX=\"")+8;
-                            int end = stringToParse.indexOf("\"", beginn+1);
-                            if (end!=-1){
-                                startItemX=(stringToParse.mid(beginn,end-beginn)).toDouble();
-                            }
-
-                        }
-                        if (stringToParse.contains("startY=\"")){
-                            int beginn = stringToParse.indexOf("startY=\"")+8;
-                            int end = stringToParse.indexOf("\"", beginn+1);
-                            if (end!=-1){
-                                startItemY=(stringToParse.mid(beginn,end-beginn)).toDouble();
-                            }
-                        }
-                        if (stringToParse.contains("endX=\"")){
-                            int beginn = stringToParse.indexOf("endX=\"")+6;
-                            int end = stringToParse.indexOf("\"", beginn+1);
-                            if (end!=-1){
-                                endItemX=(stringToParse.mid(beginn,end-beginn)).toDouble();
-
-                            }
-
-                        }
-                        if (stringToParse.contains("endY=\"")){
-                            int beginn = stringToParse.indexOf("endY=\"")+6;
-                            int end = stringToParse.indexOf("\"", beginn+1);
-                            if (end!=-1){
-                                endItemY=(stringToParse.mid(beginn,end-beginn)).toDouble();
-                            }
-                        }
-                    }
+                if (QString(tagAttribute->Name())=="from"){
+                    newRemap->setFrom(QString(tagAttribute->Value()));
+                }else if (QString(tagAttribute->Name())=="to"){
+                    newRemap->setTo(QString(tagAttribute->Value()));
+                }else if (QString(tagAttribute->Name())=="if"){
+                    newRemap->setIf(QString(tagAttribute->Value()));
+                }else if (QString(tagAttribute->Name())=="unless"){
+                    newRemap->setUnless(QString(tagAttribute->Value()));
                 }
+                tagAttribute=tagAttribute->Next();
             }
-            if (startItemX ==0||startItemY==0||endItemX ==0||endItemY==0){
-                RemapItem* newRemap = new RemapItem;
-                create_remapItem(*newRemap,pChild,includeX,includeY);
-                newNode.addRemapItem(newRemap);
-            }else{
+            newRemap->updateRemapItem();
+            //newNode.addRemapItem(newRemap);
+            qDebug()<<"_________________________";
+            qDebug()<<newNode.pos();
+            qDebug()<<"_________________________";
 
-                TiXmlAttribute* tagAttribute=pChild->ToElement()->FirstAttribute();
+            remapArrowData *remapData=new remapArrowData;
+            remapData->startNode=&newNode;
+            remapData->item=newRemap;
+            arrowList.append(*remapData);
 
-                remapArrowData *remapData=new remapArrowData;
-                while (tagAttribute)
-                {
-                    if (QString(tagAttribute->Name())=="from"){
-                        remapData->from=(QString(tagAttribute->Value()));
-                    }else if (QString(tagAttribute->Name())=="to"){
-                        remapData->to= (QString(tagAttribute->Value()));
-                    }else if (QString(tagAttribute->Name())=="if"){
-                        remapData->ifString= (QString(tagAttribute->Value()));
-                    }else if (QString(tagAttribute->Name())=="unless"){
-                        remapData->unlessString= (QString(tagAttribute->Value()));
-                    }
-                    tagAttribute=tagAttribute->Next();
-                }
-
-                remapData->startNode =QPoint(startItemX,startItemY);
-                remapData->endNode =QPoint(endItemX,endItemY);
-                arrowList.append(*remapData);
-            }
-        }
-        else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
+        } else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -601,51 +558,75 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int
 
 void RxDev::create_remapArrow(const remapArrowData *arrowdata)
 {
-
-    NodeItem *startNode;
-    NodeItem *endNode;
-    int checkSuccess=0;
-    foreach(QGraphicsItem *item, scene->items(arrowdata->startNode)){
-        qDebug()<<"start"<<item->type();
-        if (item->type()==65540){
-            startNode= qgraphicsitem_cast<NodeItem *>(item);
-            checkSuccess++;
+    QString toString=arrowdata->item->getTo();
+    QStringList toStringList=toString.split("/");
+    bool targetInGroup = false;
+    foreach(QString group,groups){
+        foreach(QString string, toStringList){
+            qDebug()<<group<<":"<<string;
+            if (string==group){
+                targetInGroup=true;
+                qDebug()<<"target is in group";
+            }
         }
-
-
     }
-    QPointF target =arrowdata->endNode;
-//    if (startNode->parentItem()){
-//        target=target+startNode->parentItem()->pos();
-//    }
-    foreach(QGraphicsItem *item, (scene->items(target))){
-        qDebug()<<"end"<<item->type();
-        if (item->type()==65540){
-            endNode= qgraphicsitem_cast<NodeItem *>(item);
-            checkSuccess++;
+    foreach(QGraphicsItem *item, scene->items()){
+        if (item->type()==65540&&item!=arrowdata->startNode){
+            NodeItem *targetNode = qgraphicsitem_cast<NodeItem *>(item);
+            if (targetInGroup)
+            {
+                if (targetNode->parentItem()){
+                    GroupItem *checkGroupItem =qgraphicsitem_cast<GroupItem *>(targetNode->parentItem());
+                    foreach(QString stringNs, toStringList){
+                        foreach(QString stringName, toStringList){
+                            if(checkGroupItem->getNamespace()==stringNs&&targetNode->getName()==stringName){
+
+                                RemapArrow *arrow = new RemapArrow(arrowdata->startNode, targetNode);
+                                arrow->setTo(arrowdata->item->getTo());
+                                arrow->setFrom(arrowdata->item->getFrom());
+                                arrow->setIf(arrowdata->item->getIf());
+                                arrow->setUnless(arrowdata->item->getUnless());
+                                arrowdata->startNode->addArrow(arrow);
+                                targetNode->addArrow(arrow);
+                                arrow->setZValue(-20);
+                                scene->addItem(arrow);
+                                arrow->updatePosition();
+                            }
+                        }
+                    }
+                }
+            }else{
+                foreach(QString string, toStringList){
+                    qDebug()<<string<<":"<<targetNode->getName();
+                    if (!targetNode->parentItem()&&string==targetNode->getName()){
+
+
+                        //                qDebug()<<"from"<<arrowdata->startNode->pos();
+                        //                qDebug()<<"to"<<targetNode->getName();
+                        //                qDebug()<<toString;
+                        RemapArrow *arrow = new RemapArrow(arrowdata->startNode, targetNode);
+                        arrow->setTo(arrowdata->item->getTo());
+                        arrow->setFrom(arrowdata->item->getFrom());
+                        arrow->setIf(arrowdata->item->getIf());
+                        arrow->setUnless(arrowdata->item->getUnless());
+                        arrowdata->startNode->addArrow(arrow);
+                        targetNode->addArrow(arrow);
+                        arrow->setZValue(-20);
+                        scene->addItem(arrow);
+                        arrow->updatePosition();
+                    }
+                }
+            }
         }
-
     }
-    if (checkSuccess==2){
-        RemapArrow *arrow = new RemapArrow(startNode, endNode);
-        arrow->setTo(arrowdata->to);
-        arrow->setFrom(arrowdata->from);
-        arrow->setIf(arrowdata->ifString);
-        arrow->setUnless(arrowdata->unlessString);
-        startNode->addArrow(arrow);
-        endNode->addArrow(arrow);
-        arrow->setZValue(-20);
-        scene->addItem(arrow);
-        arrow->updatePosition();
-
-    }
-
 }
 
+
+
 /*!\brief <rosparam>-tag object
- *
- * get attributes for the object..
- */
+                         *
+                         * get attributes for the object..
+                         */
 void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=rosparamNode->ToElement()->FirstAttribute();
@@ -681,9 +662,9 @@ void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNod
 }
 
 /*!\brief <env>-tag object
- *
- * get attributes for the <env>-object.
- */
+                         *
+                         * get attributes for the <env>-object.
+                         */
 void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=envNode->ToElement()->FirstAttribute();
@@ -716,9 +697,9 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
 }
 
 /*!\brief <arg>-tag object
- *
- * get attributes for the <arg>-object and search for including tags.
- */
+                         *
+                         * get attributes for the <arg>-object and search for including tags.
+                         */
 void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode,int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=argNode->ToElement()->FirstAttribute();
@@ -754,9 +735,9 @@ void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode,int &x, int &y)
     newArg.updateArgItem();
 }
 /*!\brief <include>-tag object
- *
- * get attributes for the <include>-object and search for including tags.
- */
+                         *
+                         * get attributes for the <include>-object and search for including tags.
+                         */
 void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *includeNode,int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=includeNode->ToElement()->FirstAttribute();
@@ -805,9 +786,9 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
 }
 
 /*!\brief <group>-tag object
- *
- * get attributes for the <group>-object and search for children of the <group>-tag.
- */
+                         *
+                         * get attributes for the <group>-object and search for children of the <group>-tag.
+                         */
 void RxDev::create_groupItem(TiXmlNode *groupNode)
 {
     GroupItem* newGroup;
@@ -836,7 +817,7 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
     }
     newGroup->updateGroupItem();
 
-
+    groups.append(newGroup->getNamespace());
     scene->addItem(newGroup);
 
     //check for included items
