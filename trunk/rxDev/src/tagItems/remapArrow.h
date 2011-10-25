@@ -58,13 +58,10 @@ QT_END_NAMESPACE
 //Datastructure
 class remapArrowData {
 public:
-    QPointF startNode;
-    QPointF endNode;
-    QString from;
-    QString to;
-    QString ifString;
-    QString unlessString;
+    NodeItem *startNode;
+    RemapItem *item;
 };
+
 //! [0]
 class RemapArrow : public QGraphicsLineItem
 {

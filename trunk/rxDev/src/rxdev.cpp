@@ -145,12 +145,15 @@ void RxDev::setupToolBar()
     toolBar->addAction(ui->actionDrag_Drop);
     toolBar->addAction(ui->actionRemap);
     toolBar->addAction(ui->actionDelete_Item);
-
-    toolBar = addToolBar(tr("&View"));
-    toolBar->setObjectName("viewToolBar");
     toolBar->addWidget(gview->comboBox_sceneScale);
     connect(gview->comboBox_sceneScale, SIGNAL(currentIndexChanged(const QString &)),
             this, SLOT(setViewScale(const QString &)));
+
+    toolBar = addToolBar(tr("&run"));
+    toolBar->setObjectName("runToolBar");
+    toolBar->setIconSize(QSize(16, 16));
+    toolBar->addAction(ui->actionStart);
+    toolBar->addAction(ui->actionStop);
 
 }
 
@@ -256,23 +259,24 @@ void RxDev::loadSettings(){
 void RxDev::changeToolBar(){
 
     if (ui->tabWidget->currentIndex()==0)   {
-
-        ui->actionLoad_Launchfile->setEnabled(true);
-        ui->actionSave_as_Launchfile->setEnabled(true);
         ui->actionLoad_Launchfile->setEnabled(true);
         ui->actionSave_as_Launchfile->setEnabled(true);
         ui->actionDrag_Drop->setEnabled(true);
         ui->actionDelete_Item->setEnabled(true);
         ui->actionRemap->setEnabled(true);
+        gview->comboBox_sceneScale->setEnabled(true);
+        ui->actionStart->setEnabled(true);
+        ui->actionStop->setEnabled(true);
     } else {
 
-        ui->actionLoad_Launchfile->setEnabled(false);
-        ui->actionSave_as_Launchfile->setEnabled(false);
         ui->actionLoad_Launchfile->setEnabled(false);
         ui->actionSave_as_Launchfile->setEnabled(false);
         ui->actionDrag_Drop->setEnabled(false);
         ui->actionDelete_Item->setEnabled(false);
         ui->actionRemap->setEnabled(false);
+        gview->comboBox_sceneScale->setEnabled(false);
+        ui->actionStart->setEnabled(false);
+        ui->actionStop->setEnabled(false);
     }
 }
 
@@ -389,7 +393,7 @@ void RxDev::on_actionLoad_Launchfile_triggered()
         }
         else
         {
-            qDebug()<<"\nFailed to load file "<<file;
+            qDebug()<<"\nFailed to load file: "<<file;
         }
     }
 
@@ -416,3 +420,13 @@ void RxDev::on_actionSettings_triggered()
     }
 }
 
+
+void RxDev::on_actionStart_triggered()
+{
+
+}
+
+void RxDev::on_actionStop_triggered()
+{
+
+}

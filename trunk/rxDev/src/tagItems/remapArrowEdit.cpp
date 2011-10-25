@@ -18,6 +18,15 @@ RemapArrowEdit::RemapArrowEdit(RemapArrow *item, QWidget *parent) : QDialog(pare
     toGroupNamespace="";
     fromString=item->getFrom();
     toString=item->getTo();
+
+    if (toString==""){
+      on_checkBox_targetName_toggled(true);
+        ui->checkBox_targetName->setChecked(true);
+        if (myItem->endItem()->parentItem()){
+            ui->checkBox_targetGroupNs->setChecked(true);
+            on_checkBox_targetNamespace_toggled(true);
+        }
+    }
     if (item->getFrom().contains(QString(myItem->startItem()->getName()).append("/"))){
         ui->checkBox_startName->setChecked(true);
         fromString.remove(myItem->startItem()->getName().append("/"));
@@ -33,7 +42,6 @@ RemapArrowEdit::RemapArrowEdit(RemapArrow *item, QWidget *parent) : QDialog(pare
             fromString.remove(group->getNamespace().append("/"));
         }
     }
-
     if (item->getTo().contains(QString(myItem->endItem()->getName()).append("/"))){
         ui->checkBox_targetName->setChecked(true);
         toString.remove(myItem->endItem()->getName().append("/"));
