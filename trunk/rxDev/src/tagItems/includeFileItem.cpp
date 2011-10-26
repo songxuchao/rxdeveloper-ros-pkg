@@ -74,6 +74,25 @@ bool IncludeFileItem::getFileData()
         updateIncludeFileItem();
         setIf(fileEdit.getIf());
         setUnless(fileEdit.getUnless());
+        QString file(fileEdit.getExpandFile());
+        if (file!=""){
+            if (QFile(file).exists())
+                if (!file.isEmpty()){
+
+                    TiXmlDocument doc( file.toStdString() );
+                    bool loadOkay = doc.LoadFile();
+                    if (loadOkay)
+                    {
+                        qDebug()<<file;
+                         //loadDocument( &doc );
+                    }
+                    else
+                    {
+                        qDebug()<<"\nFailed to load file: "<<file;
+                    }
+                }
+                scene()->removeItem(this);
+        }
         return true;
     } else
         return false;

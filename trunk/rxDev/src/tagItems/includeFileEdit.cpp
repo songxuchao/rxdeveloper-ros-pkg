@@ -9,6 +9,7 @@
 IncludeFileEdit::IncludeFileEdit(IncludeFileItem *item, QWidget *parent) : QDialog(parent), ui(new Ui::IncludeFileEdit) {
     myItem=item;
     ui->setupUi(this);
+    expandFile="";
     selectedEnv=-1;
     selectedArg=-1;
     ui->toolButton_deleteEnv->setDefaultAction(ui->actionDelete_env);
@@ -219,4 +220,33 @@ void IncludeFileEdit::on_pushButton_tryOpen_clicked()
     }
     QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 
+}
+
+void IncludeFileEdit::on_pushButton_expand_clicked()
+{
+
+}
+
+QString IncludeFileEdit::getExpandFile()
+{
+    return expandFile;
+}
+
+void IncludeFileEdit::on_checkBox_expand_toggled(bool checked)
+{
+    if (checked){
+        expandFile = ui->lineEdit_file->text();
+        if (expandFile.startsWith("$(find ")){
+            expandFile.remove("$(find ");
+            QStringList tempList;
+            tempList<<expandFile.split(")");
+            QProcess findPath;
+            findPath.start(QString("rospack find "+tempList.at(0)));
+            findPath.waitForFinished(-1);
+            QByteArray output = findPath.readAllStandardOutput();
+            expandFile = output.trimmed();
+            expandFile.append(tempList.at(1));
+        }
+    }else
+        expandFile = "";
 }
