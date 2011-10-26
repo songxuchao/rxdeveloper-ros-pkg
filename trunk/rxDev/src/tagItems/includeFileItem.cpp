@@ -75,23 +75,17 @@ bool IncludeFileItem::getFileData()
         setIf(fileEdit.getIf());
         setUnless(fileEdit.getUnless());
         QString file(fileEdit.getExpandFile());
+        QPoint point(0,0);
+        if (this->parentItem()){
+            point.setX(this->parentItem()->pos().x());
+            point.setY(this->parentItem()->pos().y());
+        }
         if (file!=""){
-            if (QFile(file).exists())
-                if (!file.isEmpty()){
+            if (QFile(file).exists()){
 
-                    TiXmlDocument doc( file.toStdString() );
-                    bool loadOkay = doc.LoadFile();
-                    if (loadOkay)
-                    {
-                        qDebug()<<file;
-                         //loadDocument( &doc );
-                    }
-                    else
-                    {
-                        qDebug()<<"\nFailed to load file: "<<file;
-                    }
-                }
+                expandItem(file,point);
                 scene()->removeItem(this);
+            }
         }
         return true;
     } else
@@ -165,16 +159,16 @@ void IncludeFileItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 
         foreach (QGraphicsItem *item, collidingItems()) {
 
-                if (item->type() ==GroupItem::Type){
+            if (item->type() ==GroupItem::Type){
 
-                    this->setPos(mapToItem(item,0,0));
-                        setParentItem(item);
+                this->setPos(mapToItem(item,0,0));
+                setParentItem(item);
 
-                } else {
-                    this->setPos(mapToScene(0,0));
-                    this->setParentItem(0);
-                }
+            } else {
+                this->setPos(mapToScene(0,0));
+                this->setParentItem(0);
             }
+        }
 
         event->setAccepted(true);// tell the base class we are handling this event
 

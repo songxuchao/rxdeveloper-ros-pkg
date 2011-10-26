@@ -14,6 +14,7 @@
 #include <QGraphicsWidget>
 #include "argItem.h"
 #include "envItem.h"
+#include "groupItem.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -69,6 +70,8 @@ class IncludeFileItem : public QGraphicsWidget
     void removeArgItems();
     QList<ArgItem *> argItems;
     void addArgItem(ArgItem *arg);
+signals:
+        void expandItem(QString item,QPoint &point);
 
  protected:
     QPointF _location;

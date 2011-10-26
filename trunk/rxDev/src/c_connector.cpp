@@ -126,15 +126,15 @@ void RxDev::on_pushButton_refreshNodes_clicked()
 
             //fetch nodespecs
             try{
-            nodeParser(availableNodeList[i]);
+                nodeParser(availableNodeList[i]);
             }catch(YAML::InvalidScalar &e){
-            qDebug()<<"Invalid scalar in"<<QString(availableNodeList[i]);
-            qDebug()<<e.what();
-            return;
+                qDebug()<<"Invalid scalar in"<<QString(availableNodeList[i]);
+                qDebug()<<e.what();
+                return;
             }catch (YAML::ParserException&e){
-             qDebug()<<"Parser exception in"<<QString(availableNodeList[i]);
-             qDebug()<<e.what();
-             return;
+                qDebug()<<"Parser exception in"<<QString(availableNodeList[i]);
+                qDebug()<<e.what();
+                return;
             }
             //Fill the model
             fillItemModel_availableNodes(availableNodeList[i]);
@@ -241,6 +241,7 @@ void RxDev::on_pushButton_includeFile_clicked()
     if (newFile->getFileData()==true){
         scene->addItem(newFile);
     }
+    connect(newFile,SIGNAL(expandItem(QString,QGraphicsItem)),this,SLOT(expandInclude(const QString &, QGraphicsItem &)));
 
 }
 
