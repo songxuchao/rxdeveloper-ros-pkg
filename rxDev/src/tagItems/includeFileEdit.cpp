@@ -222,11 +222,6 @@ void IncludeFileEdit::on_pushButton_tryOpen_clicked()
 
 }
 
-void IncludeFileEdit::on_pushButton_expand_clicked()
-{
-
-}
-
 QString IncludeFileEdit::getExpandFile()
 {
     return expandFile;

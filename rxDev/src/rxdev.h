@@ -67,12 +67,11 @@ public:
     QSettings settings;
     rosNode node;
 
-
     ~RxDev();
 
 
 public slots:
-
+    void loadDocument( TiXmlNode * pParent);
 
 
 private slots:
@@ -156,8 +155,8 @@ void openSpecFile();
 
 
 
-    void loadDocument( TiXmlNode * pParent);
-    void create_groupItem(TiXmlNode *pParent);
+    void expandInclude(const QString &string,QPoint &point);
+    void create_groupItem(TiXmlNode *pParent,GroupItem* newGroup);
     void create_paramItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
     void create_rosparamItem(RosparamItem &newRosparam, TiXmlNode * pParent,int &x, int &y);
     void create_envItem(EnvItem &newEnv,TiXmlNode * pParent,int &x, int &y);

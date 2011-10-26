@@ -44,7 +44,6 @@ class IncludeFileEdit : public QDialog {
 
             void on_actionAdd_env_triggered();
 
-            void on_pushButton_expand_clicked();
 
 private:
                 Ui::IncludeFileEdit *ui;

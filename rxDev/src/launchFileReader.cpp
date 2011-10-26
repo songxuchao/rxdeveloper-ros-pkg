@@ -15,6 +15,26 @@
 QList<remapArrowData>arrowList;
 QStringList groups;
 
+void RxDev::expandInclude(const QString &file, QPoint &point){
+
+    TiXmlDocument doc( file.toStdString() );
+    bool loadOkay = doc.LoadFile();
+    if (loadOkay)
+    {
+
+        loadDocument( &doc );
+        QTime time=QTime::currentTime();
+        ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - information: <font color=\"blue\">Includefile expanded");
+        ui->textEdit_Info->append("<font color=\"black\">  "+file);
+        ui->dockWidget_errors->show();
+    }
+    else
+    {
+        qDebug()<<"\nFailed to load file: "<<file;
+    }
+}
+
+
 void RxDev::loadDocument( TiXmlNode * documentNode)
 {
     arrowList.clear();
@@ -76,7 +96,10 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
             }
 
         }else if (QString(firstLevelNode->Value())=="group"){
-            create_groupItem(firstLevelNode);
+            GroupItem* newGroup;
+            newGroup = new GroupItem;
+            create_groupItem(firstLevelNode,newGroup);
+
         }else if (QString(firstLevelNode->Value())=="node"){
             NodeItem *newNode;
             int x,y;
@@ -159,6 +182,8 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation((newIncludeFile->pos()));
             }
+            connect(newIncludeFile,SIGNAL(expandItem(QString,QPoint &)),this,SLOT(expandInclude(const QString &,QPoint &)));
+
         }else if (QString(firstLevelNode->Value())=="env"){
             EnvItem * newEnv = new EnvItem;
             int x,y;
@@ -807,10 +832,8 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
                          *
                          * get attributes for the <group>-object and search for children of the <group>-tag.
                          */
-void RxDev::create_groupItem(TiXmlNode *groupNode)
+void RxDev::create_groupItem(TiXmlNode *groupNode,GroupItem* newGroup)
 {
-    GroupItem* newGroup;
-    newGroup = new GroupItem;
     TiXmlAttribute* tagAttribute=groupNode->ToElement()->FirstAttribute();
     int x=0,y=0;
     int xGroup=0,yGroup=0;
@@ -925,6 +948,8 @@ void RxDev::create_groupItem(TiXmlNode *groupNode)
                 newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             }
+            connect(newIncludeFile,SIGNAL(expandItem(QString,QPoint &)),this,SLOT(expandInclude(const QString &,QPoint &)));
+
 
         }else if (QString(pChild->Value())=="machine"){
             int x,y;

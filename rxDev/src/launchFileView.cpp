@@ -55,7 +55,6 @@ LaunchFileView::LaunchFileView(QWidget *parent) : QGraphicsView(parent),
 
     //is needed for program startup, otherwise program can crash
     selectedBox = new NodeItem("dummyname","dummypkg",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
-
 }
 
 /*!\brief reimplementation of the wheelevent
