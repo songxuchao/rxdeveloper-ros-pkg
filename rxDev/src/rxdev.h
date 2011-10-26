@@ -182,11 +182,19 @@ void openSpecFile();
 
     void on_pushButton_rosparam_clicked();
 
+    void on_actionStart_triggered();
+
+    void on_actionStop_triggered();
+
+    void on_pushButton_clearInfo_clicked();
+    void state(QProcess::ProcessState);
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
     QPushButton *rosCoreButton;
     QProcess *rosCoreProcess;
+    QProcess *rosLaunch;
     QStringListModel *model;
     QStringListModel *model_2;
     QFileSystemModel *workingModel;

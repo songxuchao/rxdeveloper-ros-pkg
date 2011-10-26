@@ -13,9 +13,10 @@ class Settings : public QDialog {
         Q_OBJECT
 
         public:
-                explicit Settings(QString work,QWidget *parent = 0);
+                explicit Settings(QString work,QString term,QWidget *parent = 0);
                 ~Settings();
                 QString getWorkingDir();
+                QString getTerminal();
 
         public slots:
                 void reject();
@@ -29,6 +30,7 @@ class Settings : public QDialog {
 private slots:
                 void on_pushButton_browseWorkingDir_clicked();
 
+                void on_pushButton_default_clicked();
 };
 
 #endif

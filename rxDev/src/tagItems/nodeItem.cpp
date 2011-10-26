@@ -207,7 +207,6 @@ void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button()==Qt::LeftButton){
 
-        qDebug()<<"Pfeile "<<arrows;
         setColor(Qt::yellow);
         getNodeData();
 

@@ -8,9 +8,10 @@
  *
  * ...
  */
-Settings::Settings(QString work,QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
+Settings::Settings(QString work,QString term,QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
     ui->setupUi(this);
     ui->lineEdit_workingDir->setText(work);
+    ui->lineEdit_terminal->setText(term);
 }
 
 Settings::~Settings() {
@@ -49,3 +50,13 @@ void Settings::on_pushButton_browseWorkingDir_clicked()
 
 
 
+
+void Settings::on_pushButton_default_clicked()
+{
+    ui->lineEdit_terminal->setText("xterm -hold -e bash -i -c");
+}
+
+QString Settings::getTerminal()
+{
+    return ui->lineEdit_terminal->text();
+}
