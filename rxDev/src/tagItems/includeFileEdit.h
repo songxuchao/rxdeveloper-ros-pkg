@@ -22,6 +22,7 @@ class IncludeFileEdit : public QDialog {
                 int getClearParam();
                 QString getIf();
                 QString getUnless();
+                QString getExpandFile();
                 void fillEnvModel();
                 void fillArgModel();
 
@@ -38,10 +39,12 @@ class IncludeFileEdit : public QDialog {
             void on_actionDelete_env_triggered();
 
             void on_actionDelete_arg_triggered();
-
+            void on_checkBox_expand_toggled(bool checked);
             void on_actionAdd_arg_triggered();
 
             void on_actionAdd_env_triggered();
+
+            void on_pushButton_expand_clicked();
 
 private:
                 Ui::IncludeFileEdit *ui;
@@ -50,6 +53,7 @@ private:
                 int selectedEnv;
                 QStandardItemModel *argModel;
                 IncludeFileItem *myItem;
+                QString expandFile;
 
 };
 
