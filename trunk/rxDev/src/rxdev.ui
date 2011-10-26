@@ -290,6 +290,18 @@
      <height>171</height>
     </size>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>171</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>171</height>
+    </size>
+   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -300,64 +312,103 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
-    <layout class="QGridLayout" name="gridLayout_19">
+    <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <layout class="QGridLayout" name="gridLayout_16">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_group">
+      <widget class="QPushButton" name="pushButton_group">
+       <property name="text">
+        <string>&lt;group&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton_includeFile">
+       <property name="text">
+        <string>&lt;include&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pushButton_env">
+       <property name="text">
+        <string>&lt;env&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButton_arg">
+       <property name="text">
+        <string>&lt;arg&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushButton_machine">
+       <property name="text">
+        <string>&lt;machine&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButton_remap">
+       <property name="text">
+        <string>&lt;remap&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="pushButton_Param">
+       <property name="text">
+        <string>&lt;parameter&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="pushButton_rosparam">
+       <property name="text">
+        <string>&lt;rosparam&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_errors">
+   <property name="windowIcon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/dialog-information.png</normaloff>:/icons/icons/dialog-information.png</iconset>
+   </property>
+   <property name="windowTitle">
+    <string>Info:</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QTextEdit" name="textEdit_Info"/>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_clearInfo">
          <property name="text">
-          <string>&lt;group&gt;</string>
+          <string>Clear</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_env">
-         <property name="text">
-          <string>&lt;env&gt;</string>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="pushButton_includeFile">
-         <property name="text">
-          <string>&lt;include&gt;</string>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_arg">
-         <property name="text">
-          <string>&lt;arg&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButton_machine">
-         <property name="text">
-          <string>&lt;machine&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButton_remap">
-         <property name="text">
-          <string>&lt;remap&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="pushButton_Param">
-         <property name="text">
-          <string>&lt;parameter&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton_rosparam">
-         <property name="text">
-          <string>&lt;rosparam&gt;</string>
-         </property>
-        </widget>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -423,7 +474,7 @@
     <string>Load Launchfile</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionSave_as_Launchfile">
@@ -435,7 +486,7 @@
     <string>Save Launchfile</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionRemap">

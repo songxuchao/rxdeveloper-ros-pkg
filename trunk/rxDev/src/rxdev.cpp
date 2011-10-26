@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QToolBar>
 #include <QUrl>
+#include <QDateTime>
 #include "launchFileWriter.h"
 #include "launchFileReader.h"
 #include "settings.h"
@@ -32,8 +33,11 @@ RxDev::RxDev(QWidget *parent) :
     //initialize list of available nodes and adding data
     availableNodes();
 
+
+    ui->dockWidget_errors->hide();
     //create Toolbar
     setupToolBar();
+
 
     ui->statusBar->showMessage(tr("Ready"));
 
@@ -44,6 +48,16 @@ RxDev::RxDev(QWidget *parent) :
     setupCreator();
 
     setUnifiedTitleAndToolBarOnMac(true);
+    rosLaunch = new QProcess(this);
+    connect(rosLaunch, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    if (rosLaunch->state()!=2){
+        ui->actionStart->setEnabled(true);
+        ui->actionStop->setEnabled(false);
+    }else{
+        ui->actionStart->setEnabled(false);
+        ui->actionStop->setEnabled(true);
+}
+
 }
 
 RxDev::~RxDev(){
@@ -235,6 +249,8 @@ void RxDev::on_actionDelete_Item_triggered()
  * Loads settings from the settings file or launches a dialog on first start.
  */
 void RxDev::loadSettings(){
+    if((settings.value("temrinal").toString()==""))
+        settings.setValue("terminal","xterm -hold -e bash -i -c");
     if((settings.value("workingDir").toString()=="")){
         settings.setValue("workingDir",QDir::homePath());
 
@@ -267,6 +283,13 @@ void RxDev::changeToolBar(){
         gview->comboBox_sceneScale->setEnabled(true);
         ui->actionStart->setEnabled(true);
         ui->actionStop->setEnabled(true);
+        if (rosLaunch->state()!=2){
+            ui->actionStart->setEnabled(true);
+            ui->actionStop->setEnabled(false);
+        }else{
+            ui->actionStart->setEnabled(false);
+            ui->actionStop->setEnabled(true);
+    }
     } else {
 
         ui->actionLoad_Launchfile->setEnabled(false);
@@ -405,12 +428,12 @@ void RxDev::on_actionLoad_Launchfile_triggered()
  */
 void RxDev::on_actionSettings_triggered()
 {
-    Settings settingDialog(workingDir.absolutePath());
+    Settings settingDialog(workingDir.absolutePath(),settings.value("terminal").toString());
     bool accept = settingDialog.exec();
     if ((accept)){
         workingDir = settingDialog.getWorkingDir();
         settings.setValue("workingDir",settingDialog.getWorkingDir());
-
+        settings.setValue("terminal",settingDialog.getTerminal());
         //update workingDir in the component creator tab
         workingModel->setRootPath(workingDir.absolutePath());
         ui->treeView_packageBrowser->setRootIndex(workingModel->index(workingDir.absolutePath()));
@@ -423,10 +446,46 @@ void RxDev::on_actionSettings_triggered()
 
 void RxDev::on_actionStart_triggered()
 {
+        QString file=QDir::temp().absolutePath().append("/temp.launch");
+        qDebug()<<file;
+        //writing to Launchfile
+        LaunchWriter *launchFile = new LaunchWriter;
+        QList<QGraphicsItem *> list;
+        list=scene->items();
+        launchFile->createDocument(file,list);
+
+
+
+    rosLaunch->setWorkingDirectory(QDir::temp().absolutePath());
+    rosLaunch->setProcessChannelMode(QProcess::MergedChannels);
+    QString launch= (settings.value("terminal").toString().trimmed()+" \"roslaunch temp.launch\"");
+    rosLaunch->start(launch);
+    QByteArray output = rosLaunch->readAll();
+    qDebug()<<output;
+    QTime time = QTime::currentTime();
+    ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - Information: <font color=\"blue\">trying to launch computational graph");
+    ui->textEdit_Info->append(output.trimmed()+" If nothing happens you should check the settings for the right terminal emulator.");
+    ui->dockWidget_errors->show();
+
 
 }
 
 void RxDev::on_actionStop_triggered()
 {
+    rosLaunch->kill();
+}
 
+void RxDev::on_pushButton_clearInfo_clicked()
+{
+    ui->textEdit_Info->clear();
+}
+void RxDev::state(QProcess::ProcessState){
+    if (rosLaunch->state()==2){
+        ui->actionStop->setEnabled(true);
+        ui->actionStart->setEnabled(false);
+
+    }else if (rosLaunch->state()==0){
+        ui->actionStart->setEnabled(true);
+        ui->actionStop->setEnabled(false);
+    }
 }

@@ -1,11 +1,13 @@
 #include "rxdev.h"
+#include "ui_rxdev.h"
+
 #include "tagItems/argItem.h"
 #include "tagItems/machineItem.h"
 #include "tagItems/includeFileItem.h"
 #include "tagItems/groupItem.h"
 #include "tagItems/remapItem.h"
 #include "tagItems/remapArrow.h"
-
+#include "QDateTime"
 /*!\brief find <launch> tag
  *
  * Parses the given file to find the important <launch>-tag and start the parsing of the tags
@@ -32,13 +34,13 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
             }
         }
     }
-    qDebug()<<"______________________________________________________";
+//    qDebug()<<"______________________________________________________";
     foreach(QGraphicsItem *item, scene->items()){
         if (item->type()==NodeItem::Type)
             qDebug()<<item;
     }
-    qDebug()<<arrowList.count();
-    qDebug()<<"______________________________________________________";
+//    qDebug()<<arrowList.count();
+//    qDebug()<<"______________________________________________________";
 
     for (int i=0;i<arrowList.count();i++){
         create_remapArrow(&arrowList.at(i));
@@ -295,7 +297,7 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,i
     TiXmlNode * pChild;
     for ( pChild = machineNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        printf( "child" );
+        //printf( "child" );
         if (QString(pChild->Value())=="env"){
             EnvItem* newEnv = new EnvItem;
             create_envItem(*newEnv,pChild,includeX,includeY);
@@ -454,9 +456,9 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             }
             newRemap->updateRemapItem();
             //newNode.addRemapItem(newRemap);
-            qDebug()<<"_________________________";
-            qDebug()<<newNode.pos();
-            qDebug()<<"_________________________";
+//            qDebug()<<"_________________________";
+//            qDebug()<<newNode.pos();
+//            qDebug()<<"_________________________";
 
             remapArrowData *remapData=new remapArrowData;
             remapData->startNode=&newNode;
@@ -560,13 +562,14 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
 {
     QString toString=arrowdata->item->getTo();
     QStringList toStringList=toString.split("/");
+    bool foundTarget = false;
     bool targetInGroup = false;
     foreach(QString group,groups){
         foreach(QString string, toStringList){
-            qDebug()<<group<<":"<<string;
+//            qDebug()<<group<<":"<<string;
             if (string==group){
                 targetInGroup=true;
-                qDebug()<<"target is in group";
+//                qDebug()<<"target is in group";
             }
         }
     }
@@ -591,13 +594,14 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
                                 arrow->setZValue(-20);
                                 scene->addItem(arrow);
                                 arrow->updatePosition();
+                                foundTarget=true;
                             }
                         }
                     }
                 }
             }else{
                 foreach(QString string, toStringList){
-                    qDebug()<<string<<":"<<targetNode->getName();
+                 //   qDebug()<<string<<":"<<targetNode->getName();
                     if (!targetNode->parentItem()&&string==targetNode->getName()){
 
 
@@ -614,11 +618,25 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
                         arrow->setZValue(-20);
                         scene->addItem(arrow);
                         arrow->updatePosition();
+                        foundTarget=true;
                     }
                 }
             }
         }
     }
+    //target not found -> create an included remapitem
+    if (!foundTarget){
+        QTime time = QTime::currentTime();
+
+        arrowdata->startNode->addRemapItem(arrowdata->item);
+        ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - warning: <font color=\"blue\">did not find the remap target");
+        ui->textEdit_Info->append("<font color=\"black\">  Remapping from <font color=\"red\">"+arrowdata->item->getFrom()+"<font color=\"black\"> to <font color=\"red\">"+arrowdata->item->getTo()+"<font color=\"black\"> could not get allocated!");
+        ui->textEdit_Info->append("<font color=\"blue\">  The remap information got added to the from node:<font color=\"red\"> "+arrowdata->startNode->getName());
+        ui->dockWidget_errors->show();
+    }
+
+    //qDebug()<<foundTarget;
+
 }
 
 
