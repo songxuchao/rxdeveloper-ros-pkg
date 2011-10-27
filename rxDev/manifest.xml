@@ -12,11 +12,12 @@
   <depend package="roscpp"/>
   <depend package="rospy"/>
   <depend package="rosgraph"/>
-  <depend package="tinyxml"/>
-  <depend package="yaml_cpp"/>
-  <depend package="rostopic"/>  
+  <depend package="common_rosdeps"/>
+  <depend package="rostopic"/>
   <depend package="rosnode"/>
   <rosdep name="qt4"/> 
+  <rosdep name="tinyxml"/>
+  <rosdep name="yaml-cpp"/>
   
 </package>
 
