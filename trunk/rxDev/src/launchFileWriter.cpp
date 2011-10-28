@@ -78,9 +78,6 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
             if (list.at(i)->parentItem()==0)
                 create_rosparamTag(*launchTag,*list.at(i));
             break;
-        case ParameterItem::Type:
-            paramItems<<i;                  //save parameteritems for later
-            break;
         default:
             break;
         }
