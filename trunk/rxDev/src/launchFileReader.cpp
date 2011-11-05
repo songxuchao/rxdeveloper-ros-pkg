@@ -15,14 +15,18 @@
 QList<remapArrowData>arrowList;
 QStringList groups;
 
-void RxDev::expandInclude(const QString &file, QPoint &point){
+void RxDev::expandInclude(const QString &file, GroupItem &group){
 
     TiXmlDocument doc( file.toStdString() );
     bool loadOkay = doc.LoadFile();
     if (loadOkay)
     {
 
-        loadDocument( &doc );
+        qDebug()<<group.pos();
+        if (group.isVisible() && group.pos()!=QPoint(0,0))          //if IncludeItem has a Parent-GroupItem
+            loadDocumentInGroup( &doc, group);
+        else                            //treat inclue as an standard launchfile
+            loadDocument( &doc );
         QTime time=QTime::currentTime();
         ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - information: <font color=\"blue\">Includefile expanded");
         ui->textEdit_Info->append("<font color=\"black\">  "+file);
@@ -32,6 +36,179 @@ void RxDev::expandInclude(const QString &file, QPoint &point){
     {
         qDebug()<<"\nFailed to load file: "<<file;
     }
+}
+void RxDev::loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group)
+{
+    arrowList.clear();
+    groups.clear();
+    if ( !documentNode ) return;
+    int x = group.pos().x();
+    int y = group.pos().y();
+    TiXmlNode * pChild2;
+    for ( pChild2 = documentNode->FirstChild(); pChild2 != 0; pChild2 = pChild2->NextSibling())
+    {
+        if (QString(pChild2->Value())=="launch"){
+            //check for included items
+            TiXmlNode * pChild;
+            for ( pChild = pChild2->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
+            {
+
+                if (QString(pChild->Value())=="env"){
+                    int x,y;
+                    EnvItem* newEnv = new EnvItem;
+                    create_envItem(*newEnv,pChild,x,y);
+                    newEnv->setParentItem(&group);
+                    scene->addItem(newEnv);
+
+                    if (x==0 &&y==0){
+                        newEnv->setPos(((newEnv->mapToParent(QPoint(x,y)))));
+                        newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
+                    } else{
+                        newEnv->setPos(QPoint(x,y));
+                        newEnv->setLocation(newEnv->mapToParent(newEnv->pos()));
+                    }
+                }else if (QString(pChild->Value())=="param"){
+                    int x,y;
+                    ParameterItem* newParam = new ParameterItem;
+                    create_paramItem(*newParam,pChild,x,y);
+                    newParam->setParentItem(&group);
+                    scene->addItem(newParam);
+                    if (x==0 &&y==0){
+                        newParam->setPos(((newParam->mapToParent(QPoint(x,y)))));
+                        newParam->setLocation(newParam->mapToParent(newParam->pos()));
+                    } else{
+                        newParam->setPos(QPoint(x,y));
+                        newParam->setLocation(newParam->mapToParent(newParam->pos()));
+
+                    }
+                }else if (QString(pChild->Value())=="rosparam"){
+                    int x,y;
+                    RosparamItem* newRosparam = new RosparamItem;
+                    create_rosparamItem(*newRosparam,pChild,x,y);
+                    newRosparam->setParentItem(&group);
+                    scene->addItem(newRosparam);
+                    if (x==0 &&y==0){
+                        newRosparam->setPos(((newRosparam->mapToParent(QPoint(x,y)))));
+                        newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
+                    } else{
+                        newRosparam->setPos(QPoint(x,y));
+                        newRosparam->setLocation(newRosparam->mapToParent(newRosparam->pos()));
+                    }
+                }else if (QString(pChild->Value())=="remap"){
+                    int x,y;
+                    RemapItem* newRemap = new RemapItem;
+                    create_remapItem(*newRemap,pChild,x,y);
+                    newRemap->setParentItem(&group);
+                    scene->addItem(newRemap);
+                    if (x==0 &&y==0){
+                        newRemap->setPos((((QPoint(x,y)))));
+                        newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
+                    } else{
+                        newRemap->setPos(QPoint(x,y));
+                        newRemap->setLocation(newRemap->mapToParent(newRemap->pos()));
+                    }
+
+                }else if (QString(pChild->Value())=="arg"){
+                    int x,y;
+                    ArgItem* newArg = new ArgItem;
+                    create_argItem(*newArg,pChild,x,y);
+                    newArg->setParentItem(&group);
+                    scene->addItem(newArg);
+                    if (x==0 &&y==0){
+                        newArg->setPos(((newArg->mapToParent(QPoint(x,y)))));
+                        newArg->setLocation(newArg->mapToParent(newArg->pos()));
+                    } else{
+                        newArg->setPos(QPoint(x,y));
+                        newArg->setLocation(newArg->mapToParent(newArg->pos()));
+                    }
+                }
+                else if (QString(pChild->Value())=="include"){
+                    int x,y;
+                    IncludeFileItem* newIncludeFile = new IncludeFileItem;
+                    create_includeFileItem(*newIncludeFile,pChild,x,y);
+                    newIncludeFile->setParentItem(&group);
+                    scene->addItem(newIncludeFile);
+                    if (x==0 &&y==0){
+                        newIncludeFile->setPos((newIncludeFile->mapToParent(QPoint(x,y))));
+                        newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
+                    } else{
+                        newIncludeFile->setPos(QPoint(x,y));
+                        newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
+                    }
+                    connect(newIncludeFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &,GroupItem &)));
+
+
+                }else if (QString(pChild->Value())=="machine"){
+                    int x,y;
+                    MachineItem* newMachine = new MachineItem;
+                    create_machineItem(*newMachine,pChild,x,y);
+                    newMachine->setParentItem(&group);
+                    scene->addItem(newMachine);
+                    if (x==0 &&y==0){
+                        newMachine->setPos(((newMachine->mapToParent(QPoint(x,y)))));
+                        newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+                    } else{
+                        newMachine->setPos(QPoint(x,y));
+                        newMachine->setLocation(newMachine->mapToParent(newMachine->pos()));
+                    }
+                }else if (QString(pChild->Value())=="node"){
+                    NodeItem *newNode;
+                    int x1=x,y1=y;
+                    QString nodePackage, nodeType;
+                    QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
+                    prepare_nodeOrTest(pChild, nodePackage, nodeType,
+                                       nodeSubs,nodePubs, nodeArgs, nodeSrvs);
+                    newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
+                    create_nodeorTestItem(*newNode,0, pChild, x1 , y1);
+                    newNode->setParentItem(&group);
+                    scene->addItem(newNode);
+
+                    if (x==0 &&y==0){
+                        newNode->setPos(QPoint(x1,y1));
+                        newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                    }else{
+                        newNode->setPos(QPoint(x1,y1));
+                        newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                    }
+
+                }else if (QString(pChild->Value())=="test"){
+                    NodeItem *newNode;
+                    int x1=x,y1=y;
+                    QString nodePackage, nodeType;
+                    QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
+                    prepare_nodeOrTest(pChild, nodePackage, nodeType,
+                                       nodeSubs,nodePubs, nodeArgs, nodeSrvs);
+                    newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
+                    create_nodeorTestItem(*newNode,1, pChild,x,y);
+                    newNode->setParentItem(&group);
+                    scene->addItem(newNode);
+
+                    if (x==0 &&y==0){
+                        newNode->setPos(QPoint(x1,y1));
+                        newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                    }else{
+                        newNode->setPos(QPoint(x1,y1));
+                        newNode->setLocation(newNode->mapToParent(newNode->pos()));
+                    }
+
+
+                }
+            }
+        }
+        //    qDebug()<<"______________________________________________________";
+        foreach(QGraphicsItem *item, scene->items()){
+            if (item->type()==NodeItem::Type)
+                qDebug()<<item;
+        }
+        //    qDebug()<<arrowList.count();
+        //    qDebug()<<"______________________________________________________";
+
+        for (int i=0;i<arrowList.count();i++){
+            create_remapArrow(&arrowList.at(i));
+        }
+
+    }
+
 }
 
 
@@ -54,13 +231,13 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
             }
         }
     }
-//    qDebug()<<"______________________________________________________";
+    //    qDebug()<<"______________________________________________________";
     foreach(QGraphicsItem *item, scene->items()){
         if (item->type()==NodeItem::Type)
             qDebug()<<item;
     }
-//    qDebug()<<arrowList.count();
-//    qDebug()<<"______________________________________________________";
+    //    qDebug()<<arrowList.count();
+    //    qDebug()<<"______________________________________________________";
 
     for (int i=0;i<arrowList.count();i++){
         create_remapArrow(&arrowList.at(i));
@@ -182,7 +359,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
                 newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation((newIncludeFile->pos()));
             }
-            connect(newIncludeFile,SIGNAL(expandItem(QString,QPoint &)),this,SLOT(expandInclude(const QString &,QPoint &)));
+            connect(newIncludeFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &,GroupItem &)));
 
         }else if (QString(firstLevelNode->Value())=="env"){
             EnvItem * newEnv = new EnvItem;
@@ -481,9 +658,9 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             }
             newRemap->updateRemapItem();
             //newNode.addRemapItem(newRemap);
-//            qDebug()<<"_________________________";
-//            qDebug()<<newNode.pos();
-//            qDebug()<<"_________________________";
+            //            qDebug()<<"_________________________";
+            //            qDebug()<<newNode.pos();
+            //            qDebug()<<"_________________________";
 
             remapArrowData *remapData=new remapArrowData;
             remapData->startNode=&newNode;
@@ -591,10 +768,10 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
     bool targetInGroup = false;
     foreach(QString group,groups){
         foreach(QString string, toStringList){
-//            qDebug()<<group<<":"<<string;
+            //            qDebug()<<group<<":"<<string;
             if (string==group){
                 targetInGroup=true;
-//                qDebug()<<"target is in group";
+                //                qDebug()<<"target is in group";
             }
         }
     }
@@ -626,7 +803,7 @@ void RxDev::create_remapArrow(const remapArrowData *arrowdata)
                 }
             }else{
                 foreach(QString string, toStringList){
-                 //   qDebug()<<string<<":"<<targetNode->getName();
+                    //   qDebug()<<string<<":"<<targetNode->getName();
                     if (!targetNode->parentItem()&&string==targetNode->getName()){
 
 
@@ -948,7 +1125,7 @@ void RxDev::create_groupItem(TiXmlNode *groupNode,GroupItem* newGroup)
                 newIncludeFile->setPos(QPoint(x,y));
                 newIncludeFile->setLocation(newIncludeFile->mapToParent(newIncludeFile->pos()));
             }
-            connect(newIncludeFile,SIGNAL(expandItem(QString,QPoint &)),this,SLOT(expandInclude(const QString &,QPoint &)));
+            connect(newIncludeFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &,GroupItem &)));
 
 
         }else if (QString(pChild->Value())=="machine"){

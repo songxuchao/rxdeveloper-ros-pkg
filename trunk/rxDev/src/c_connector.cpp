@@ -241,7 +241,7 @@ void RxDev::on_pushButton_includeFile_clicked()
     if (newFile->getFileData()==true){
         scene->addItem(newFile);
     }
-    connect(newFile,SIGNAL(expandItem(QString,QGraphicsItem)),this,SLOT(expandInclude(const QString &, QGraphicsItem &)));
+    connect(newFile,SIGNAL(expandItem(QString,GroupItem)),this,SLOT(expandInclude(const QString &, GroupItem &)));
 
 }
 

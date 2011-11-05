@@ -58,8 +58,8 @@ GroupItem::~GroupItem()
 void GroupItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    QList<QGraphicsItem *> list;
-    list=this->childItems();
+//    QList<QGraphicsItem *> list;
+//    list=this->childItems();
 //    qDebug()<<"Begin group items->";
 //    for (int i = 0; i < list.size(); i++) {
 //        if (list.at(i)->type() != 8)

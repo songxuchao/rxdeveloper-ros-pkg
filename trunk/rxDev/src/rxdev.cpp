@@ -150,6 +150,7 @@ void RxDev::setupToolBar()
     toolBar = addToolBar(tr("&Launchfile"));
     toolBar->setObjectName("launchToolBar");
     toolBar->setIconSize(QSize(16, 16));
+    toolBar->addAction(ui->actionNew_Launchfile);
     toolBar->addAction(ui->actionLoad_Launchfile);
     toolBar->addAction(ui->actionSave_as_Launchfile);
 
@@ -275,6 +276,7 @@ void RxDev::loadSettings(){
 void RxDev::changeToolBar(){
 
     if (ui->tabWidget->currentIndex()==0)   {
+        ui->actionNew_Launchfile->setEnabled(true);
         ui->actionLoad_Launchfile->setEnabled(true);
         ui->actionSave_as_Launchfile->setEnabled(true);
         ui->actionDrag_Drop->setEnabled(true);
@@ -291,7 +293,7 @@ void RxDev::changeToolBar(){
             ui->actionStop->setEnabled(true);
     }
     } else {
-
+        ui->actionNew_Launchfile->setEnabled(false);
         ui->actionLoad_Launchfile->setEnabled(false);
         ui->actionSave_as_Launchfile->setEnabled(false);
         ui->actionDrag_Drop->setEnabled(false);

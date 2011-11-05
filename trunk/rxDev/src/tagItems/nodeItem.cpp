@@ -176,7 +176,7 @@ void NodeItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
         setColor(Qt::red);
 
         _dragStart = event->pos();
-        qDebug()<< getNamespace();
+    //    qDebug()<< getNamespace();
 
         event->setAccepted(true);
 
