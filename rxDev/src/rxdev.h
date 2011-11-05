@@ -72,7 +72,7 @@ public:
 
 public slots:
     void loadDocument( TiXmlNode * pParent);
-
+    void loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group);
 
 private slots:
     void on_actionAvailable_Nodes_changed();
@@ -155,7 +155,7 @@ void openSpecFile();
 
 
 
-    void expandInclude(const QString &string,QPoint &point);
+    void expandInclude(const QString &string,GroupItem &group);
     void create_groupItem(TiXmlNode *pParent,GroupItem* newGroup);
     void create_paramItem(ParameterItem &newParam, TiXmlNode * pParent,int &x, int &y);
     void create_rosparamItem(RosparamItem &newRosparam, TiXmlNode * pParent,int &x, int &y);

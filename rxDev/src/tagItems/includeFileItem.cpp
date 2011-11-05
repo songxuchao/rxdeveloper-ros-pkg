@@ -75,15 +75,14 @@ bool IncludeFileItem::getFileData()
         setIf(fileEdit.getIf());
         setUnless(fileEdit.getUnless());
         QString file(fileEdit.getExpandFile());
-        QPoint point(0,0);
+        GroupItem *group;
         if (this->parentItem()){
-            point.setX(this->parentItem()->pos().x());
-            point.setY(this->parentItem()->pos().y());
+            group =qgraphicsitem_cast<GroupItem *>(this->parentItem());
         }
         if (file!=""){
             if (QFile(file).exists()){
 
-                expandItem(file,point);
+                expandItem(file,*group);
                 scene()->removeItem(this);
             }
         }

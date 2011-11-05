@@ -71,7 +71,7 @@ class IncludeFileItem : public QGraphicsWidget
     QList<ArgItem *> argItems;
     void addArgItem(ArgItem *arg);
 signals:
-        void expandItem(QString item,QPoint &point);
+        void expandItem(QString item,GroupItem &group);
 
  protected:
     QPointF _location;
