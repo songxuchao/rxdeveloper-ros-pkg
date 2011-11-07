@@ -1,0 +1,14 @@
+= Introduction =
+
+The rxDeveloper is a package for the robot operating system ROS(http://www.ros.org). It provides a drag & drop GUI for creating and editing launchfiles.
+---
+= Installation =
+
+== What do I need? ==
+The rxDeveloper is tested under *Ubuntu 11.04* and *Linux Mint 11* and requires *ROS Electric* or newer, because of changes in the dependency-handling for tinyxml and yaml-cpp. For *ROS Diamondback* you'll have to do some changes. To get the sourcecode you also need *subversion*
+
+== How do I get it running ==
+  * download the sourcecode: "svn checkout http://rxdeveloper-ros-pkg.googlecode.com/svn/trunk/ rxdeveloper-ros-pkg-read-only"
+  * make sure that you did the ROS environment setup and "rxdeveloper-ros-pkg-read-only" is in the _ROS_PACKAGE_PATH_.
+  * compile: "rosmake rxDev"
+  * run: "rosrun rxDev rxdev" or start the binary "/rxDev/bin/rxdev"
