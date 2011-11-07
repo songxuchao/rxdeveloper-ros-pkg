@@ -1,6 +1,6 @@
 = Introduction =
 
-The rxDeveloper is a package for the robot operating system ROS(http://www.ros.org). It provides a drag & drop GUI for creating and editing launchfiles.
+The rxDeveloper is a package for the robot operating system [http://www.ros.org ROS]. It provides a drag & drop GUI for creating and editing launchfiles.
 ---
 = Installation =
 
