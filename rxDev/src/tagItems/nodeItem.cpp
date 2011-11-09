@@ -41,7 +41,6 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _outterborderPen.setWidth(2);
     _outterborderPen.setColor(_outterborderColor);
 
-
     _title.setParentItem(this);
     _title.setTextWidth(_width);
     _title.setDefaultTextColor(Qt::blue);
@@ -57,10 +56,10 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _namespace.setParentItem(this);
     _namespace.setDefaultTextColor(Qt::red);
 
-    _remaps.setPos(0,70);
-    _remaps.setTextWidth(_width);
-    _remaps.setParentItem(this);
-    _remaps.setDefaultTextColor(Qt::black);
+    _contains.setPos(0,70);
+    _contains.setTextWidth(_width);
+    _contains.setParentItem(this);
+    _contains.setDefaultTextColor(Qt::black);
 
     _pkgString=package;
     _typeString=node;
@@ -285,12 +284,7 @@ void NodeItem::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 void NodeItem::addRemapItem(RemapItem *remap)
 {
     remapItems.append(remap);
-    if (remapItems.count()!=0)
-        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
-    else
-        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
-
-
+    updateContains();
 }
 
 void NodeItem::removeRemapItems()
@@ -308,11 +302,7 @@ void NodeItem::removeRemapItem(RemapItem *remap)
 
     if (index != -1)
         remapItems.removeAt(index);
-    if (remapItems.count()!=0)
-        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">remaps");
-    else
-        _remaps.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
-
+    updateContains();
 }
 
 
@@ -564,6 +554,7 @@ QPointF NodeItem::getLocation()
 void NodeItem::addEnvItem(EnvItem *env)
 {
     envItems.append(env);
+    updateContains();
 
 }
 
@@ -582,13 +573,14 @@ void NodeItem::removeEnvItem(EnvItem *env)
 
     if (index != -1)
         envItems.removeAt(index);
+    updateContains();
 }
 
 
 void NodeItem::addParamItem(ParameterItem *param)
 {
     paramItems.append(param);
-
+    updateContains();
 }
 
 void NodeItem::removeParamItems()
@@ -606,6 +598,7 @@ void NodeItem::removeParamItem(ParameterItem *param)
 
     if (index != -1)
         paramItems.removeAt(index);
+    updateContains();
 }
 void NodeItem::removeRosparamItem(RosparamItem *rosparam)
 {
@@ -613,6 +606,7 @@ void NodeItem::removeRosparamItem(RosparamItem *rosparam)
 
     if (index != -1)
         rosparamItems.removeAt(index);
+    updateContains();
 }
 
 void NodeItem::removeRosparamItems()
@@ -626,7 +620,7 @@ void NodeItem::removeRosparamItems()
 void NodeItem::addRosparamItem(RosparamItem *rosparam)
 {
     rosparamItems.append(rosparam);
-
+    updateContains();
 }
 
 QString NodeItem::getIf()
@@ -652,5 +646,23 @@ void NodeItem::setUnless(QString newUnless)
 void NodeItem::setType(QString type)
 {
     _typeString=type;
+}
+
+void NodeItem::updateContains()
+{
+    _containsString="";
+    if (remapItems.count()!=0)
+        _containsString.append(" remap");
+    if (paramItems.count()!=0)
+        _containsString.append(" param");
+    if (rosparamItems.count()!=0)
+        _containsString.append(" rosparam");
+    if (envItems.count()!=0)
+        _containsString.append(" env");
+    if (remapItems.count()!=0 ||paramItems.count()!=0||rosparamItems.count()!=0||envItems.count()!=0)
+        _contains.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">"+_containsString);
+    else
+        _contains.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
+
 }
 
