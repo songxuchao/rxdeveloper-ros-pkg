@@ -401,3 +401,8 @@ void NodeEdit::on_actionAdd_rosparam_triggered()
     fillRosparamModel();
 
 }
+
+QString NodeEdit::getType()
+{
+    return ui->lineEdit_type->text();
+}

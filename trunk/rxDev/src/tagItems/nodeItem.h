@@ -77,6 +77,7 @@ public:
     void setName(QString newName);
     QString getPkg();
     QString getType();
+    void setType(QString type);
     QStringList getSubscriptions();
     QStringList getPublications();
     QStringList getServices();
@@ -179,6 +180,7 @@ private:
     int _clear_paramsInt;
     int _outputInt;
     int _cwdInt;
+    bool _blank;
     QString _ifString;
     QString _unlessString;
 
