@@ -46,12 +46,12 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _title.setDefaultTextColor(Qt::blue);
     _title.setParent(this);
 
-    _name.setPos(0,32);
+    _name.setPos(0,22);
     _name.setTextWidth(_width);
     _name.setParentItem(this);
     _name.setDefaultTextColor(Qt::green);
 
-    _namespace.setPos(0,50);
+    _namespace.setPos(0,52);
     _namespace.setTextWidth(_width);
     _namespace.setParentItem(this);
     _namespace.setDefaultTextColor(Qt::red);
@@ -277,7 +277,7 @@ void NodeItem::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 
     QRectF rect (topLeft, bottomRight);
     painter->drawRoundRect(rect,25,25);
-    painter->drawLine(0,34,_width,34);
+    painter->drawLine(0,25,_width,25);
 
 
 }

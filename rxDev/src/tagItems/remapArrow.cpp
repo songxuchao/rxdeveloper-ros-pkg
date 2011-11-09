@@ -94,7 +94,7 @@ QPainterPath RemapArrow::shape() const
 //! [3]
 void RemapArrow::updatePosition()
 {
-    switch ( myStartItem->arrows.indexOf(this) )
+    switch ( myStartItem->arrows.indexOf(this) )        //creates a position offset if there is more than one arrow for a node
     {
     case 0:
         offset=0;
