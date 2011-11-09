@@ -113,6 +113,7 @@ private:
     QString _toString;
     QString _ifString;
     QString _unlessString;
+    int offset;
 
 };
 //! [0]

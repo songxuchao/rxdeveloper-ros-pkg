@@ -52,7 +52,8 @@ const qreal nodeDimension = 100; // The Size of the NodeItems
 //! [0]
 RemapArrow::RemapArrow(NodeItem *startItem, NodeItem *endItem,
                        QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsLineItem(parent, scene)
+    : QGraphicsLineItem(parent, scene),
+      offset(0)
 {
     myStartItem = startItem;
     myEndItem = endItem;
@@ -93,6 +94,32 @@ QPainterPath RemapArrow::shape() const
 //! [3]
 void RemapArrow::updatePosition()
 {
+    switch ( myStartItem->arrows.indexOf(this) )
+    {
+    case 0:
+        offset=0;
+        break;
+    case 1:
+        offset=15;
+        break;
+    case 2:
+        offset=-15;
+        break;
+    case 3:
+        offset=30;
+        break;
+    case 4:
+        offset=-30;
+        break;
+    case 5:
+        offset=45;
+        break;
+    case 6:
+        offset=-45;
+        break;
+    default:
+        offset=0;
+    }
     QPoint inclPos;
     QPoint startParent(0,0);
     QPoint endParent(0,0);
@@ -104,23 +131,24 @@ void RemapArrow::updatePosition()
         endParent.setX(myEndItem->parentItem()->pos().x());
         endParent.setY(myEndItem->parentItem()->pos().y());
     }
-    QLineF line(startParent+myStartItem->pos()+QPoint(nodeDimension/2, nodeDimension/2),
-                (endParent+myEndItem->pos()+QPoint(nodeDimension/2, nodeDimension/2)));
+
+    QLineF line(startParent+myStartItem->pos()+QPoint(nodeDimension/2+offset, nodeDimension/2+offset),
+                (endParent+myEndItem->pos()+QPoint(nodeDimension/2+offset, nodeDimension/2+offset)));
     setLine(line);
     if (line.p2().x()-line.p1().x()>0){
-        textPos.setX(line.p1().x()+nodeDimension/2+5);
-        inclPos.setX(line.p1().x()+nodeDimension/2-5);
+        textPos.setX(line.p1().x()+nodeDimension/2+5-offset);
+        inclPos.setX(line.p1().x()+nodeDimension/2-5-offset);
     }else{
-        textPos.setX(line.p2().x()+nodeDimension/2+55);
-        inclPos.setX(line.p1().x()-nodeDimension/2-15);
+        textPos.setX(line.p2().x()+nodeDimension/2+55-offset);
+        inclPos.setX(line.p1().x()-nodeDimension/2-15-offset);
     }
 
     if (line.p2().y()-line.p1().y()>0){
         textPos.setY(line.p2().y()+(line.p1().y()-line.p2().y())/2);
-        inclPos.setY(line.p1().y()+nodeDimension/2-5);
+        inclPos.setY(line.p1().y()+nodeDimension/2-5-offset);
     }else{
         textPos.setY(line.p1().y()+(line.p2().y()-line.p1().y())/2);
-        inclPos.setY(line.p1().y()-nodeDimension/2-15);
+        inclPos.setY(line.p1().y()-nodeDimension/2-15-offset);
     }
     incl.setPos(inclPos);
     title.setPos(textPos);
@@ -136,6 +164,8 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 {
     if (myStartItem->collidesWithItem(myEndItem))
         return;
+
+    qDebug()<<offset;
 
     QPen myPen = pen();
     myPen.setColor(myColor);
@@ -153,8 +183,8 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
         endParent.setX(myEndItem->parentItem()->pos().x());
         endParent.setY(myEndItem->parentItem()->pos().y());
     }
-    QLineF centerLine(startParent+myStartItem->pos()+QPoint(nodeDimension/2,nodeDimension/2),
-                      endParent+myEndItem->pos()+QPoint(nodeDimension/2,nodeDimension/2));
+    QLineF centerLine(startParent+myStartItem->pos()+QPoint(nodeDimension/2+offset,nodeDimension/2+offset),
+                      endParent+myEndItem->pos()+QPoint(nodeDimension/2+offset,nodeDimension/2+offset));
 
     QPolygonF endPolygon;
     QPointF p1, p2, intersectPoint;
@@ -171,7 +201,7 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                 break;
             p1 = p2;
         }
-        setLine(QLineF(intersectPoint, startParent+myStartItem->pos()+QPoint(nodeDimension/2,nodeDimension/2)));
+        setLine(QLineF(intersectPoint, startParent+myStartItem->pos()+QPoint(nodeDimension/2+offset,nodeDimension/2+offset)));
         double angle = ::acos(line().dx() / line().length());
         if (line().dy() >= 0)
             angle = (Pi * 2) - angle;
@@ -196,7 +226,7 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                 break;
             p1 = p2;
         }
-        setLine(QLineF(intersectPoint, endParent+myEndItem->pos()+QPoint(nodeDimension/2,nodeDimension/2)));
+        setLine(QLineF(intersectPoint, endParent+myEndItem->pos()+QPoint(nodeDimension/2+offset,nodeDimension/2+offset)));
         double angle = ::acos(line().dx() / line().length());
         if (line().dy() >= 0)
             angle = (Pi * 2) - angle;
