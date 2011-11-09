@@ -19,6 +19,7 @@ public:
     explicit NodeEdit(NodeItem *item,bool blank, QWidget *parent = 0);
     ~NodeEdit();
     QString getName();
+    QString getType();
     QString getArgs();
     QString getNamespace();
     QString getMachine();

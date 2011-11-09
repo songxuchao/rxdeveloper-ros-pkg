@@ -32,7 +32,8 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _respawnInt(0),
     _clear_paramsInt(0),
     _outputInt(0),
-    _cwdInt(0)
+    _cwdInt(0),
+    _blank(false)
 
 {
     this->setParentItem(0);
@@ -40,11 +41,12 @@ NodeItem::NodeItem(QString node,QString package, QStringList subscriptions,QStri
     _outterborderPen.setWidth(2);
     _outterborderPen.setColor(_outterborderColor);
 
-    _title.setHtml("<font size=\"-2\" color=\"black\"><center>::<font size=\"-2\" color=\"blue\">"+node+"<font size=\"-2\" color=\"black\">::</center>");
+
     _title.setParentItem(this);
     _title.setTextWidth(_width);
     _title.setDefaultTextColor(Qt::blue);
     _title.setParent(this);
+
     _name.setPos(0,32);
     _name.setTextWidth(_width);
     _name.setParentItem(this);
@@ -316,15 +318,15 @@ void NodeItem::removeRemapItem(RemapItem *remap)
 
 bool NodeItem::getNodeData()
 {
-    bool blank = false;
     if (this->getType()=="_blank_node"){
-        blank=true;
+        _blank=true;
     }
-    NodeEdit nodeEdit(this, blank);
+    NodeEdit nodeEdit(this, _blank);
     nodeEdit.setWindowTitle("Node: "+getName());
 
     bool accept = nodeEdit.exec();
     if ((accept)){
+        setType(nodeEdit.getType());
         setName(nodeEdit.getName());
         setArgs(nodeEdit.getArgs());
         setNamespace(nodeEdit.getNamespace());
@@ -348,6 +350,7 @@ bool NodeItem::getNodeData()
 }
 void NodeItem::updateNodeItem()
 {
+    _title.setHtml("<font size=\"-2\" color=\"black\"><center>::<font size=\"-2\" color=\"blue\">"+getType()+"<font size=\"-2\" color=\"black\">::</center>");
     _name.setHtml("<font size=\"-2\" color=\"black\">name: <font size=\"-2\" color=\"blue\">"+getName());
     _namespace.setHtml("<font size=\"-2\" color=\"black\">ns: <font size=\"-2\" color=\"red\">"+getNamespace());
 }
@@ -644,5 +647,10 @@ QString NodeItem::getUnless()
 void NodeItem::setUnless(QString newUnless)
 {
     _unlessString = newUnless;
+}
+
+void NodeItem::setType(QString type)
+{
+    _typeString=type;
 }
 
