@@ -54,7 +54,7 @@ public:
     QGraphicsTextItem _title;    ///< sample text to go in the title area.
     QGraphicsTextItem _name;    ///< sample text to go in the title area.
     QGraphicsTextItem _namespace;    ///< sample text to go in the title area.
-    QGraphicsTextItem _remaps;
+    QGraphicsTextItem _contains;
     void setGridSpace(int space);
     void setColor(QColor color);
     void setLocation(QPointF point);
@@ -112,7 +112,7 @@ public:
     void setNode_or_test(int set);
     bool getNodeData();
     void updateNodeItem();
-
+    void updateContains();
     void removeEnvItem(EnvItem *env);
     void removeEnvItems();
     QList<EnvItem *> envItems;
@@ -175,6 +175,7 @@ private:
     QString _time_limitString;
     QString _retryString;
     QString _launch_prefixString;
+    QString _containsString;
     int _requiredInt;
     int _respawnInt;
     int _clear_paramsInt;

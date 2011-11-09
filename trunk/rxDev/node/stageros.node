@@ -1,0 +1,13 @@
+type: stageros
+package:
+  stage
+subscriptions:
+  cmd_vel{geometry_msgs/Twist}
+publications:
+  odom{nav_msgs/Odometry}
+  base_scan{sensor_msgs/LaserScan}
+  base_pose_ground_truth{nav_msgs/Odometry}
+services:
+ 
+parameters:
+  ~base_watchdog_timeout{double}[0.2]
