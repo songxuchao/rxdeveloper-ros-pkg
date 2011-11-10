@@ -39,12 +39,12 @@ IncludeFileItem::IncludeFileItem(QGraphicsRectItem *parent, QGraphicsScene *scen
     _file.setParentItem(this);
     _file.setDefaultTextColor(Qt::green);
 
-    _namespace.setPos(10,15);
+    _namespace.setPos(10,29);
     _namespace.setTextWidth(_width);
     _namespace.setParentItem(this);
     _namespace.setDefaultTextColor(Qt::red);
 
-    _clearParams.setPos(10,30);
+    _clearParams.setPos(10,39);
     _clearParams.setTextWidth(_width);
     _clearParams.setParentItem(this);
     _clearParams.setDefaultTextColor(Qt::red);
