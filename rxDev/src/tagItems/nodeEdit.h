@@ -20,6 +20,7 @@ public:
     ~NodeEdit();
     QString getName();
     QString getType();
+    QString getPackage();
     QString getArgs();
     QString getNamespace();
     QString getMachine();

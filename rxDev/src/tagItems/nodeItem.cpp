@@ -322,6 +322,7 @@ bool NodeItem::getNodeData()
         setType(nodeEdit.getType());
         setName(nodeEdit.getName());
         setArgs(nodeEdit.getArgs());
+        setPkg(nodeEdit.getPackage());
         setNamespace(nodeEdit.getNamespace());
         setMachine(nodeEdit.getMachine());
         setTime_limit(nodeEdit.getTime_limit());
@@ -667,5 +668,10 @@ void NodeItem::updateContains()
     else
         _contains.setHtml("<font size=\"-2\" color=\"black\">contains: <font size=\"-2\" color=\"red\">");
 
+}
+
+void NodeItem::setPkg(QString newPackage)
+{
+    _pkgString = newPackage;
 }
 

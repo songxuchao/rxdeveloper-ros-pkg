@@ -76,6 +76,7 @@ public:
     QString getName();
     void setName(QString newName);
     QString getPkg();
+    void setPkg(QString newPackage);
     QString getType();
     void setType(QString type);
     QStringList getSubscriptions();
