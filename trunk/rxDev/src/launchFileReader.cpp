@@ -214,6 +214,8 @@ void RxDev::loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group)
 
 void RxDev::loadDocument( TiXmlNode * documentNode)
 {
+
+
     arrowList.clear();
     groups.clear();
     if ( !documentNode ) return;

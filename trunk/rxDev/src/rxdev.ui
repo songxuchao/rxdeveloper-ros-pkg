@@ -200,7 +200,7 @@
   <widget class="QDockWidget" name="dockWidget_availableNodes">
    <property name="minimumSize">
     <size>
-     <width>200</width>
+     <width>268</width>
      <height>268</height>
     </size>
    </property>
@@ -226,14 +226,14 @@
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>nodes, nodelets, tests</string>
+    <string>node / test-node:</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_15">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QTreeView" name="treeView_availableNodes">
        <property name="minimumSize">
         <size>
@@ -273,10 +273,76 @@
        </attribute>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="4" column="0">
       <widget class="QPushButton" name="pushButton_refreshNodes">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>refresh list</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="minimumSize">
+        <size>
+         <width>250</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>250</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>nodelets</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_blankNodelet">
+          <property name="text">
+           <string>blank nodelet</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_managerNodelet">
+          <property name="text">
+           <string>manager nodelet</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_blankNode">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>blank node</string>
        </property>
       </widget>
      </item>
@@ -292,7 +358,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>312</width>
+     <width>200</width>
      <height>171</height>
     </size>
    </property>
@@ -304,7 +370,7 @@
    </property>
    <property name="baseSize">
     <size>
-     <width>0</width>
+     <width>200</width>
      <height>171</height>
     </size>
    </property>
@@ -319,13 +385,6 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_group">
-       <property name="text">
-        <string>&lt;group&gt;</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QPushButton" name="pushButton_includeFile">
        <property name="text">
@@ -372,6 +431,13 @@
       <widget class="QPushButton" name="pushButton_rosparam">
        <property name="text">
         <string>&lt;rosparam&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_group">
+       <property name="text">
+        <string>&lt;group&gt;</string>
        </property>
       </widget>
      </item>

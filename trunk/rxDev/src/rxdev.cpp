@@ -38,6 +38,9 @@ RxDev::RxDev(QWidget *parent) :
     //create Toolbar
     setupToolBar();
 
+    //get TinyXML-Version
+    tiny_version=(TIXML_MINOR_VERSION);
+
 
     ui->statusBar->showMessage(tr("Ready"));
 

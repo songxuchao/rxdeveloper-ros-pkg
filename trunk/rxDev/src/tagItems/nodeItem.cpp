@@ -312,7 +312,10 @@ bool NodeItem::getNodeData()
         _blank=true;
     }
     NodeEdit nodeEdit(this, _blank);
-    nodeEdit.setWindowTitle("Node: "+getName());
+    if (this->getType()=="nodelet")
+        nodeEdit.setWindowTitle("Nodelet: "+getName());
+    else
+        nodeEdit.setWindowTitle("Node: "+getName());
 
     bool accept = nodeEdit.exec();
     if ((accept)){
