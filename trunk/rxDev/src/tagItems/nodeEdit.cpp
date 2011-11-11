@@ -406,3 +406,8 @@ QString NodeEdit::getType()
 {
     return ui->lineEdit_type->text();
 }
+
+QString NodeEdit::getPackage()
+{
+    return ui->lineEdit_pkg->text();
+}
