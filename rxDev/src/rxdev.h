@@ -188,6 +188,12 @@ void openSpecFile();
     void on_pushButton_clearInfo_clicked();
     void state(QProcess::ProcessState);
 
+    void on_pushButton_blankNodelet_clicked();
+
+    void on_pushButton_managerNodelet_clicked();
+
+    void on_pushButton_blankNode_clicked();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
@@ -206,6 +212,7 @@ private:
     QDir workingDir;
     QDir currentDir;
 
+    int tiny_version;
     //new
      //end new
 

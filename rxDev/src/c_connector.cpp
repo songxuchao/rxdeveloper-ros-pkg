@@ -146,13 +146,60 @@ void RxDev::on_pushButton_refreshNodes_clicked()
 
 }
 
+void RxDev::on_pushButton_blankNodelet_clicked()
+{
+    NodeItem * newNode;
+    newNode = new NodeItem("","nodelet",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
+    newNode->setType("nodelet");
+    newNode->setArgs("load x on_y");
+    newNode->setLocation(findSpace(QPoint(0,55)));
+    newNode->setColor(Qt::yellow);
+    newNode->setPos(findSpace(QPoint(0,55)));
+
+    if (newNode->getNodeData()==true){
+        scene->addItem(newNode);
+    }
+}
+
+void RxDev::on_pushButton_managerNodelet_clicked()
+{
+    NodeItem * newNode;
+    newNode = new NodeItem("","nodelet",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
+    newNode->setType("nodelet");
+    newNode->setArgs("manager");
+    newNode->setLocation(findSpace(QPoint(0,55)));
+    newNode->setColor(Qt::yellow);
+    newNode->setPos(findSpace(QPoint(0,55)));
+
+    if (newNode->getNodeData()==true){
+        scene->addItem(newNode);
+    }
+}
+
+void RxDev::on_pushButton_blankNode_clicked()
+{
+    NodeItem * newNode;
+    newNode = new NodeItem("","",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
+    newNode->setType("_blank_node");
+    newNode->setLocation(findSpace(QPoint(0,55)));
+newNode->setColor(Qt::yellow);
+    newNode->setPos(findSpace(QPoint(0,55)));
+
+    if (newNode->getNodeData()==true){
+        scene->addItem(newNode);
+    }
+
+
+}
+
 
 void RxDev::on_pushButton_group_clicked()
 {
     GroupItem * newGroup;
     newGroup = new GroupItem;
     newGroup->setLocation(findSpace(QPoint(0,55)));
-    newGroup->setPos(findSpace(QPoint(0,55)));
+newGroup->setColor(Qt::yellow);
+newGroup->setPos(findSpace(QPoint(0,55)));
     if (newGroup->getGroupData()==true){
         scene->addItem(newGroup);
     }
@@ -165,6 +212,7 @@ void RxDev::on_pushButton_env_clicked()
     newEnv = new EnvItem;
     newEnv->setLocation(findSpace(QPoint(0,55)));
     newEnv->setPos(findSpace(QPoint(0,55)));
+    newEnv->setColor(Qt::yellow);
     if (newEnv->getEnvData()==true){
         scene->addItem(newEnv);
     }
@@ -177,6 +225,7 @@ void RxDev::on_pushButton_arg_clicked()
     newArg = new ArgItem;
     newArg->setPos(findSpace(QPoint(0,55)));
     newArg->setLocation(findSpace(QPoint(0,55)));
+    newArg->setColor(Qt::yellow);
     if (newArg->getArgData()==true){
         scene->addItem(newArg);
     }
@@ -190,6 +239,7 @@ void RxDev::on_pushButton_machine_clicked()
     newMachine = new MachineItem;
     newMachine->setPos(findSpace(QPoint(0,55)));
     newMachine->setLocation(findSpace(QPoint(0,55)));
+    newMachine->setColor(Qt::yellow);
     if (newMachine->getMachineData()==true){
         scene->addItem(newMachine);
     }
@@ -203,6 +253,7 @@ void RxDev::on_pushButton_Param_clicked()
     newParam = new ParameterItem;
     newParam->setPos(findSpace(QPoint(0,0)));
     newParam->setLocation(findSpace(QPoint(0,55)));
+    newParam->setColor(Qt::yellow);
     if (newParam->getParamData()==true){
         scene->addItem(newParam);
     }
@@ -215,6 +266,7 @@ void RxDev::on_pushButton_rosparam_clicked()
     newParam = new RosparamItem;
     newParam->setPos(findSpace(QPoint(0,0)));
     newParam->setLocation(findSpace(QPoint(0,55)));
+    newParam->setColor(Qt::yellow);
     if (newParam->getRosparamData()==true){
         scene->addItem(newParam);
     }
@@ -227,6 +279,7 @@ void RxDev::on_pushButton_remap_clicked()
     newRemap = new RemapItem;
     newRemap->setPos(findSpace(QPoint(0,55)));
     newRemap->setLocation(findSpace(QPoint(0,55)));
+    newRemap->setColor(Qt::yellow);
     if (newRemap->getRemapData()==true){
         scene->addItem(newRemap);
     }
@@ -238,6 +291,7 @@ void RxDev::on_pushButton_includeFile_clicked()
     newFile = new IncludeFileItem;
     newFile->setPos(findSpace(QPoint(0,55)));
     newFile->setLocation(findSpace(QPoint(0,55)));
+    newFile->setColor(Qt::yellow);
     if (newFile->getFileData()==true){
         scene->addItem(newFile);
     }
