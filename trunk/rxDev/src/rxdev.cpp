@@ -22,6 +22,8 @@ RxDev::RxDev(QWidget *parent) :
 {
     //initialize UI
     ui->setupUi(this);
+    this->tabifyDockWidget(ui->dockWidget_components,ui->dockWidget_availableNodes);
+    ui->dockWidget_availableNodes->setFocus();
     ui->tabWidget->setCurrentIndex(0);  //0 = connector tab
 
     //load Settings
@@ -31,7 +33,7 @@ RxDev::RxDev(QWidget *parent) :
     setupConnector();
 
     //initialize list of available nodes and adding data
-    availableNodes();
+    availableNodesOrComps();
 
 
     ui->dockWidget_errors->hide();
@@ -351,9 +353,9 @@ void RxDev::on_actionAvailable_Tags_changed()
 void RxDev::on_actionSave_as_Launchfile_triggered()
 {
     QString file = QFileDialog::getSaveFileName(
-                this, tr( "Save launch file as ..." ),
+                this, tr( "Save launch file or component as ..." ),
 
-                currentDir.absolutePath(), tr("Launchfiles (*.launch *.xml)"));
+                currentDir.absolutePath(), tr("Launchfiles (*.launch *.xml );;Componentfiles (*.comp)"));
     if (!file.isEmpty()){
         settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
         currentDir.setPath(settings.value("currentDir").toString());
@@ -494,3 +496,4 @@ void RxDev::state(QProcess::ProcessState){
         ui->actionStop->setEnabled(false);
     }
 }
+

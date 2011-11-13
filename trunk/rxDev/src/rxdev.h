@@ -100,9 +100,13 @@ private slots:
 
     //new
 
-    void availableNodes();
+    void availableNodesOrComps();
     void showContextMenu_availableNodes(const QPoint &point);
-void openSpecFile();
+    void showContextMenu_availableComponents(const QPoint &point);
+    void openCompFile();
+    void addCompFile();
+
+    void openSpecFile();
     void collapseNode();
     void expandNode();
     void collapseAll();
@@ -111,6 +115,8 @@ void openSpecFile();
     void nodeParser(const QString nodeFile);
 
     void fillItemModel_availableNodes(const QString nodeFile);
+    void fillItemModel_availableComponents(const QString compFile);
+
     void setupConnector();
     //end new
     void on_actionLoad_Launchfile_triggered();
@@ -172,7 +178,7 @@ void openSpecFile();
     void beginParsing(TiXmlNode *pParent);
     QPoint getCoords(TiXmlNode *node);
     void getGroupDim(TiXmlNode *node,int &width, int &height);
-    void on_pushButton_refreshNodes_clicked();
+    void on_pushButton_refreshNodesOrComps_clicked();
 
 
     void on_actionSettings_triggered();
@@ -204,6 +210,8 @@ private:
     QStringListModel *model_2;
     QFileSystemModel *workingModel;
     QStandardItemModel *model_availableNodes;
+    QStandardItemModel *model_availableComponents;
+
     //QFileSystemWatcher *watcher;
     QStringList packageList;
     QStringList nodeList;
