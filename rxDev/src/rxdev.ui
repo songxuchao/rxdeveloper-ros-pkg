@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1105</width>
+    <width>788</width>
     <height>919</height>
    </rect>
   </property>
@@ -37,7 +37,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -161,7 +161,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1105</width>
+     <width>788</width>
      <height>25</height>
     </rect>
    </property>
@@ -226,7 +226,7 @@
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>node / test-node:</string>
+    <string>nodes / test-nodes:</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -271,25 +271,6 @@
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="pushButton_refreshNodes">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>refresh list</string>
-       </property>
       </widget>
      </item>
      <item row="2" column="0">
@@ -346,6 +327,25 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="pushButton_refreshNodesOrComps">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>refresh list</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -358,7 +358,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>200</width>
+     <width>220</width>
      <height>171</height>
     </size>
    </property>
@@ -487,6 +487,49 @@
         </spacer>
        </item>
       </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_components">
+   <property name="minimumSize">
+    <size>
+     <width>105</width>
+     <height>130</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>200</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Components</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="0" column="0">
+      <widget class="QListView" name="listView_availableComponents">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

@@ -79,11 +79,13 @@ bool IncludeFileItem::getFileData()
         if (this->parentItem()){
             group =qgraphicsitem_cast<GroupItem *>(this->parentItem());
         }
+        qDebug()<<file;
         if (file!=""){
             if (QFile(file).exists()){
 
                 expandItem(file,*group);
-                scene()->removeItem(this);
+                if (this->parentItem()==0||this->parentItem()==group)
+                    scene()->removeItem(this);
             }
         }
         return true;

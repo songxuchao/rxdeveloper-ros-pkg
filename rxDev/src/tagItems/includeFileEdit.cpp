@@ -231,6 +231,7 @@ void IncludeFileEdit::on_checkBox_expand_toggled(bool checked)
 {
     if (checked){
         expandFile = ui->lineEdit_file->text();
+        expandFile.trimmed();
         if (expandFile.startsWith("$(find ")){
             expandFile.remove("$(find ");
             QStringList tempList;

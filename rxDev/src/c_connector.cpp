@@ -16,7 +16,7 @@
 #include <fstream>
 #include <QUrl>
 
-QPoint menuPoint_availableNodes;
+//QPoint menuPoint_availableNodes;
 
 
 void RxDev::setupConnector(){
@@ -46,16 +46,23 @@ void RxDev::setupConnector(){
 }
 
 
-void RxDev::availableNodes() {
+void RxDev::availableNodesOrComps() {
 
     /* Create the data model */
 
     model_availableNodes  = new QStandardItemModel();
-
     ui->treeView_availableNodes->setModel(model_availableNodes);
     ui->treeView_availableNodes->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    on_pushButton_refreshNodes_clicked();
+    model_availableComponents = new QStandardItemModel();
+    ui->listView_availableComponents->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->listView_availableComponents->setModel(model_availableComponents);
+    on_pushButton_refreshNodesOrComps_clicked();
+
+    connect(ui->listView_availableComponents, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(addCompFile()));
+    connect(ui->listView_availableComponents, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showContextMenu_availableComponents(const QPoint&)));
 
     connect(ui->treeView_availableNodes, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showContextMenu_availableNodes(const QPoint&)));
@@ -80,11 +87,13 @@ void RxDev::on_actionNew_Launchfile_triggered()
 }
 
 
-void RxDev::on_pushButton_refreshNodes_clicked()
+void RxDev::on_pushButton_refreshNodesOrComps_clicked()
 {
+
     ui->statusBar->showMessage(tr("refreshing nodelist...please wait!"));
     packageList.clear();
     model_availableNodes->clear();
+    model_availableComponents->clear();
     //get all available packages
     QProcess findPackages;
     findPackages.start(QString("rospack list-names"));
@@ -97,6 +106,8 @@ void RxDev::on_pushButton_refreshNodes_clicked()
 
     //for all available packages do
     QStringList availableNodeList;
+    QStringList availableCompList;
+
     for(int pack=0; pack<packageList.count();pack++){
         //Get package-path
         QProcess getPackagePath;
@@ -114,10 +125,20 @@ void RxDev::on_pushButton_refreshNodes_clicked()
         getNodes.waitForFinished(-1);
         output = getNodes.readAllStandardOutput();
         availableNodeList.append(QString(output).split("\n"));
+        //find .comp-files
+        QProcess getComponents;
+        getComponents.setWorkingDirectory(workingDir.absolutePath());
+        command = "find -H "+packagePath+"/component";
+        getComponents.start(command);
+        getComponents.waitForFinished(-1);
+        output = getComponents.readAllStandardOutput();
+        availableCompList.append(QString(output).split("\n"));
     }
     availableNodeList.removeDuplicates();
     availableNodeList.sort();
-    //qDebug()<<availableNodeList;
+    availableCompList.removeDuplicates();
+    availableCompList.sort();
+
 
     //parse all available specfiles
     for (int i=0; i<availableNodeList.count();i++){
@@ -141,7 +162,16 @@ void RxDev::on_pushButton_refreshNodes_clicked()
 
         }
     }
+    //parse all available components
+    for (int i=0; i<availableCompList.count();i++){
+        if (QString(availableCompList[i]).endsWith(".comp")){
+            qDebug()<<availableCompList[i];
 
+            //Fill the model
+            fillItemModel_availableComponents(availableCompList[i]);
+
+        }
+    }
     ui->statusBar->showMessage(tr("Nodelist updated!"),5000);
 
 }
@@ -290,12 +320,12 @@ void RxDev::on_pushButton_includeFile_clicked()
     IncludeFileItem * newFile;
     newFile = new IncludeFileItem;
     newFile->setPos(findSpace(QPoint(0,55)));
+    connect(newFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &, GroupItem &)));
     newFile->setLocation(findSpace(QPoint(0,55)));
     newFile->setColor(Qt::yellow);
     if (newFile->getFileData()==true){
         scene->addItem(newFile);
     }
-    connect(newFile,SIGNAL(expandItem(QString,GroupItem)),this,SLOT(expandInclude(const QString &, GroupItem &)));
 
 }
 
@@ -306,6 +336,20 @@ QPointF RxDev::findSpace(QPointF currentPoint){
         return findSpace(QPointF(currentPoint.x()+1,currentPoint.y()));
 
     return currentPoint;
+}
+
+void RxDev::fillItemModel_availableComponents(const QString compFile)
+{
+    int begin = compFile.lastIndexOf("/")+1;
+    int end = compFile.lastIndexOf(".comp");
+    QString subString = compFile.mid(begin,end-begin);
+
+    QStandardItem *group = new QStandardItem(QString("%1").arg(subString));
+    QStandardItem *path = new QStandardItem(QString("%1").arg(compFile));
+    group->appendRow(path);
+
+    // append group as new row to the model. model takes the ownership of the item
+            model_availableComponents->appendRow(group);
 }
 
 void RxDev::fillItemModel_availableNodes(QString nodeFile){
@@ -455,13 +499,35 @@ void RxDev::nodeParser(QString nodeFile){
 
 }
 
+void RxDev::showContextMenu_availableComponents(const QPoint&point){
+
+    QMenu contextMenu_availableComponents;
+    QModelIndex index(ui->listView_availableComponents->indexAt(point));
+    //menuPoint_availableComponents = point;
+    //const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();
+    QModelIndex seekRoot = index;
+    while(seekRoot.parent() != QModelIndex())
+    {
+        seekRoot = seekRoot.parent();
+
+    }
+    contextMenu_availableComponents.addAction(tr("open Component File"),this, SLOT(openCompFile()));
+    contextMenu_availableComponents.addSeparator();
+    contextMenu_availableComponents.addAction(tr("add this Component"),this, SLOT(addCompFile()));
+    //contextMenu_availableNodes.addAction(tr("expand all"),this, SLOT(expandAll()));
+    //contextMenu_availableNodes.addAction(tr("collapse all"),this, SLOT(collapseAll()));
+
+
+
+    contextMenu_availableComponents.exec(ui->listView_availableComponents->viewport()->mapToGlobal(point));
+}
 
 
 void RxDev::showContextMenu_availableNodes(const QPoint&point){
 
     QMenu contextMenu_availableNodes;
     //QModelIndex index(ui->treeView_availableNodes->indexAt(point));
-    menuPoint_availableNodes = point;
+    //menuPoint_availableNodes = point;
     const QModelIndex index = ui->treeView_availableNodes->selectionModel()->currentIndex();
     QModelIndex seekRoot = index;
     while(seekRoot.parent() != QModelIndex())
@@ -516,6 +582,39 @@ void RxDev::openSpecFile(){
     QString filePath =  seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString();
     //qDebug()<<filePath;
     QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
+}
+void RxDev::openCompFile(){
+    const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();
+    QModelIndex seekRoot = index;
+    while(seekRoot.parent() != QModelIndex())
+    {
+        seekRoot = seekRoot.parent();
+    }
+    QString filePath =  seekRoot.child(0,0).data(Qt::DisplayRole).toString();
+    qDebug()<<filePath;
+    QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
+}
+void RxDev::addCompFile(){
+    const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();
+    QModelIndex seekRoot = index;
+    while(seekRoot.parent() != QModelIndex())
+    {
+        seekRoot = seekRoot.parent();
+    }
+    QString filePath =  seekRoot.child(0,0).data(Qt::DisplayRole).toString();
+    qDebug()<<filePath;
+    IncludeFileItem * newFile;
+    newFile = new IncludeFileItem;
+    connect(newFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &, GroupItem &)));
+    newFile->setPos(findSpace(QPoint(0,55)));
+    newFile->setLocation(findSpace(QPoint(0,55)));
+    newFile->setColor(Qt::yellow);
+    newFile->setFile(filePath);
+    //if (newFile->getFileData()==true){
+        newFile->updateIncludeFileItem();
+        scene->addItem(newFile);
+    //}
+
 }
 
 
