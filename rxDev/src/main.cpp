@@ -32,7 +32,8 @@ void error( const char* msg = "Invalid argument" )
     }
     else
     {
-        fprintf(stderr, "Usage: rxdev\n");
+        fprintf(stderr, "Usage: a) rxdev\n");
+        fprintf(stderr, "       b) rxdev <file.launch>\n");
     }
     exit( 1 );
 }
@@ -45,22 +46,51 @@ int main(int argc, char *argv[])
 {
 
     ros::init(argc, argv, "rxdev");
-
+    QString file ="";
     if( argc == 2 )
     {
         if( QString( argv[ 1 ] ) == "--help" ||
             QString( argv[ 1 ] ) == "-help" ||
+                QString( argv[ 1 ] ) == "-?" ||
             QString( argv[ 1 ] ) == "-h" )
         {
             error( 0 );
-        }
+        } else
+
+            if (QString( argv[ 1 ] ).endsWith("launch")){
+                file=( argv[ 1 ] );
+                qDebug()<<file;
+            }
+
     }
 
     QApplication a(argc, argv);
     a.setOrganizationName("ais-bonn");
     a.setApplicationName("rxDeveloper");
     RxDev w;
+    if (file!=""){
+        if (!file.isEmpty()){
+            w.settings.setValue("currentDir", QFileInfo(file).dir().absolutePath());
+            if( !QFile::exists( file ) )
+            {
 
+                error( 0 );
+            }
+
+
+            TiXmlDocument doc( file.toStdString() );
+            bool loadOkay = doc.LoadFile();
+            if (loadOkay)
+            {
+                w.loadDocument( &doc );
+                w.setWindowTitle("rxDeveloper - "+file);
+            }
+            else
+            {
+                qDebug()<<"\nFailed to load file: "<<file;
+            }
+        }
+    }
     w.show();
 
     return a.exec();
