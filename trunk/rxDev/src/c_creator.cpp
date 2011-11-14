@@ -126,10 +126,12 @@ void RxDev::createNewSpecFile()
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+folderPath);
     createFile.exec();
-
+    QString filename=createFile.getFileName();
     QFile newFile;
-    if (!(createFile.getFileName()=="")){
-        newFile.setFileName(createFile.getFileName());
+    if (!(filename=="")){
+        if (!filename.endsWith(".node"))
+            filename.append(".node");
+        newFile.setFileName(filename);
         QDir::setCurrent(folderPath);
         if (!(newFile.exists()))
         {
@@ -154,10 +156,12 @@ void RxDev::createNewCpp_NodeletFile()
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+folderPath);
     createFile.exec();
-
+    QString filename=createFile.getFileName();
     QFile newFile;
-    if (!(createFile.getFileName()=="")){
-        newFile.setFileName(createFile.getFileName());
+    if (!(filename=="")){
+        if (!filename.endsWith(".cpp")&&!filename.endsWith(".c")&&!filename.endsWith(".cc")&&!filename.endsWith(".c++"))
+            filename.append(".cpp");
+        newFile.setFileName(filename);
         QDir::setCurrent(folderPath);
         if (!(newFile.exists()))
         {
@@ -174,10 +178,12 @@ void RxDev::createNewPython_NodeletFile()
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+folderPath);
     createFile.exec();
-
+    QString filename=createFile.getFileName();
     QFile newFile;
-    if (!(createFile.getFileName()=="")){
-        newFile.setFileName(createFile.getFileName());
+    if (!(filename=="")){
+        if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
+            filename.append(".py");
+        newFile.setFileName(filename);
         QDir::setCurrent(folderPath);
         if (!(newFile.exists()))
         {
