@@ -107,6 +107,7 @@ void SpecFileEdit::on_actionAdd_sub_triggered()
 {
     int row = model_subscriptions->rowCount();
     model_subscriptions->insertRow(row);
+    model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 0), "<new>");
 }
 
 void SpecFileEdit::on_actionDelete_pub_triggered()
@@ -118,6 +119,7 @@ void SpecFileEdit::on_actionAdd_pub_triggered()
 {
     int row = model_publications->rowCount();
     model_publications->insertRow(row);
+    model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 0), "<new>");
 }
 void SpecFileEdit::on_actionDelete_serv_triggered()
 {
@@ -128,6 +130,7 @@ void SpecFileEdit::on_actionAdd_serv_triggered()
 {
     int row = model_services->rowCount();
     model_services->insertRow(row);
+    model_services->setData(model_services->index(model_services->rowCount() - 1, 0), "<new>");
 }
 void SpecFileEdit::on_actionDelete_param_triggered()
 {
@@ -138,6 +141,9 @@ void SpecFileEdit::on_actionAdd_param_triggered()
 {
     int row = model_parameters->rowCount();
     model_parameters->insertRow(row);
+    model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 0), "<new>");
+    //model_parameters->row(row)->doubleClicked();
+
 }
 
 
