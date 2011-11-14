@@ -3,6 +3,7 @@
 #include "newEntry.h"
 #include "QCompleter"
 #include <QUrl>
+#include "specFileEdit.h"
 
 QPoint menuPoint;
 QString folderName;
@@ -53,6 +54,9 @@ void RxDev::showContextMenu(const QPoint&point){
     menuPoint = point;
     if(workingModel->fileInfo(index).isDir()){
         contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
+        contextMenu.addAction(tr("new SpecFile"),this, SLOT(createNewSpecFile()));
+        contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(createNewCpp_NodeletFile()));
+        contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(createNewPython_NodeletFile()));
         contextMenu.addSeparator();
         contextMenu.addAction(tr("new Folder"),this, SLOT(createNewFolder()));
         contextMenu.addAction(tr("browse Folder"),this, SLOT(openFileOrFolder()));
@@ -98,7 +102,75 @@ void RxDev::createNewFile()
 {
 
     QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
 
+    QFile newFile;
+    if (!(createFile.getFileName()=="")){
+        newFile.setFileName(createFile.getFileName());
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::ReadWrite);
+            newFile.close();
+        }
+    }
+
+}
+
+
+void RxDev::createNewSpecFile()
+{
+    QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
+
+    QFile newFile;
+    if (!(createFile.getFileName()=="")){
+        newFile.setFileName(createFile.getFileName());
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::ReadWrite);
+            newFile.close();
+        }
+    }
+    QString filePath= folderPath.append("/"+newFile.fileName());
+    rosNode newSpec;
+    SpecFileEdit specFile(&newSpec);
+    specFile.setWindowTitle("Specfile: "+createFile.getFileName());
+    bool accept = specFile.exec();
+    if ((accept)){
+        writeSpecFile(&newSpec,filePath);
+
+    }
+}
+
+void RxDev::createNewCpp_NodeletFile()
+{
+    QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
+
+    QFile newFile;
+    if (!(createFile.getFileName()=="")){
+        newFile.setFileName(createFile.getFileName());
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::ReadWrite);
+            newFile.close();
+        }
+    }
+
+}
+
+void RxDev::createNewPython_NodeletFile()
+{
+    QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+folderPath);
     createFile.exec();

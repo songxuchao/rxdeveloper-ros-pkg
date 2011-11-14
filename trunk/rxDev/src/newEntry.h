@@ -7,25 +7,25 @@
 
 
 namespace Ui {
-    class NewEntry;
+class NewEntry;
 }
 
 class NewEntry : public QDialog {
-        Q_OBJECT
+    Q_OBJECT
 
-        public:
-                explicit NewEntry(QWidget *parent = 0);
-                ~NewEntry();
-                QString getFileName();
+public:
+    explicit NewEntry(QWidget *parent = 0);
+    ~NewEntry();
+    QString getFileName();
 
-        public slots:
-                void reject();
-                void accept();
+public slots:
+    void reject();
+    void accept();
 
-        private slots:
+private slots:
 
-        private:
-                Ui::NewEntry *ui;
+private:
+    Ui::NewEntry *ui;
 
 private slots:
 

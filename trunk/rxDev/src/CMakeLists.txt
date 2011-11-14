@@ -24,12 +24,14 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/machineEdit.h
     rxdev.h
     newEntry.h
+    specFileEdit.h
     settings.h
 
 )
 qt4_wrap_ui(UI_HEADERS
     rxdev.ui
     newEntry.ui
+    specFileEdit.ui
     settings.ui
     tagItems/parameterEdit.ui
     tagItems/rosparamEdit.ui
@@ -74,6 +76,7 @@ set( CPP
     c_creator.cpp
     c_connector.cpp
     newEntry.cpp
+    specFileEdit.cpp
     settings.cpp
     launchFileView.cpp
     launchFileScene.cpp
