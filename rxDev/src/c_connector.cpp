@@ -512,6 +512,8 @@ void RxDev::showContextMenu_availableComponents(const QPoint&point){
     //menuPoint_availableComponents = point;
     //const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();
     QModelIndex seekRoot = index;
+    qDebug()<<index;
+    if(index.isValid()){
     while(seekRoot.parent() != QModelIndex())
     {
         seekRoot = seekRoot.parent();
@@ -526,16 +528,19 @@ void RxDev::showContextMenu_availableComponents(const QPoint&point){
 
 
     contextMenu_availableComponents.exec(ui->listView_availableComponents->viewport()->mapToGlobal(point));
+    }
 }
 
 
 void RxDev::showContextMenu_availableNodes(const QPoint&point){
 
     QMenu contextMenu_availableNodes;
-    //QModelIndex index(ui->treeView_availableNodes->indexAt(point));
+    QModelIndex index(ui->treeView_availableNodes->indexAt(point));
     //menuPoint_availableNodes = point;
-    const QModelIndex index = ui->treeView_availableNodes->selectionModel()->currentIndex();
+    //const QModelIndex index = ui->treeView_availableNodes->selectionModel()->currentIndex();
     QModelIndex seekRoot = index;
+    if(index.isValid()){
+
     while(seekRoot.parent() != QModelIndex())
     {
         seekRoot = seekRoot.parent();
@@ -551,6 +556,7 @@ void RxDev::showContextMenu_availableNodes(const QPoint&point){
 
 
     contextMenu_availableNodes.exec(ui->treeView_availableNodes->viewport()->mapToGlobal(point));
+    }
 }
 void RxDev::expandNode(){
     const QModelIndex index = ui->treeView_availableNodes->selectionModel()->currentIndex();
