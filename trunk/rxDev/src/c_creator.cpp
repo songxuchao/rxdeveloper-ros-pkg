@@ -123,6 +123,10 @@ void RxDev::createNewFile()
 void RxDev::createNewSpecFile()
 {
     QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    if (!folderPath.endsWith("/node"))
+        QMessageBox::warning( this, "No correct specfilefolder!",
+                             "If you continue, rxDeveloper will not be able to use the specfile.\nSpecfiles have to be in '<packagename>/node/'-folder structure");
+
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+folderPath);
     createFile.exec();
@@ -132,12 +136,6 @@ void RxDev::createNewSpecFile()
         if (!filename.endsWith(".node"))
             filename.append(".node");
         newFile.setFileName(filename);
-        QDir::setCurrent(folderPath);
-        if (!(newFile.exists()))
-        {
-            newFile.open(QIODevice::ReadWrite);
-            newFile.close();
-        }
     }
     QString filePath= folderPath.append("/"+newFile.fileName());
     rosNode newSpec;
@@ -148,6 +146,7 @@ void RxDev::createNewSpecFile()
         writeSpecFile(&newSpec,filePath);
 
     }
+
 }
 
 void RxDev::createNewCpp_NodeletFile()
