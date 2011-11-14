@@ -520,7 +520,7 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,i
  */
 void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
                                QString &nodePackage, QString &nodeType,QStringList &nodeSubs,
-                               QStringList &nodePubs,QStringList &nodeArgs,QStringList &nodeSrvs){
+                               QStringList &nodePubs,QStringList &nodeParams,QStringList &nodeSrvs){
 
     TiXmlAttribute* tagAttribute=nodeNode->ToElement()->FirstAttribute();
 
@@ -544,7 +544,7 @@ void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
             nodeSubs = node.nodeInput;
             nodePubs = node.nodeOutput;
             nodeSrvs = node.nodeServices;
-            nodeArgs = node.nodeParameters;
+            nodeParams = node.nodeParameters;
             break;
         }
     }

@@ -36,6 +36,7 @@
 #include "tagItems/machineItem.h"
 #include "tagItems/groupItem.h"
 
+
 class LaunchFileScene;
 class LaunchFileView;
 
@@ -91,6 +92,9 @@ private slots:
 
     void deleteFile();
     void createNewFile();
+    void createNewSpecFile();
+    void createNewCpp_NodeletFile();
+    void createNewPython_NodeletFile();
     void createNewFolder();
 
     void renameFolder();
@@ -107,6 +111,8 @@ private slots:
     void addCompFile();
 
     void openSpecFile();
+    void writeSpecFile(rosNode *node,QString filePath);
+
     void collapseNode();
     void expandNode();
     void collapseAll();

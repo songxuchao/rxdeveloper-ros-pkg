@@ -12,6 +12,7 @@
 #include <yaml-cpp/yaml.h>
 #include "launchFileView.h"
 #include "launchFileScene.h"
+#include "specFileEdit.h"
 
 #include <fstream>
 #include <QUrl>
@@ -125,7 +126,7 @@ void RxDev::on_pushButton_refreshNodesOrComps_clicked()
         getNodes.waitForFinished(-1);
         output = getNodes.readAllStandardOutput();
         availableNodeList.append(QString(output).split("\n"));
-        //find .comp-files
+        //find component-launch-files
         QProcess getComponents;
         getComponents.setWorkingDirectory(workingDir.absolutePath());
         command = "find -H "+packagePath+"/component";
@@ -156,6 +157,11 @@ void RxDev::on_pushButton_refreshNodesOrComps_clicked()
                 qDebug()<<"Parser exception in"<<QString(availableNodeList[i]);
                 qDebug()<<e.what();
                 return;
+            } catch (YAML::BadDereference&e){
+                qDebug()<<"Bad Dereference in"<<QString(availableNodeList[i]);
+                qDebug()<<e.what();
+
+
             }
             //Fill the model
             fillItemModel_availableNodes(availableNodeList[i]);
@@ -164,8 +170,8 @@ void RxDev::on_pushButton_refreshNodesOrComps_clicked()
     }
     //parse all available components
     for (int i=0; i<availableCompList.count();i++){
-        if (QString(availableCompList[i]).endsWith(".comp")){
-            qDebug()<<availableCompList[i];
+        qDebug()<<availableCompList[i];
+        if (QString(availableCompList[i]).endsWith(".launch")){
 
             //Fill the model
             fillItemModel_availableComponents(availableCompList[i]);
@@ -341,7 +347,7 @@ QPointF RxDev::findSpace(QPointF currentPoint){
 void RxDev::fillItemModel_availableComponents(const QString compFile)
 {
     int begin = compFile.lastIndexOf("/")+1;
-    int end = compFile.lastIndexOf(".comp");
+    int end = compFile.lastIndexOf(".launch");
     QString subString = compFile.mid(begin,end-begin);
 
     QStandardItem *group = new QStandardItem(QString("%1").arg(subString));
@@ -460,7 +466,6 @@ void RxDev::nodeParser(QString nodeFile){
     } catch (YAML::InvalidScalar) {
         qDebug()<<"No valid type found";
         exit(-1);
-
     }
     if ((yamlNode = doc.FindValue("package"))) {
         *yamlNode >> nodePackage;
@@ -470,6 +475,7 @@ void RxDev::nodeParser(QString nodeFile){
 
     }
     if ((yamlNode = doc.FindValue("subscriptions"))) {
+
         *yamlNode >> nodeInput;
         if (nodeInput!="~"){
 
@@ -581,7 +587,19 @@ void RxDev::openSpecFile(){
     }
     QString filePath =  seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString();
     //qDebug()<<filePath;
-    QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
+
+    nodeParser(filePath);
+
+    SpecFileEdit specFile(&node);
+    qDebug()<<node.nodeType;
+    specFile.setWindowTitle("Specfile: "+seekRoot.data(Qt::DisplayRole).toString());
+    bool accept = specFile.exec();
+    if ((accept)){
+        writeSpecFile(&node,filePath);
+
+    }
+
+//    QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
 }
 void RxDev::openCompFile(){
     const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();

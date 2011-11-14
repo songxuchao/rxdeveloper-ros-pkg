@@ -1,6 +1,6 @@
 #include "rxdev.h"
 #include "ui_rxdev.h"
-
+#include <yaml-cpp/yaml.h>
 #include <QCloseEvent>
 #include <QComboBox>
 #include <QToolBar>
@@ -61,7 +61,7 @@ RxDev::RxDev(QWidget *parent) :
     }else{
         ui->actionStart->setEnabled(false);
         ui->actionStop->setEnabled(true);
-}
+    }
 
 }
 
@@ -296,7 +296,7 @@ void RxDev::changeToolBar(){
         }else{
             ui->actionStart->setEnabled(false);
             ui->actionStop->setEnabled(true);
-    }
+        }
     } else {
         ui->actionNew_Launchfile->setEnabled(false);
         ui->actionLoad_Launchfile->setEnabled(false);
@@ -453,13 +453,13 @@ void RxDev::on_actionSettings_triggered()
 
 void RxDev::on_actionStart_triggered()
 {
-        QString file=QDir::temp().absolutePath().append("/temp.launch");
-        qDebug()<<file;
-        //writing to Launchfile
-        LaunchWriter *launchFile = new LaunchWriter;
-        QList<QGraphicsItem *> list;
-        list=scene->items();
-        launchFile->createDocument(file,list);
+    QString file=QDir::temp().absolutePath().append("/temp.launch");
+    qDebug()<<file;
+    //writing to Launchfile
+    LaunchWriter *launchFile = new LaunchWriter;
+    QList<QGraphicsItem *> list;
+    list=scene->items();
+    launchFile->createDocument(file,list);
 
 
 
@@ -497,3 +497,88 @@ void RxDev::state(QProcess::ProcessState){
     }
 }
 
+void RxDev::writeSpecFile(rosNode *node, QString filePath)
+{
+    ///@todo change to sequence for subs, pubs, servs, and params in specfiles, will give more features, but means a lot of changes
+    YAML::Emitter out;
+    out << YAML::BeginMap;
+    out << YAML::Key << "type";
+    out << YAML::Value << node->nodeType.toStdString();
+    out << YAML::Key << "package";
+    out << YAML::Value << node->nodePackage.toStdString();
+    //        if (!specFile.getSubscriptions().count()==0){
+    //        out << YAML::Key << "subscriptions"<< YAML::Value;
+    //        for (int i;i<specFile.getSubscriptions().count();i++)
+    //            out << specFile.getSubscriptions().at(i).toStdString();
+    //        }
+
+    //        out << YAML::Key << "publications";
+
+    //        for (int i;i<specFile.getPublications().count();i++)
+    //            out << YAML::Value <<specFile.getPublications().at(i).toStdString();
+
+
+    //        out << YAML::Key << "services";
+
+    //        for (int i;i<specFile.getServices().count();i++)
+    //            out << YAML::Value <<specFile.getServices().at(i).toStdString();
+
+    //        out << YAML::Key << "parameters";
+    //        for (int i;i<specFile.getParameters().count();i++)
+    //            out << YAML::Value <<specFile.getParameters().at(i).toStdString();
+    out << YAML::EndMap;
+
+    QString tempContents;
+    if (!node->nodeInput.count()==0){
+        tempContents.append("subscriptions:");
+        for (int i;i<node->nodeInput.count();i++)
+            tempContents.append("\n  "+node->nodeInput.at(i));
+        tempContents.append("\n");
+    }
+
+    if (!node->nodeOutput.count()==0){
+        tempContents.append("publications:");
+        for (int i;i<node->nodeOutput.count();i++)
+            tempContents.append("\n  "+node->nodeOutput.at(i));
+        tempContents.append("\n");
+    }
+    if (!node->nodeServices.count()==0){
+        tempContents.append("services:");
+        for (int i;i<node->nodeServices.count();i++)
+            tempContents.append("\n  "+node->nodeServices.at(i));
+        tempContents.append("\n");
+    }
+    if (!node->nodeParameters.count()==0){
+        tempContents.append("parameters:");
+        for (int i;i<node->nodeParameters.count();i++)
+            tempContents.append("\n  "+node->nodeParameters.at(i));
+        tempContents.append("\n");
+    }
+
+    //qDebug()<< QString(out.c_str());
+
+    //        QString strin;
+    //                out.Write(strin);
+    //        qDebug()<< QString(strin);
+    qDebug()<<"speicher "+filePath;
+    QFile file;
+    file.setFileName(filePath);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if (file.isWritable()){
+        QTextStream text(&file);
+        text<<out.c_str()<<"\n"<<tempContents;
+        qDebug()<<"hier jetzt yamlfileschreiben ";
+        //qDebug()<<"subs "<<specFile.getSubscriptions();
+        file.close();
+        QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
+        on_pushButton_refreshNodesOrComps_clicked();
+
+    } else
+        QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
+
+    //        setType(nodeEdit.getType());
+    //        setName(nodeEdit.getName());
+    //        setArgs(nodeEdit.getArgs());
+
+
+}
