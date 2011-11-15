@@ -552,26 +552,26 @@ void RxDev::writeSpecFile(rosNode *node, QString filePath)
     QString tempContents;
     if (!node->nodeInput.count()==0){
         tempContents.append("subscriptions:");
-        for (int i;i<node->nodeInput.count();i++)
+        for (int i=0;i<node->nodeInput.count();i++)
             tempContents.append("\n  "+node->nodeInput.at(i));
         tempContents.append("\n");
     }
 
     if (!node->nodeOutput.count()==0){
         tempContents.append("publications:");
-        for (int i;i<node->nodeOutput.count();i++)
+        for (int i=0;i<node->nodeOutput.count();i++)
             tempContents.append("\n  "+node->nodeOutput.at(i));
         tempContents.append("\n");
     }
     if (!node->nodeServices.count()==0){
         tempContents.append("services:");
-        for (int i;i<node->nodeServices.count();i++)
+        for (int i=0;i<node->nodeServices.count();i++)
             tempContents.append("\n  "+node->nodeServices.at(i));
         tempContents.append("\n");
     }
     if (!node->nodeParameters.count()==0){
         tempContents.append("parameters:");
-        for (int i;i<node->nodeParameters.count();i++)
+        for (int i=0;i<node->nodeParameters.count();i++)
             tempContents.append("\n  "+node->nodeParameters.at(i));
         tempContents.append("\n");
     }
@@ -640,3 +640,5 @@ void RxDev::on_actionRxconsole_toggled(bool status)
     else
         rxconsole->kill();
 }
+
+

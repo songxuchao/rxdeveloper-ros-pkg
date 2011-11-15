@@ -78,8 +78,8 @@ public slots:
 private slots:
     void on_actionAvailable_Nodes_changed();
     void setupCreator();
-
-    void selectionHandle_3(const QItemSelection &,const QItemSelection &);
+    void selectionHandle_packages(const QItemSelection &,const QItemSelection &);
+    void selectionHandle_selectedPackage(const QItemSelection &,const QItemSelection &);
     void selectionHandle_availableNodes(const QItemSelection &,const QItemSelection &);
     void on_pushButton_createPackage_clicked();
     void on_actionAbout_rxdev_activated();
@@ -92,9 +92,6 @@ private slots:
 
     void deleteFile();
     void createNewFile();
-    void createNewSpecFile();
-    void createNewCpp_NodeletFile();
-    void createNewPython_NodeletFile();
     void createNewFolder();
 
     void renameFolder();
@@ -214,6 +211,14 @@ private slots:
 
     void on_actionRxconsole_toggled(bool status);
 
+    void on_pushButton_nodeletCpp_clicked();
+
+    void on_pushButton_NodeletPython_clicked();
+
+    void on_pushButton_specfile_clicked();
+
+    void refresh_packageModel();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
@@ -227,12 +232,16 @@ private:
     QStringListModel *model;
     QStringListModel *model_2;
     QFileSystemModel *workingModel;
+    QStringListModel *packageModel;
     QStandardItemModel *model_availableNodes;
     QStandardItemModel *model_availableComponents;
+    QString folderPath;
 
     //QFileSystemWatcher *watcher;
+    QStringList workingDirPackages;
     QStringList packageList;
     QStringList nodeList;
+    QString packagePath;
     bool check;
     bool project;
     QDir workingDir;
