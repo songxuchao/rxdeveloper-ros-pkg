@@ -53,6 +53,15 @@ RxDev::RxDev(QWidget *parent) :
     setupCreator();
 
     setUnifiedTitleAndToolBarOnMac(true);
+
+    rxgraph = new QProcess(this);
+    connect(rxgraph, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    rxloggerlevel = new QProcess(this);
+    connect(rxloggerlevel, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    rxconsole = new QProcess(this);
+    connect(rxconsole, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    dynamicreconfigure = new QProcess(this);
+    connect(dynamicreconfigure, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     rosLaunch = new QProcess(this);
     connect(rosLaunch, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     if (rosLaunch->state()!=2){
@@ -495,6 +504,18 @@ void RxDev::state(QProcess::ProcessState){
         ui->actionStart->setEnabled(true);
         ui->actionStop->setEnabled(false);
     }
+    if (rxgraph->state()==0){
+        ui->actionRxGraph->setChecked(false);
+    }
+    if (rxloggerlevel->state()==0){
+        ui->actionRxloggerlevel->setChecked(false);
+    }
+    if (rxconsole->state()==0){
+        ui->actionRxconsole->setChecked(false);
+    }
+    if (dynamicreconfigure->state()==0){
+        ui->actionDynamic_reconfigure_gui->setChecked(false);
+    }
 }
 
 void RxDev::writeSpecFile(rosNode *node, QString filePath)
@@ -581,4 +602,41 @@ void RxDev::writeSpecFile(rosNode *node, QString filePath)
     //        setArgs(nodeEdit.getArgs());
 
 
+}
+
+void RxDev::on_actionRxGraph_toggled(bool status)
+{
+    if (status)
+        rxgraph->start(QString("rosrun rxgraph rxgraph"));
+    else
+        rxgraph->kill();
+
+}
+
+void RxDev::on_actionDynamic_reconfigure_gui_toggled(bool status)
+{
+    if (status)
+        dynamicreconfigure->start(QString("rosrun dynamic_reconfigure reconfigure_gui"));
+    else
+        dynamicreconfigure->kill();
+
+
+}
+
+void RxDev::on_actionRxloggerlevel_toggled(bool status)
+{
+
+    if (status)
+        rxloggerlevel->start(QString("rosrun rxtools rxloggerlevel"));
+    else
+        rxloggerlevel->kill();
+
+}
+
+void RxDev::on_actionRxconsole_toggled(bool status)
+{
+    if(status)
+        rxconsole->start(QString("rosrun rxtools rxconsole"));
+    else
+        rxconsole->kill();
 }
