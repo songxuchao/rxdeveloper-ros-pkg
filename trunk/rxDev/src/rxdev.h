@@ -206,12 +206,24 @@ private slots:
 
     void on_pushButton_blankNode_clicked();
 
+    void on_actionRxGraph_toggled(bool status);
+
+    void on_actionDynamic_reconfigure_gui_toggled(bool status);
+
+    void on_actionRxloggerlevel_toggled(bool status);
+
+    void on_actionRxconsole_toggled(bool status);
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
     QPushButton *rosCoreButton;
     QProcess *rosCoreProcess;
     QProcess *rosLaunch;
+    QProcess *rxgraph;
+    QProcess *rxloggerlevel;
+    QProcess *rxconsole;
+    QProcess *dynamicreconfigure;
     QStringListModel *model;
     QStringListModel *model_2;
     QFileSystemModel *workingModel;
