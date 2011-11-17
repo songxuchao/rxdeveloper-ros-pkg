@@ -7,8 +7,8 @@
 SpecFileEdit::SpecFileEdit(rosNode *node,QWidget *parent) : QDialog(parent), ui(new Ui::SpecFileEdit) {
     ui->setupUi(this);
     mynode=node;
-    ui->lineEdit_type->setText(node->nodeType);
-    ui->lineEdit_package->setText(node->nodePackage);
+    ui->lineEdit_type->setText(node->type);
+    ui->lineEdit_package->setText(node->package);
 
     QStringList sublist;
     sublist<<"eins"<<"zwei";
@@ -17,10 +17,10 @@ SpecFileEdit::SpecFileEdit(rosNode *node,QWidget *parent) : QDialog(parent), ui(
     model_services = new QStringListModel();
     model_parameters = new QStringListModel();
 
-    model_subscriptions->setStringList(node->nodeInput);
-    model_publications->setStringList(node->nodeOutput);
-    model_services->setStringList(node->nodeServices);
-    model_parameters->setStringList(node->nodeParameters);
+    model_subscriptions->setStringList(node->subscriptions);
+    model_publications->setStringList(node->publications);
+    model_services->setStringList(node->services);
+    model_parameters->setStringList(node->parameters);
 
     ui->listView_subscriptions->setModel(model_subscriptions);
     ui->listView_publications->setModel(model_publications);
@@ -62,12 +62,12 @@ void SpecFileEdit::accept() {
         ui->lineEdit_type->setFocus();
 
     } else{
-        mynode->nodeType= ui->lineEdit_type->text();
-        mynode->nodePackage = ui->lineEdit_package->text();
-        mynode->nodeInput= model_subscriptions->stringList();
-        mynode->nodeOutput= model_publications->stringList();
-        mynode->nodeServices =model_services->stringList();
-        mynode->nodeParameters =model_parameters->stringList();
+        mynode->type= ui->lineEdit_type->text();
+        mynode->package = ui->lineEdit_package->text();
+        mynode->subscriptions= model_subscriptions->stringList();
+        mynode->publications= model_publications->stringList();
+        mynode->services =model_services->stringList();
+        mynode->parameters =model_parameters->stringList();
         QDialog::accept();
     }
 

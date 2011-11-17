@@ -540,11 +540,12 @@ void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
     for (int i = 0; i < items.size(); i++) {
         item = items.at(i);
         if (item->child(1,0)->child(0,0)->text() ==nodePackage){
-            nodeParser(item->child(0,0)->child(0,0)->data(Qt::DisplayRole).toString());
-            nodeSubs = node.nodeInput;
-            nodePubs = node.nodeOutput;
-            nodeSrvs = node.nodeServices;
-            nodeParams = node.nodeParameters;
+            SpecFileParser *specParser = new SpecFileParser;
+            specParser->nodeParser(item->child(0,0)->child(0,0)->data(Qt::DisplayRole).toString());
+            nodeSubs = specParser->node.subscriptions;
+            nodePubs = specParser->node.publications;
+            nodeSrvs = specParser->node.services;
+            nodeParams = specParser->node.parameters;
             break;
         }
     }

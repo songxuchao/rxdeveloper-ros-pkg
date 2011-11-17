@@ -22,9 +22,6 @@ RxDev::RxDev(QWidget *parent) :
 {
     //initialize UI
     ui->setupUi(this);
-    this->tabifyDockWidget(ui->dockWidget_components,ui->dockWidget_availableNodes);
-    ui->dockWidget_availableNodes->setFocus();
-    ui->tabWidget->setCurrentIndex(0);  //0 = connector tab
 
     //load Settings
     loadSettings();
@@ -72,6 +69,10 @@ RxDev::RxDev(QWidget *parent) :
         ui->actionStop->setEnabled(true);
     }
 
+
+    ui->tabWidget->setCurrentIndex(0);  //0 = connector tab
+    ui->dockWidget_availableNodes->show();
+    ui->dockWidget_availablePackages->hide();
 }
 
 RxDev::~RxDev(){
@@ -290,6 +291,8 @@ void RxDev::loadSettings(){
 void RxDev::changeToolBar(){
 
     if (ui->tabWidget->currentIndex()==0)   {
+        ui->dockWidget_availableNodes->show();
+        ui->dockWidget_availablePackages->hide();
         ui->actionNew_Launchfile->setEnabled(true);
         ui->actionLoad_Launchfile->setEnabled(true);
         ui->actionSave_as_Launchfile->setEnabled(true);
@@ -307,6 +310,8 @@ void RxDev::changeToolBar(){
             ui->actionStop->setEnabled(true);
         }
     } else {
+        ui->dockWidget_availableNodes->hide();
+        ui->dockWidget_availablePackages->show();
         ui->actionNew_Launchfile->setEnabled(false);
         ui->actionLoad_Launchfile->setEnabled(false);
         ui->actionSave_as_Launchfile->setEnabled(false);
@@ -327,33 +332,6 @@ void RxDev::on_actionAbout_rxdev_activated()
                                          "<p>Copyright &copy; 2011 Institute for Computer Science VI (AIS)"
                                          "<p>Created by: Filip Müllers (mailto:mueller4@cs.uni-bonn.de)"));
 }
-
-
-/*!\brief show available nodes?
- *
- * Shows and hides the available nodes dock.
- */
-void RxDev::on_actionAvailable_Nodes_changed()
-{
-    if (ui->actionAvailable_Nodes->isChecked()==true)
-        ui->dockWidget_availableNodes->show();
-    else
-        ui->dockWidget_availableNodes->hide();
-}
-
-/*!\brief show available tags?
- *
- * Shows and hides the available tags dock.
- */
-void RxDev::on_actionAvailable_Tags_changed()
-{
-    if (ui->actionAvailable_Tags->isChecked()==true)
-        ui->dockWidget_availableTags->show();
-    else
-        ui->dockWidget_availableTags->hide();
-
-}
-
 
 /*!\brief save launchfile
  *
@@ -453,6 +431,7 @@ void RxDev::on_actionSettings_triggered()
         //update workingDir in the component creator tab
         workingModel->setRootPath(workingDir.absolutePath());
         ui->treeView_packageBrowser->setRootIndex(workingModel->index(workingDir.absolutePath()));
+        refresh_packageModel();
         ui->statusBar->showMessage(tr("Settings saved"), 5000);
     } else{
 
@@ -518,91 +497,6 @@ void RxDev::state(QProcess::ProcessState){
     }
 }
 
-void RxDev::writeSpecFile(rosNode *node, QString filePath)
-{
-    ///@todo change to sequence for subs, pubs, servs, and params in specfiles, will give more features, but means a lot of changes
-    YAML::Emitter out;
-    out << YAML::BeginMap;
-    out << YAML::Key << "type";
-    out << YAML::Value << node->nodeType.toStdString();
-    out << YAML::Key << "package";
-    out << YAML::Value << node->nodePackage.toStdString();
-    //        if (!specFile.getSubscriptions().count()==0){
-    //        out << YAML::Key << "subscriptions"<< YAML::Value;
-    //        for (int i;i<specFile.getSubscriptions().count();i++)
-    //            out << specFile.getSubscriptions().at(i).toStdString();
-    //        }
-
-    //        out << YAML::Key << "publications";
-
-    //        for (int i;i<specFile.getPublications().count();i++)
-    //            out << YAML::Value <<specFile.getPublications().at(i).toStdString();
-
-
-    //        out << YAML::Key << "services";
-
-    //        for (int i;i<specFile.getServices().count();i++)
-    //            out << YAML::Value <<specFile.getServices().at(i).toStdString();
-
-    //        out << YAML::Key << "parameters";
-    //        for (int i;i<specFile.getParameters().count();i++)
-    //            out << YAML::Value <<specFile.getParameters().at(i).toStdString();
-    out << YAML::EndMap;
-
-    QString tempContents;
-    if (!node->nodeInput.count()==0){
-        tempContents.append("subscriptions:");
-        for (int i=0;i<node->nodeInput.count();i++)
-            tempContents.append("\n  "+node->nodeInput.at(i));
-        tempContents.append("\n");
-    }
-
-    if (!node->nodeOutput.count()==0){
-        tempContents.append("publications:");
-        for (int i=0;i<node->nodeOutput.count();i++)
-            tempContents.append("\n  "+node->nodeOutput.at(i));
-        tempContents.append("\n");
-    }
-    if (!node->nodeServices.count()==0){
-        tempContents.append("services:");
-        for (int i=0;i<node->nodeServices.count();i++)
-            tempContents.append("\n  "+node->nodeServices.at(i));
-        tempContents.append("\n");
-    }
-    if (!node->nodeParameters.count()==0){
-        tempContents.append("parameters:");
-        for (int i=0;i<node->nodeParameters.count();i++)
-            tempContents.append("\n  "+node->nodeParameters.at(i));
-        tempContents.append("\n");
-    }
-
-    //qDebug()<< QString(out.c_str());
-
-    //        QString strin;
-    //                out.Write(strin);
-    //        qDebug()<< QString(strin);
-    qDebug()<<"speicher "+filePath;
-    QFile file;
-    file.setFileName(filePath);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if (file.isWritable()){
-        QTextStream text(&file);
-        text<<out.c_str()<<"\n"<<tempContents;
-        qDebug()<<"hier jetzt yamlfileschreiben ";
-        //qDebug()<<"subs "<<specFile.getSubscriptions();
-        file.close();
-        QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
-        on_pushButton_refreshNodesOrComps_clicked();
-
-    } else
-        QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
-
-    //        setType(nodeEdit.getType());
-    //        setName(nodeEdit.getName());
-    //        setArgs(nodeEdit.getArgs());
-
-
-}
 
 void RxDev::on_actionRxGraph_toggled(bool status)
 {

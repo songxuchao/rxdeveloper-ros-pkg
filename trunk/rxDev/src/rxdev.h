@@ -35,21 +35,12 @@
 #include "tagItems/includeFileItem.h"
 #include "tagItems/machineItem.h"
 #include "tagItems/groupItem.h"
-
+#include "specFileParser.h"
 
 class LaunchFileScene;
 class LaunchFileView;
 
-//Datastructure for specfile data
-class rosNode {
-public:
-    QString nodeType;
-    QString nodePackage;
-    QStringList nodeInput;
-    QStringList nodeOutput;
-    QStringList nodeServices;
-    QStringList nodeParameters;
-};
+
 
 
 
@@ -66,7 +57,6 @@ class RxDev : public QMainWindow
 public:
     explicit RxDev(QWidget *parent = 0);
     QSettings settings;
-    rosNode node;
 
     ~RxDev();
 
@@ -76,7 +66,6 @@ public slots:
     void loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group);
 
 private slots:
-    void on_actionAvailable_Nodes_changed();
     void setupCreator();
     void selectionHandle_packages(const QItemSelection &,const QItemSelection &);
     void selectionHandle_selectedPackage(const QItemSelection &,const QItemSelection &);
@@ -108,16 +97,14 @@ private slots:
     void addCompFile();
 
     void openSpecFile();
-    void writeSpecFile(rosNode *node,QString filePath);
 
     void collapseNode();
     void expandNode();
     void collapseAll();
     void expandAll();
 
-    void nodeParser(const QString nodeFile);
 
-    void fillItemModel_availableNodes(const QString nodeFile);
+    void fillItemModel_availableNodes(const QString nodeFile, rosNode &node);
     void fillItemModel_availableComponents(const QString compFile);
 
     void setupConnector();
@@ -160,7 +147,6 @@ private slots:
 
     void on_pushButton_group_clicked();
 
-    void on_actionAvailable_Tags_changed();
 
 
 
@@ -211,9 +197,9 @@ private slots:
 
     void on_actionRxconsole_toggled(bool status);
 
-    void on_pushButton_nodeletCpp_clicked();
+    void on_pushButton_createCpp_clicked();
 
-    void on_pushButton_NodeletPython_clicked();
+    void on_pushButton_createPython_clicked();
 
     void on_pushButton_specfile_clicked();
 

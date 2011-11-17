@@ -4,6 +4,7 @@
 #include "QCompleter"
 #include <QUrl>
 #include "specFileEdit.h"
+#include "specFileParser.h"
 
 QPoint menuPoint;
 QString folderName;
@@ -76,9 +77,10 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
     getPackagePath.waitForFinished(-1);
     QByteArray output = getPackagePath.readAllStandardOutput();
     packagePath = output.trimmed();
+    folderPath=packagePath;
     bool isPack = packagePath.startsWith("/");
-    ui->pushButton_nodeletCpp->setEnabled(isPack);
-    ui->pushButton_NodeletPython->setEnabled(isPack);
+    ui->pushButton_createCpp->setEnabled(isPack);
+    ui->pushButton_createPython->setEnabled(isPack);
     ui->pushButton_specfile->setEnabled(isPack);
     if (isPack){
         qDebug()<<packagePath;
@@ -113,8 +115,8 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         if(workingModel->fileInfo(index).isDir()||!index.isValid()){
             contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
             contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
-            contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(on_pushButton_nodeletCpp_clicked()));
-            contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(on_pushButton_NodeletPython_clicked()));
+            contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(on_pushButton_createCpp_clicked()));
+            contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(on_pushButton_createPython_clicked()));
             contextMenu.addSeparator();
             contextMenu.addAction(tr("new Folder"),this, SLOT(createNewFolder()));
             contextMenu.addAction(tr("browse Folder"),this, SLOT(openFileOrFolder()));
@@ -238,7 +240,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         packageModel->setData(packageModel->index(0, 0), ui->lineEdit_packageName->text());
         ui->lineEdit_packageName->setText("");
     }
-    void RxDev::on_pushButton_nodeletCpp_clicked()
+    void RxDev::on_pushButton_createCpp_clicked()
     {
         if (!packagePath.endsWith("/src")){
             currentDir.setPath(packagePath);
@@ -246,32 +248,31 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
             packagePath.append("/src");
         }
         NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+packagePath);
+        createFile.setWindowTitle("Create File in "+folderPath);
         createFile.exec();
         QString filename=createFile.getFileName();
         QFile newFile;
         if (!(filename=="")){
-            if (!filename.endsWith(".cpp")&&!filename.endsWith(".c")&&!filename.endsWith(".cc")&&!filename.endsWith(".c++"))
+            if (!filename.endsWith(".cpp")&&!filename.endsWith(".c")&&!filename.endsWith(".C")&&!filename.endsWith(".h")&&!filename.endsWith(".hpp")&&!filename.endsWith(".h++")&&!filename.endsWith(".cc")&&!filename.endsWith(".c++"))
                 filename.append(".cpp");
             newFile.setFileName(filename);
-            QDir::setCurrent(packagePath);
+            QDir::setCurrent(folderPath);
             if (!(newFile.exists()))
             {
-                newFile.open(QIODevice::ReadWrite);
+                newFile.open(QIODevice::WriteOnly | QIODevice::Text);
                 newFile.close();
             }
         }
     }
 
-    void RxDev::on_pushButton_NodeletPython_clicked()
+    void RxDev::on_pushButton_createPython_clicked()
     {
         if (!packagePath.endsWith("/src")){
             currentDir.setPath(packagePath);
             currentDir.mkdir("src");
-            packagePath.append("/src");
         }
         NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+packagePath);
+        createFile.setWindowTitle("Create File in "+folderPath);
         createFile.exec();
         QString filename=createFile.getFileName();
         QFile newFile;
@@ -279,7 +280,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
             if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
                 filename.append(".py");
             newFile.setFileName(filename);
-            QDir::setCurrent(packagePath);
+            QDir::setCurrent(folderPath);
             if (!(newFile.exists()))
             {
                 newFile.open(QIODevice::ReadWrite);
@@ -294,12 +295,9 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         if (!packagePath.endsWith("/node")){
             currentDir.setPath(packagePath);
             currentDir.mkdir("node");
-            //QMessageBox::warning( this, "No correct specfilefolder!",
-            //                   "If you continue, rxDeveloper will not be able to use the specfile.\nSpecfiles have to be in '<packagename>/node/'-folder structure");
-            packagePath.append("/node");
         }
         NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+packagePath);
+        createFile.setWindowTitle("Create File in "+packagePath+("/node"));
         createFile.exec();
         QString filename=createFile.getFileName();
         QFile newFile;
@@ -308,13 +306,35 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
                 filename.append(".node");
             newFile.setFileName(filename);
         }
-        QString filePath= packagePath.append("/"+newFile.fileName());
+        QString filePath= packagePath+("/node/"+newFile.fileName());
+
         rosNode newSpec;
         SpecFileEdit specFile(&newSpec);
         specFile.setWindowTitle("Specfile: "+createFile.getFileName());
         bool accept = specFile.exec();
+        SpecFileParser *specParser = new SpecFileParser;
         if ((accept)){
-            writeSpecFile(&newSpec,filePath);
+            qDebug()<<"speicher "+filePath;
+            QFile file;
+            file.setFileName(filePath);
+            file.open(QIODevice::WriteOnly | QIODevice::Text);
+            if (file.isWritable()){
+                QString tempContens = specParser->writeSpecFile(&newSpec);
+                QTextStream text(&file);
+                text<<tempContens;
+                qDebug()<<"hier jetzt yamlfileschreiben ";
+                //qDebug()<<"subs "<<specFile.getSubscriptions();
+                file.close();
+                QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
+                on_pushButton_refreshNodesOrComps_clicked();
+
+            } else
+                QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
+
+            //        setType(nodeEdit.getType());
+            //        setName(nodeEdit.getName());
+            //        setArgs(nodeEdit.getArgs());
+
 
         }
 
