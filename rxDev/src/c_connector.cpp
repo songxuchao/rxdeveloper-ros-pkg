@@ -9,12 +9,11 @@
 #include "tagItems/envItem.h"
 #include "tagItems/remapItem.h"
 #include "std_msgs/String.h"
-#include <yaml-cpp/yaml.h>
 #include "launchFileView.h"
 #include "launchFileScene.h"
 #include "specFileEdit.h"
-
-#include <fstream>
+#include "specFileParser.h"
+#include <yaml-cpp/yaml.h>
 #include <QUrl>
 
 //QPoint menuPoint_availableNodes;
@@ -126,6 +125,7 @@ void RxDev::on_pushButton_refreshNodesOrComps_clicked()
         getNodes.waitForFinished(-1);
         output = getNodes.readAllStandardOutput();
         availableNodeList.append(QString(output).split("\n"));
+
         //find component-launch-files
         QProcess getComponents;
         getComponents.setWorkingDirectory(workingDir.absolutePath());
@@ -142,29 +142,29 @@ void RxDev::on_pushButton_refreshNodesOrComps_clicked()
 
 
     //parse all available specfiles
+    SpecFileParser *specParse=new SpecFileParser;
     for (int i=0; i<availableNodeList.count();i++){
         if (QString(availableNodeList[i]).endsWith(".node")){
             //qDebug()<<availableNodeList[i];
 
             //fetch nodespecs
             try{
-                nodeParser(availableNodeList[i]);
+                specParse->nodeParser(availableNodeList[i]);
             }catch(YAML::InvalidScalar &e){
                 qDebug()<<"Invalid scalar in"<<QString(availableNodeList[i]);
                 qDebug()<<e.what();
-                return;
+                //break;
             }catch (YAML::ParserException&e){
                 qDebug()<<"Parser exception in"<<QString(availableNodeList[i]);
                 qDebug()<<e.what();
-                return;
+                //break;
             } catch (YAML::BadDereference&e){
                 qDebug()<<"Bad Dereference in"<<QString(availableNodeList[i]);
                 qDebug()<<e.what();
-
-
+                //break;
             }
             //Fill the model
-            fillItemModel_availableNodes(availableNodeList[i]);
+            fillItemModel_availableNodes(availableNodeList[i],specParse->node );
 
         }
     }
@@ -358,9 +358,9 @@ void RxDev::fillItemModel_availableComponents(const QString compFile)
             model_availableComponents->appendRow(group);
 }
 
-void RxDev::fillItemModel_availableNodes(QString nodeFile){
+void RxDev::fillItemModel_availableNodes(QString nodeFile, rosNode &node){
 
-    QStandardItem *group = new QStandardItem(QString("%1").arg(node.nodeType));
+    QStandardItem *group = new QStandardItem(QString("%1").arg(node.type));
 
     QStandardItem *child;
     QStandardItem *item;
@@ -374,18 +374,18 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile){
 
 
     child = new QStandardItem(QString("type"));
-    item = new QStandardItem(QString("%1").arg(node.nodeType));
+    item = new QStandardItem(QString("%1").arg(node.type));
     child->appendRow(item);
     child = new QStandardItem(QString("package"));
-    item = new QStandardItem(QString("%1").arg(node.nodePackage));
+    item = new QStandardItem(QString("%1").arg(node.package));
     child->appendRow(item);
 
     group->appendRow(child);
 
     child = new QStandardItem(QString("subscriptions"));
-    for (int j = 0; j<node.nodeInput.count(); j++)
+    for (int j = 0; j<node.subscriptions.count(); j++)
     {
-        item = new QStandardItem(QString("%1").arg(node.nodeInput[j]));
+        item = new QStandardItem(QString("%1").arg(node.subscriptions[j]));
         child->appendRow(item);
     }
 
@@ -394,115 +394,33 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile){
     child = new QStandardItem(QString("publications"));
 
     QList<QStandardItem *> list;
-    for (int j = 0; j<node.nodeOutput.count(); j++)
+    for (int j = 0; j<node.publications.count(); j++)
     {
-        list.append(new QStandardItem(QString("%1").arg(node.nodeOutput[j])));
+        list.append(new QStandardItem(QString("%1").arg(node.publications[j])));
 
     }
     child->appendColumn(list);
     group->appendRow(child);
 
     child = new QStandardItem(QString("services"));
-    for (int j = 0; j<node.nodeServices.count(); j++)
+    for (int j = 0; j<node.services.count(); j++)
     {
-        item = new QStandardItem(QString("%1").arg(node.nodeServices[j]));
+        item = new QStandardItem(QString("%1").arg(node.services[j]));
         child->appendRow(item);
     }
     group->appendRow(child);
 
     child = new QStandardItem(QString("parameters"));
-    for (int j = 0; j<node.nodeParameters.count(); j++)
+    for (int j = 0; j<node.parameters.count(); j++)
     {
-        item = new QStandardItem(QString("%1").arg(node.nodeParameters[j]));
+        item = new QStandardItem(QString("%1").arg(node.parameters[j]));
         child->appendRow(item);
     }
     group->appendRow(child);
 
     // append group as new row to the model. model takes the ownership of the item
-    if (!node.nodeType.isEmpty() && !node.nodePackage.isEmpty())
+    if (!node.type.isEmpty() && !node.package.isEmpty())
         model_availableNodes->appendRow(group);
-}
-
-
-
-
-/**
-  * Nodespecfile-Parser
-  **/
-void RxDev::nodeParser(QString nodeFile){
-
-    std::string fname= nodeFile.toStdString();
-    std::ifstream fin(fname.c_str());
-    if (!fin.is_open()){
-        ROS_ERROR("could not open %s.", fname.c_str());
-        exit(-1);
-    }
-    YAML::Parser parser(fin);
-    YAML::Node doc;
-    parser.GetNextDocument(doc);
-    const YAML::Node *yamlNode;
-
-    //kill old data
-    node.nodePackage.clear();
-    node.nodeType.clear();
-    node.nodeInput.clear();
-    node.nodeOutput.clear();
-    node.nodeServices.clear();
-    node.nodeParameters.clear();
-
-    //temp
-    std::string nodePackage;
-    std::string nodeType;
-    std::string nodeInput;
-    std::string nodeOutput;
-    std::string nodeServices;
-    std::string nodeParameters;
-
-
-    try {
-        doc["type"] >> nodeType;
-        node.nodeType = QString::fromStdString(nodeType);
-
-    } catch (YAML::InvalidScalar) {
-        qDebug()<<"No valid type found";
-        exit(-1);
-    }
-    if ((yamlNode = doc.FindValue("package"))) {
-        *yamlNode >> nodePackage;
-        node.nodePackage = QString::fromStdString(nodePackage);
-    } else{
-        qDebug()<<"No valid package found in "+nodeFile;
-
-    }
-    if ((yamlNode = doc.FindValue("subscriptions"))) {
-
-        *yamlNode >> nodeInput;
-        if (nodeInput!="~"){
-
-            node.nodeInput = QString::fromStdString(nodeInput).split(" ");
-        }
-    }
-    if ((yamlNode = doc.FindValue("publications"))) {
-        *yamlNode >> nodeOutput;
-        if (nodeOutput!="~"){
-            node.nodeOutput = QString::fromStdString(nodeOutput).split(" ");
-        }
-
-    }
-    if ((yamlNode = doc.FindValue("services"))) {
-        *yamlNode >> nodeServices;
-        if (nodeServices!="~"){
-            node.nodeServices = QString::fromStdString(nodeServices).split(" ");
-        }
-
-    }
-    if ((yamlNode = doc.FindValue("parameters"))) {
-        *yamlNode >> nodeParameters;
-        if (nodeParameters!="~"){
-            node.nodeParameters = QString::fromStdString(nodeParameters).split(" ");
-        }
-    }
-
 }
 
 void RxDev::showContextMenu_availableComponents(const QPoint&point){
@@ -593,18 +511,36 @@ void RxDev::openSpecFile(){
     }
     QString filePath =  seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString();
     //qDebug()<<filePath;
+    SpecFileParser *specParser = new SpecFileParser;
+    specParser->nodeParser(filePath);
 
-    nodeParser(filePath);
-
-    SpecFileEdit specFile(&node);
-    qDebug()<<node.nodeType;
+    SpecFileEdit specFile(&specParser->node);
+    qDebug()<<specParser->node.type;
     specFile.setWindowTitle("Specfile: "+seekRoot.data(Qt::DisplayRole).toString());
     bool accept = specFile.exec();
     if ((accept)){
-        writeSpecFile(&node,filePath);
+        qDebug()<<"speicher "+filePath;
+        QFile file;
+        file.setFileName(filePath);
+        file.open(QIODevice::WriteOnly | QIODevice::Text);
+        if (file.isWritable()){
+            QString tempContens = specParser->writeSpecFile(&specParser->node);
+            QTextStream text(&file);
+            text<<tempContens;
+            qDebug()<<"hier jetzt yamlfileschreiben ";
+            //qDebug()<<"subs "<<specFile.getSubscriptions();
+            file.close();
+            QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
+            on_pushButton_refreshNodesOrComps_clicked();
+        } else
+            QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
+
+        //        setType(nodeEdit.getType());
+        //        setName(nodeEdit.getName());
+        //        setArgs(nodeEdit.getArgs());
+
 
     }
-
 //    QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
 }
 void RxDev::openCompFile(){
@@ -652,14 +588,15 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
         seekRoot = seekRoot.parent();
 
     }
-    nodeParser(seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString());
+    SpecFileParser *specParser = new SpecFileParser;
+    specParser->nodeParser(seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString());
     //  @todo Selected Node Datastructure
-    gview->selectedNodeName = node.nodeType;
-    gview->selectedNodePackage = node.nodePackage;
-    gview->selectedNodeSubscriptions = node.nodeInput;
-    gview->selectedNodePublications = node.nodeOutput;
-    gview->selectedNodeServices = node.nodeServices;
-    gview->selectedNodeParameters = node.nodeParameters;
+    gview->selectedNodeName = specParser->node.type;
+    gview->selectedNodePackage = specParser->node.package;
+    gview->selectedNodeSubscriptions = specParser->node.subscriptions;
+    gview->selectedNodePublications = specParser->node.publications;
+    gview->selectedNodeServices = specParser->node.services;
+    gview->selectedNodeParameters = specParser->node.parameters;
     //qDebug()<<QString("%1").arg(gview->selectedNodeName);
     //qDebug()<<QString("%1").arg(gview->selectedNodePackage);
 

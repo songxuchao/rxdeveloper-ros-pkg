@@ -24,6 +24,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/machineEdit.h
     rxdev.h
     newEntry.h
+    #specFileParser.h
     specFileEdit.h
     settings.h
 
@@ -77,6 +78,7 @@ set( CPP
     c_connector.cpp
     newEntry.cpp
     specFileEdit.cpp
+    specFileParser.cpp
     settings.cpp
     launchFileView.cpp
     launchFileScene.cpp

@@ -4,6 +4,7 @@
 
 #include <QDialog>
 #include "rxdev.h"
+#include "specFileParser.h"
 
 
 namespace Ui {
