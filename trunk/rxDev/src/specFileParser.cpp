@@ -1,6 +1,11 @@
 #include "specFileParser.h"
 #include <fstream>
-#include "rxdev.h"
+#include "ros/ros.h"
+#include <QDebug>
+
+
+
+
 /**
   * Nodespecfile-Parser
   **/
@@ -15,7 +20,7 @@ void SpecFileParser::nodeParser(QString nodeFile){
     YAML::Parser parser(fin);
     YAML::Node doc;
     parser.GetNextDocument(doc);
-    const YAML::Node *yamlNode;
+    //const YAML::Node *yamlNode;
 
     //kill old data
     node.package.clear();
@@ -24,130 +29,140 @@ void SpecFileParser::nodeParser(QString nodeFile){
     node.publications.clear();
     node.services.clear();
     node.parameters.clear();
-
-    //temp
-    std::string nodePackage;
-    std::string nodeType;
-    std::string nodeInput;
-    std::string nodeOutput;
-    std::string nodeServices;
-    std::string nodeParameters;
-
-
     try {
-        doc["type"] >> nodeType;
-        node.type = QString::fromStdString(nodeType);
-
-    } catch (YAML::InvalidScalar) {
-        qDebug()<<"No valid type found";
-        exit(-1);
+        doc["type"] >> node.type;
+        doc["package"] >> node.package;
+    } catch(YAML::ParserException& e) {
+        std::cout << e.what() << "\n";
     }
-    if ((yamlNode = doc.FindValue("package"))) {
-        *yamlNode >> nodePackage;
-        node.package = QString::fromStdString(nodePackage);
-    } else{
-        qDebug()<<"No valid package found in "+nodeFile;
-
-    }
-    if ((yamlNode = doc.FindValue("subscriptions"))) {
-
-        *yamlNode >> nodeInput;
-        if (nodeInput!="~"){
-
-            node.subscriptions = QString::fromStdString(nodeInput).split(" ");
+    if(doc.FindValue("subscriptions")) {
+        for(YAML::Iterator it=doc.FindValue("subscriptions")->begin();it!=doc.FindValue("subscriptions")->end();++it) {
+            try {
+                const YAML::Node& subs = *it;
+                Topic_Type tt;
+                subs["topic"]>> tt.topic;
+                subs["type"]>> tt.topictype;
+                node.subscriptions.push_back(tt);
+            } catch(YAML::ParserException& e) {
+                std::cout << e.what() << "\n";
+            }
         }
     }
-    if ((yamlNode = doc.FindValue("publications"))) {
-        *yamlNode >> nodeOutput;
-        if (nodeOutput!="~"){
-            node.publications = QString::fromStdString(nodeOutput).split(" ");
+    if(doc.FindValue("publications")) {
+        for(YAML::Iterator it=doc.FindValue("publications")->begin();it!=doc.FindValue("publications")->end();++it) {
+            try {
+                const YAML::Node& pubs = *it;
+                Topic_Type tt;
+                pubs["topic"]>> tt.topic;
+                pubs["type"]>> tt.topictype;
+                node.publications.push_back(tt);
+            } catch(YAML::ParserException& e) {
+                std::cout << e.what() << "\n";
+            }
         }
+    }
+    if ((doc.FindValue("services"))) {
+        for(YAML::Iterator it=doc.FindValue("services")->begin();it!=doc.FindValue("services")->end();++it) {
+            try{
+                const YAML::Node& servs = *it;
+                Topic_Type tt;
+                servs["name"]>> tt.topic;
+                servs["type"]>> tt.topictype;
+                node.services.push_back(tt);
+            } catch(YAML::ParserException& e) {
+                std::cout << e.what() << "\n";
+            }
+        }
+    }
+    if(doc.FindValue("parameters")) {
+        for(YAML::Iterator it=doc.FindValue("parameters")->begin();it!=doc.FindValue("parameters")->end();++it) {
+            try{
+                const YAML::Node& params = *it;
+                Name_Type_Default ntd;
+                params["name"]>> ntd.paramName;
+                params["type"]>> ntd.paramType;
+                params["default"]>> ntd.paramDefault;
+                node.parameters.push_back(ntd);
+            } catch(YAML::ParserException& e) {
+                std::cout << e.what() << "\n";
+            }
+        }
+    }
 
-    }
-    if ((yamlNode = doc.FindValue("services"))) {
-        *yamlNode >> nodeServices;
-        if (nodeServices!="~"){
-            node.services = QString::fromStdString(nodeServices).split(" ");
-        }
-
-    }
-    if ((yamlNode = doc.FindValue("parameters"))) {
-        *yamlNode >> nodeParameters;
-        if (nodeParameters!="~"){
-            node.parameters = QString::fromStdString(nodeParameters).split(" ");
-        }
-    }
 
 }
 
-QString SpecFileParser::writeSpecFile(rosNode *node)
+QString SpecFileParser::writeSpecFile(Specfile *node)
 {
     ///@todo change to sequence for subs, pubs, servs, and params in specfiles, will give more features, but means a lot of changes
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "type";
-    out << YAML::Value << node->type.toStdString();
-    out << YAML::Key << "package";
-    out << YAML::Value << node->package.toStdString();
-    //        if (!specFile.getSubscriptions().count()==0){
-    //        out << YAML::Key << "subscriptions"<< YAML::Value;
-    //        for (int i;i<specFile.getSubscriptions().count();i++)
-    //            out << specFile.getSubscriptions().at(i).toStdString();
-    //        }
+    out << YAML::Key << "type" << YAML::Value << node->type;
+    out << YAML::Key << "package" << YAML::Value << node->package;
 
-    //        out << YAML::Key << "publications";
+    if (!node->subscriptions.size()==0){
+        out << YAML::Key << "subscriptions" << YAML::Value << YAML::BeginSeq;
+        for(std::list<Topic_Type>::iterator iter=node->subscriptions.begin();iter != node->subscriptions.end();iter++ )
+        {
+            std::string tempTT;
+            tempTT= (Topic_Type(*iter).topic);
+            out << YAML::BeginMap;
+            out << YAML::Key << "topic" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topictype);
+            out << YAML::Key << "type" << YAML::Value <<tempTT;
+            out << YAML::EndMap;
+        }
+        out << YAML::EndSeq;
+    }
+    if (!node->publications.size()==0){
+        out << YAML::Key << "publications" << YAML::Value << YAML::BeginSeq;
+        for(std::list<Topic_Type>::iterator iter=node->publications.begin();iter != node->publications.end();iter++ )
+        {
+            std::string tempTT;
+            tempTT= (Topic_Type(*iter).topic);
+            out << YAML::BeginMap;
+            out << YAML::Key << "topic" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topictype);
+            out << YAML::Key << "type" << YAML::Value <<tempTT;
+            out << YAML::EndMap;
+        }
+        out << YAML::EndSeq;
+    }
+    if (!node->services.size()==0){
+        out << YAML::Key << "services" << YAML::Value << YAML::BeginSeq;
+        for(std::list<Topic_Type>::iterator iter=node->services.begin();iter != node->services.end();iter++ )
+        {
+            std::string tempTT;
+            tempTT= (Topic_Type(*iter).topic);
+            out << YAML::BeginMap;
+            out << YAML::Key << "name" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topictype);
+            out << YAML::Key << "type" << YAML::Value <<tempTT;
+            out << YAML::EndMap;
+        }
+        out << YAML::EndSeq;
+    }
+    if (!node->parameters.size()==0){
+        out << YAML::Key << "parameters" << YAML::Value << YAML::BeginSeq;
+        for(std::list<Name_Type_Default>::iterator iter=node->parameters.begin();iter != node->parameters.end();iter++ )
+        {
+            std::string tempNTD;
+            out << YAML::BeginMap;
+            tempNTD= (Name_Type_Default(*iter).paramName);
+            out << YAML::Key << "name" << YAML::Value << tempNTD;
+            tempNTD= (Name_Type_Default(*iter).paramType);
+            out << YAML::Key << "type" << YAML::Value <<tempNTD;
+            tempNTD= (Name_Type_Default(*iter).paramDefault);
+            out << YAML::Key << "default" << YAML::Value <<tempNTD;
 
-    //        for (int i;i<specFile.getPublications().count();i++)
-    //            out << YAML::Value <<specFile.getPublications().at(i).toStdString();
+            out << YAML::EndMap;
+        }
+        out << YAML::EndSeq;
+    }
 
-
-    //        out << YAML::Key << "services";
-
-    //        for (int i;i<specFile.getServices().count();i++)
-    //            out << YAML::Value <<specFile.getServices().at(i).toStdString();
-
-    //        out << YAML::Key << "parameters";
-    //        for (int i;i<specFile.getParameters().count();i++)
-    //            out << YAML::Value <<specFile.getParameters().at(i).toStdString();
     out << YAML::EndMap;
 
-    //move: new SOlution please in writeSpecFile
-    QString tempContents;
-    if (!node->subscriptions.count()==0){
-        tempContents.append("subscriptions:");
-        for (int i=0;i<node->subscriptions.count();i++)
-            tempContents.append("\n  "+node->subscriptions.at(i));
-        tempContents.append("\n");
-    }
-
-    if (!node->publications.count()==0){
-        tempContents.append("publications:");
-        for (int i=0;i<node->publications.count();i++)
-            tempContents.append("\n  "+node->publications.at(i));
-        tempContents.append("\n");
-    }
-    if (!node->services.count()==0){
-        tempContents.append("services:");
-        for (int i=0;i<node->services.count();i++)
-            tempContents.append("\n  "+node->services.at(i));
-        tempContents.append("\n");
-    }
-    if (!node->parameters.count()==0){
-        tempContents.append("parameters:");
-        for (int i=0;i<node->parameters.count();i++)
-            tempContents.append("\n  "+node->parameters.at(i));
-        tempContents.append("\n");
-    }
-    //end move
-
-
-    //qDebug()<< QString(out.c_str());
-
-    //        QString strin;
-    //                out.Write(strin);
-    //        qDebug()<< QString(strin);
-    QString output = QString(out.c_str()).append("\n"+tempContents);
-    return output;
+    return QString(out.c_str());
 
 }
 

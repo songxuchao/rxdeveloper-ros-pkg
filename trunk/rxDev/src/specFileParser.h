@@ -2,33 +2,34 @@
 #define SPECFILEPARSER
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 #include <yaml-cpp/yaml.h>
+#include "datastruct.h"
 
-//Datastructure for specfile data
-class rosNode {
+class Specfile {
 public:
-    QString type;
-    QString package;
-    QStringList subscriptions;
-    QStringList publications;
-    QStringList services;
-    QStringList parameters;
+    std::string type;
+    std::string package;
+    std::list<Topic_Type> subscriptions;
+    std::list<Topic_Type> publications;
+    std::list<Topic_Type> services;
+    std::list<Name_Type_Default> parameters;
 };
+inline void operator >> (const YAML::Node& node, Specfile& spec) {
+
+}
+
+
 
 class SpecFileParser
 {
 public:
     void nodeParser(const QString nodeFile);
-    rosNode node;
-    QString writeSpecFile(rosNode *node);
+    Specfile node;
+    QString writeSpecFile(Specfile *node);
 
 };
 
 
+
 #endif // SPECFILEPARSER
-
-
-
-
-
-

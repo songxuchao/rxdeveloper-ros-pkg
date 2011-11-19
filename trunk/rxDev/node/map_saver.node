@@ -1,8 +1,8 @@
 type: map_saver
-package:
-  map_server
+package: map_server
 subscriptions: 
-  map{nav_msgs/OccupancyGrid}
+ - topic: map
+   type: nav_msgs/OccupancyGrid
 publications:
 services:
 parameters:

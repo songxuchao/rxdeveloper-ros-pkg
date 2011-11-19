@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>504</width>
-    <height>485</height>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,20 +38,6 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="lineEdit_package"/>
    </item>
-   <item row="2" column="1">
-    <widget class="QListView" name="listView_subscriptions">
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QListView" name="listView_parameters">
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="11" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -59,20 +45,6 @@
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QListView" name="listView_publications">
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QListView" name="listView_services">
-     <property name="alternatingRowColors">
-      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -227,6 +199,34 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="2" column="1">
+    <widget class="QTableView" name="tableView_subscriptions">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QTableView" name="tableView_publications">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QTableView" name="tableView_parameters">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QTableView" name="tableView_services">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
   <action name="actionDelete_sub">

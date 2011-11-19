@@ -1,30 +1,62 @@
 type: move_base
-package:
-  move_base
+package: move_base
 subscriptions:
-  move_base/goal{move_base_msgs/MoveBaseActionGoal}
-  move_base/cancel{actionlib_msgs/GoalID}
-  move_base_simple/goal{geometry_msgs/PoseStamped}
+ - topic: move_base/goal
+   type: move_base_msgs/MoveBaseActionGoal
+ - topic: move_base/cancel
+   type: actionlib_msgs/GoalID
+ - topic: move_base_simple/goal
+   type: geometry_msgs/PoseStamped
 publications:
-  move_base/feedback{move_base_msgs/MoveBaseActionFeedback}
-  move_base/status{actionlib_msgs/GoalStatusArray}
-  move_base/result{move_base_msgs/MoveBaseActionResult}
-  cmd_vel{geometry_msgs/Twist}
+ - topic: move_base/feedback
+   type: move_base_msgs/MoveBaseActionFeedback
+ - topic: move_base/status
+   type: actionlib_msgs/GoalStatusArray
+ - topic: move_base/result
+   type: move_base_msgs/MoveBaseActionResult
+ - topic: cmd_vel
+   type: geometry_msgs/Twist
 services:
-  ~make_plan{nav_msgs/GetPlan}
-  ~clear_unknown_space{std_srvs/Empty}
-  ~clear_costmaps{std_srvs/Empty}
+ - name: ~make_plan
+   type: nav_msgs/GetPlan
+ - name: ~clear_unknown_space
+   type: std_srvs/Empty
+ - name: ~clear_costmaps
+   type: std_srvs/Empty
 parameters:
-  ~base_global_planner{string}["navfn/NavfnROS"]
-  ~base_local_planner{string}["base_local_planner/TrajectoryPlannerROS"]
-  ~recovery_behaviors{list} 
-  ~controller_frequency{double}[20.0]
-  ~planner_patience{double}[5.0]
-  ~controller_patience{double}[15.0)
-  ~conservative_reset_dist{double}[3.0)
-  ~recovery_behavior_enabled{bool}[true)
-  ~clearing_rotation_allowed{bool}[true)
-  ~shutdown_costmaps{bool}[false)
-  ~oscillation_timeout{double}[0.0)
-  ~oscillation_distance{double}[0.5)
-
+ - name: ~base_global_planner
+   type: string
+   default: "navfn/NavfnROS"
+ - name: ~base_local_planner
+   type: string
+   default: "base_local_planner/TrajectoryPlannerROS"
+ - name: ~recovery_behaviors
+   type: list
+   default: 
+ - name: ~controller_frequency
+   type: double
+   default: 20.0
+ - name: ~planner_patience
+   type: double
+   default: 5.0
+ - name: ~controller_patience
+   type: double
+   default: 15.0
+ - name: ~conservative_reset_dist
+   type: double
+   default: 3.0
+ - name: ~recovery_behavior_enabled
+   type: bool
+   default: true
+ - name: ~clearing_rotation_allowed
+   type: bool
+   default: true
+ - name: ~shutdown_costmaps
+   type: bool
+   default: false
+ - name: ~oscillation_timeout
+   type: double
+   default: 0.0
+ - name: ~oscillation_distance
+   type: double
+   default: 0.5

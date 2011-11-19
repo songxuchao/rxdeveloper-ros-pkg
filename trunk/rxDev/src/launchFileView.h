@@ -76,7 +76,7 @@ public:
     QComboBox *comboBox_sceneScale;
     QString selectedNodeName;
     QString selectedNodePackage;
-    QStringList selectedNodeSubscriptions;
+    QStringList  selectedNodeSubscriptions;
     QStringList selectedNodePublications;
     QStringList selectedNodeServices;
     QStringList selectedNodeParameters;
