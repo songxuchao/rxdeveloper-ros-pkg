@@ -1,7 +1,8 @@
 type: listener.py
 package: test_ros
 subscriptions: #input
-  chatter{std_msgs/String}
+ - topic: chatter
+   type: std_msgs/String
 publications: #output
 services:
 parameters:

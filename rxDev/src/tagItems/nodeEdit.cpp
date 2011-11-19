@@ -343,18 +343,16 @@ void NodeEdit::on_actionAdd_param_triggered()
 {
     QString topicString="",typeString="",defaultString="";
     if (!myItem->getParameters().isEmpty()){
+        qDebug()<<myItem->getParameters();
         NodeParamEdit nodeParam(myItem->getParameters());
         bool accept = nodeParam.exec();
         if (accept){
             QStringList tempList;
-            tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp("[\{\[]"));
+            tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp(" "));
             topicString=tempList.at(0);
             typeString=tempList.at(1);
-            typeString.chop(1);
             if (tempList.count()==3){
                 defaultString=tempList.at(2);
-                defaultString.chop(1);
-
             }
         }
     }
@@ -367,8 +365,6 @@ void NodeEdit::on_actionAdd_param_triggered()
         myItem->addParamItem(newParam);
     }
     fillParameterModel();
-
-
 }
 
 void NodeEdit::on_actionAdd_env_triggered()

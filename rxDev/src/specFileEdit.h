@@ -15,7 +15,7 @@ class SpecFileEdit : public QDialog {
     Q_OBJECT
 
 public:
-    explicit SpecFileEdit(rosNode *node, QWidget *parent = 0);
+    explicit SpecFileEdit(Specfile *node, QWidget *parent = 0);
     ~SpecFileEdit();
 
 public slots:
@@ -38,11 +38,11 @@ private slots:
 
 private:
     Ui::SpecFileEdit *ui;
-    QStringListModel *model_subscriptions;
-    QStringListModel *model_publications;
-    QStringListModel *model_services;
-    QStringListModel *model_parameters;
-    rosNode *mynode;
+    QStandardItemModel *model_subscriptions;
+    QStandardItemModel *model_publications;
+    QStandardItemModel *model_services;
+    QStandardItemModel *model_parameters;
+    Specfile *mynode;
     int selectedSub,selectedPub,selectedServ,selectedParam;
 private slots:
 

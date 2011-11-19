@@ -28,8 +28,6 @@ void RxDev::setupConnector(){
     on_actionDrag_Drop_triggered();
 
     ui->hLayout->addWidget( gview );
-
-
     /*
      setSizePolicy, when used with the horizontalLayout widget, allows the grapicsview to expand/contract
      as the user re-sizes the main window.
@@ -41,7 +39,6 @@ void RxDev::setupConnector(){
         add the scene to the QGraphicsView
     */
     gview->setScene( scene);
-
     gview->show(); //let the show begin
 }
 
@@ -70,6 +67,82 @@ void RxDev::availableNodesOrComps() {
             this, SLOT(selectionHandle_availableNodes(const QItemSelection &,const QItemSelection &)));
 
 }
+
+void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
+
+    QStandardItem *group = new QStandardItem(QString("%1").arg(QString::fromStdString(node.type)));
+
+    QStandardItem *child;
+    QStandardItem *item;
+        QStandardItem *item2;
+    child = new QStandardItem(QString("path"));
+    item = new QStandardItem(QString("%1").arg(nodeFile));
+    child->appendRow(item);
+    // the appendRow function appends the child as new row
+
+    group->appendRow(child);
+
+
+    child = new QStandardItem(QString("type"));
+    item = new QStandardItem(QString("%1").arg(QString::fromStdString(node.type)));
+    child->appendRow(item);
+    child = new QStandardItem(QString("package"));
+    item = new QStandardItem(QString("%1").arg(QString::fromStdString(node.package)));
+    child->appendRow(item);
+
+    group->appendRow(child);
+
+    child = new QStandardItem(QString("subscriptions"));
+     for(std::list<Topic_Type>::iterator iter=node.subscriptions.begin();iter != node.subscriptions.end();iter++ )
+     {
+         item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
+         item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+         item->appendRow(item2);
+         child->appendRow(item);
+     }
+
+
+    group->appendRow(child);
+
+    child = new QStandardItem(QString("publications"));
+    for(std::list<Topic_Type>::iterator iter=node.publications.begin();iter != node.publications.end();iter++ )
+    {
+        item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
+        item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+        item->appendRow(item2);
+        child->appendRow(item);
+    }
+
+    group->appendRow(child);
+
+    child = new QStandardItem(QString("services"));
+    for(std::list<Topic_Type>::iterator iter=node.services.begin();iter != node.services.end();iter++ )
+    {
+        item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
+        item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+        item->appendRow(item2);
+        child->appendRow(item);
+    }
+    group->appendRow(child);
+
+    child = new QStandardItem(QString("parameters"));
+    for(std::list<Name_Type_Default>::iterator iter=node.parameters.begin();iter != node.parameters.end();iter++ )
+    {
+        item = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramName));
+        item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramType));
+        item->appendRow(item2);
+        item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramDefault));
+        item->appendRow(item2);
+        child->appendRow(item);
+    }
+    group->appendRow(child);
+
+    // append group as new row to the model. model takes the ownership of the item
+    if (!(node.type.length()==0) && !(node.package.length()==0))
+        model_availableNodes->appendRow(group);
+}
+
+
 
 void RxDev::on_actionNew_Launchfile_triggered()
 {
@@ -358,70 +431,7 @@ void RxDev::fillItemModel_availableComponents(const QString compFile)
             model_availableComponents->appendRow(group);
 }
 
-void RxDev::fillItemModel_availableNodes(QString nodeFile, rosNode &node){
 
-    QStandardItem *group = new QStandardItem(QString("%1").arg(node.type));
-
-    QStandardItem *child;
-    QStandardItem *item;
-
-    child = new QStandardItem(QString("path"));
-    item = new QStandardItem(QString("%1").arg(nodeFile));
-    child->appendRow(item);
-    // the appendRow function appends the child as new row
-
-    group->appendRow(child);
-
-
-    child = new QStandardItem(QString("type"));
-    item = new QStandardItem(QString("%1").arg(node.type));
-    child->appendRow(item);
-    child = new QStandardItem(QString("package"));
-    item = new QStandardItem(QString("%1").arg(node.package));
-    child->appendRow(item);
-
-    group->appendRow(child);
-
-    child = new QStandardItem(QString("subscriptions"));
-    for (int j = 0; j<node.subscriptions.count(); j++)
-    {
-        item = new QStandardItem(QString("%1").arg(node.subscriptions[j]));
-        child->appendRow(item);
-    }
-
-    group->appendRow(child);
-
-    child = new QStandardItem(QString("publications"));
-
-    QList<QStandardItem *> list;
-    for (int j = 0; j<node.publications.count(); j++)
-    {
-        list.append(new QStandardItem(QString("%1").arg(node.publications[j])));
-
-    }
-    child->appendColumn(list);
-    group->appendRow(child);
-
-    child = new QStandardItem(QString("services"));
-    for (int j = 0; j<node.services.count(); j++)
-    {
-        item = new QStandardItem(QString("%1").arg(node.services[j]));
-        child->appendRow(item);
-    }
-    group->appendRow(child);
-
-    child = new QStandardItem(QString("parameters"));
-    for (int j = 0; j<node.parameters.count(); j++)
-    {
-        item = new QStandardItem(QString("%1").arg(node.parameters[j]));
-        child->appendRow(item);
-    }
-    group->appendRow(child);
-
-    // append group as new row to the model. model takes the ownership of the item
-    if (!node.type.isEmpty() && !node.package.isEmpty())
-        model_availableNodes->appendRow(group);
-}
 
 void RxDev::showContextMenu_availableComponents(const QPoint&point){
 
@@ -515,7 +525,7 @@ void RxDev::openSpecFile(){
     specParser->nodeParser(filePath);
 
     SpecFileEdit specFile(&specParser->node);
-    qDebug()<<specParser->node.type;
+    qDebug()<<QString::fromStdString(specParser->node.type);
     specFile.setWindowTitle("Specfile: "+seekRoot.data(Qt::DisplayRole).toString());
     bool accept = specFile.exec();
     if ((accept)){
@@ -576,7 +586,13 @@ void RxDev::addCompFile(){
     //}
 
 }
+template <typename InIt>
+QStringList convertFromStdStringContainer(InIt begIt, InIt endIt){
+   QStringList output;
 
+   copy(begIt, endIt, output.begin(), output.end());
+   return output;
+}
 
 void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const QItemSelection &deselected)
 {
@@ -591,12 +607,38 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
     SpecFileParser *specParser = new SpecFileParser;
     specParser->nodeParser(seekRoot.child(0,0).child(0,0).data(Qt::DisplayRole).toString());
     //  @todo Selected Node Datastructure
-    gview->selectedNodeName = specParser->node.type;
-    gview->selectedNodePackage = specParser->node.package;
-    gview->selectedNodeSubscriptions = specParser->node.subscriptions;
-    gview->selectedNodePublications = specParser->node.publications;
-    gview->selectedNodeServices = specParser->node.services;
-    gview->selectedNodeParameters = specParser->node.parameters;
+    gview->selectedNodeName = QString::fromStdString(specParser->node.type);
+    gview->selectedNodePackage = QString::fromStdString(specParser->node.package);
+    QStringList subs;
+    //CONTINUE HERE std::string muss TOPIC_TYPE werden und so weiter
+    for(std::list<Topic_Type>::iterator iter=specParser->node.subscriptions.begin();iter != specParser->node.subscriptions.end();iter++ )
+    {
+        subs.append(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+
+    }
+    gview->selectedNodeSubscriptions = subs;
+    QStringList pubs;
+    for(std::list<Topic_Type>::iterator iter=specParser->node.publications.begin();iter != specParser->node.publications.end();iter++ )
+    {
+        pubs.append(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+
+    }
+    gview->selectedNodePublications = pubs;
+    QStringList servs;
+    for(std::list<Topic_Type>::iterator iter=specParser->node.services.begin();iter != specParser->node.services.end();iter++ )
+    {
+        servs.append(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+    }
+    gview->selectedNodeServices = servs;
+    QStringList params;
+    for(std::list<Name_Type_Default>::iterator iter=specParser->node.parameters.begin();iter != specParser->node.parameters.end();iter++ )
+    {
+        params.append(QString("%1 %2 %3").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)));
+        //todo add topictype anyhow
+        //todo add topicdefault anyhow
+
+    }
+    gview->selectedNodeParameters = params;
     //qDebug()<<QString("%1").arg(gview->selectedNodeName);
     //qDebug()<<QString("%1").arg(gview->selectedNodePackage);
 

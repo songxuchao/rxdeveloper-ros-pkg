@@ -104,7 +104,7 @@ private slots:
     void expandAll();
 
 
-    void fillItemModel_availableNodes(const QString nodeFile, rosNode &node);
+    void fillItemModel_availableNodes(const QString nodeFile, Specfile &node);
     void fillItemModel_availableComponents(const QString compFile);
 
     void setupConnector();

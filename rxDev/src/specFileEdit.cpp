@@ -4,28 +4,112 @@
  *
  * ...
  */
-SpecFileEdit::SpecFileEdit(rosNode *node,QWidget *parent) : QDialog(parent), ui(new Ui::SpecFileEdit) {
+SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui(new Ui::SpecFileEdit) {
     ui->setupUi(this);
     mynode=node;
-    ui->lineEdit_type->setText(node->type);
-    ui->lineEdit_package->setText(node->package);
+    ui->lineEdit_type->setText(QString::fromStdString(node->type));
+    ui->lineEdit_package->setText(QString::fromStdString(node->package));
 
-    QStringList sublist;
-    sublist<<"eins"<<"zwei";
-    model_subscriptions = new QStringListModel();
-    model_publications = new QStringListModel();
-    model_services = new QStringListModel();
-    model_parameters = new QStringListModel();
+    model_subscriptions= new QStandardItemModel(node->subscriptions.size(),2);
+    model_subscriptions->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
+    model_subscriptions->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
 
-    model_subscriptions->setStringList(node->subscriptions);
-    model_publications->setStringList(node->publications);
-    model_services->setStringList(node->services);
-    model_parameters->setStringList(node->parameters);
+    QStringList subs;
+    for(std::list<Topic_Type>::iterator iter=node->subscriptions.begin();iter != node->subscriptions.end();iter++ )
+    {
+        subs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+        //todo add topictype anyhow
+    }
+    for (int i=0;i<subs.count();i++){
+        QStringList sub = subs.at(i).split(" ");
+        QStandardItem *item0;
 
-    ui->listView_subscriptions->setModel(model_subscriptions);
-    ui->listView_publications->setModel(model_publications);
-    ui->listView_services->setModel(model_services);
-    ui->listView_parameters->setModel(model_parameters);
+         item0 = new QStandardItem(sub.at(0));
+         model_subscriptions->setItem(i,0,item0);
+         item0 = new QStandardItem(sub.at(1));
+         model_subscriptions->setItem(i,1,item0);
+    }
+
+    model_publications= new QStandardItemModel(node->publications.size(),2);
+    model_publications->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
+    model_publications->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+    QStringList pubs;
+    for(std::list<Topic_Type>::iterator iter=node->publications.begin();iter != node->publications.end();iter++ )
+    {
+        pubs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+
+    }
+    for (int i=0;i<pubs.count();i++){
+        QStringList pub = pubs.at(i).split(" ");
+        QStandardItem *item0;
+
+         item0 = new QStandardItem(pub.at(0));
+         model_publications->setItem(i,0,item0);
+         item0 = new QStandardItem(pub.at(1));
+         model_publications->setItem(i,1,item0);
+    }
+
+    model_services= new QStandardItemModel(node->publications.size(),2);
+    model_services->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
+    model_services->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+
+    QStringList servs;
+    for(std::list<Topic_Type>::iterator iter=node->services.begin();iter != node->services.end();iter++ )
+    {
+        servs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+    }
+    for (int i=0;i<servs.count();i++){
+        QStringList serv = servs.at(i).split(" ");
+        QStandardItem *item0;
+
+         item0 = new QStandardItem(serv.at(0));
+         model_publications->setItem(i,0,item0);
+         item0 = new QStandardItem(serv.at(1));
+         model_publications->setItem(i,1,item0);
+    }
+
+
+    model_parameters= new QStandardItemModel(node->parameters.size(),3);
+    model_parameters->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
+    model_parameters->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+    model_parameters->setHeaderData(2,Qt::Horizontal,QObject::tr("default"));
+    QStringList params;
+    for(std::list<Name_Type_Default>::iterator iter=node->parameters.begin();iter != node->parameters.end();iter++ )
+    {
+        params.push_back((QString("%1 %2 %3").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault))));
+        //todo add topictype anyhow
+    }
+    for (int i=0;i<params.count();i++){
+        QStringList param = params.at(i).split(" ");
+        QStandardItem *item0;
+
+         item0 = new QStandardItem(param.at(0));
+         model_parameters->setItem(i,0,item0);
+         item0 = new QStandardItem(param.at(1));
+         model_parameters->setItem(i,1,item0);
+         item0 = new QStandardItem(param.at(2));
+         model_parameters->setItem(i,2,item0);
+    }
+
+
+
+
+
+    ui->tableView_subscriptions->setModel(model_subscriptions);
+    ui->tableView_subscriptions->setColumnWidth(0,180);
+    ui->tableView_subscriptions->setColumnWidth(1,179);
+    ui->tableView_publications->setModel(model_publications);
+    ui->tableView_publications->setColumnWidth(0,180);
+    ui->tableView_publications->setColumnWidth(1,179);
+
+    ui->tableView_services->setModel(model_services);
+    ui->tableView_services->setColumnWidth(0,180);
+    ui->tableView_services->setColumnWidth(1,179);
+
+    ui->tableView_parameters->setModel(model_parameters);
+    ui->tableView_parameters->setColumnWidth(0,149);
+    ui->tableView_parameters->setColumnWidth(1,149);
+    ui->tableView_parameters->setColumnWidth(2,61);
 
     ui->toolButton_addSub->setDefaultAction(ui->actionAdd_sub);
     ui->toolButton_addPub->setDefaultAction(ui->actionAdd_pub);
@@ -36,10 +120,10 @@ SpecFileEdit::SpecFileEdit(rosNode *node,QWidget *parent) : QDialog(parent), ui(
     ui->toolButton_delServ->setDefaultAction(ui->actionDelete_serv);
     ui->toolButton_delParam->setDefaultAction(ui->actionDelete_param);
 
-    connect(ui->listView_subscriptions,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_subs(const QModelIndex &)));
-    connect(ui->listView_publications,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_pubs(const QModelIndex &)));
-    connect(ui->listView_services,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_servs(const QModelIndex &)));
-    connect(ui->listView_parameters,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_params(const QModelIndex &)));
+    connect(ui->tableView_subscriptions,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_subs(const QModelIndex &)));
+    connect(ui->tableView_publications,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_pubs(const QModelIndex &)));
+    connect(ui->tableView_services,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_servs(const QModelIndex &)));
+    connect(ui->tableView_parameters,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_params(const QModelIndex &)));
 
 
 }
@@ -55,19 +139,45 @@ void SpecFileEdit::reject() {
 void SpecFileEdit::accept() {
 
 
-    if (ui->lineEdit_type->text()==""){
+    if (ui->lineEdit_type->text()==""||ui->lineEdit_package->text()==""){
         QMessageBox::information(this, (QString::fromUtf8("Information")),
-                                 QString::fromUtf8("<h2>Name missing</h2>"
-                                                   "<p>Please insert a correct name!</p>"));
+                                 QString::fromUtf8("<h2>Type or package missing</h2>"
+                                                   "<p>Please insert type and package data!</p>"));
         ui->lineEdit_type->setFocus();
 
     } else{
-        mynode->type= ui->lineEdit_type->text();
-        mynode->package = ui->lineEdit_package->text();
-        mynode->subscriptions= model_subscriptions->stringList();
-        mynode->publications= model_publications->stringList();
-        mynode->services =model_services->stringList();
-        mynode->parameters =model_parameters->stringList();
+        mynode->type= ui->lineEdit_type->text().toStdString();
+        mynode->package = ui->lineEdit_package->text().toStdString();
+        Topic_Type tempTT;
+        Name_Type_Default tempNTD;
+
+        mynode->subscriptions.clear();
+        for (int i=0;i<model_subscriptions->rowCount();i++){
+            tempTT.topic=(model_subscriptions->item(i,0))->text().toStdString();
+            tempTT.topictype=(model_subscriptions->item(i,1))->text().toStdString();
+            mynode->subscriptions.push_back(tempTT);
+        }
+        mynode->publications.clear();
+        for (int i=0;i<model_publications->rowCount();i++){
+            tempTT.topic=(model_publications->item(i,0))->text().toStdString();
+            tempTT.topictype=(model_publications->item(i,1))->text().toStdString();
+            mynode->publications.push_back(tempTT);
+        }
+        mynode->services.clear();
+        for (int i=0;i<model_services->rowCount();i++){
+            tempTT.topic=(model_services->item(i,0))->text().toStdString();
+            tempTT.topictype=(model_services->item(i,1))->text().toStdString();
+            mynode->services.push_back(tempTT);
+        }
+        mynode->parameters.clear();
+        for (int i=0;i<model_parameters->rowCount();i++){
+            tempNTD.paramName=(model_parameters->item(i,0))->text().toStdString();
+            tempNTD.paramType=(model_parameters->item(i,1))->text().toStdString();
+            tempNTD.paramDefault=(model_parameters->item(i,2))->text().toStdString();
+            mynode->parameters.push_back(tempNTD);
+        }
+
+
         QDialog::accept();
     }
 

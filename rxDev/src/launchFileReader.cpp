@@ -155,10 +155,10 @@ void RxDev::loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group)
                     NodeItem *newNode;
                     int x1=x,y1=y;
                     QString nodePackage, nodeType;
-                    QStringList nodeSubs, nodePubs, nodeArgs, nodeSrvs;
+                    QStringList nodeSubs, nodePubs, nodeParams, nodeSrvs;
                     prepare_nodeOrTest(pChild, nodePackage, nodeType,
-                                       nodeSubs,nodePubs, nodeArgs, nodeSrvs);
-                    newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeArgs);
+                                       nodeSubs,nodePubs, nodeParams, nodeSrvs);
+                    newNode= new NodeItem(nodeType,nodePackage,nodeSubs,nodePubs,nodeSrvs,nodeParams);
                     create_nodeorTestItem(*newNode,0, pChild, x1 , y1);
                     newNode->setParentItem(&group);
                     scene->addItem(newNode);
@@ -542,10 +542,33 @@ void RxDev::prepare_nodeOrTest(TiXmlNode *nodeNode,
         if (item->child(1,0)->child(0,0)->text() ==nodePackage){
             SpecFileParser *specParser = new SpecFileParser;
             specParser->nodeParser(item->child(0,0)->child(0,0)->data(Qt::DisplayRole).toString());
-            nodeSubs = specParser->node.subscriptions;
-            nodePubs = specParser->node.publications;
-            nodeSrvs = specParser->node.services;
-            nodeParams = specParser->node.parameters;
+
+            QStringList subs;
+            for(std::list<Topic_Type>::iterator iter=specParser->node.subscriptions.begin();iter != specParser->node.subscriptions.end();iter++ )
+            {
+                subs.push_back(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+            }
+            nodeSubs = subs;
+            QStringList pubs;
+            for(std::list<Topic_Type>::iterator iter=specParser->node.publications.begin();iter != specParser->node.publications.end();iter++ )
+            {
+                pubs.push_back(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+            }
+            nodePubs = pubs;
+            QStringList servs;
+            for(std::list<Topic_Type>::iterator iter=specParser->node.services.begin();iter != specParser->node.services.end();iter++ )
+            {
+                servs.push_back(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
+            }
+            nodeSrvs = servs;
+            QStringList params;
+            for(std::list<Name_Type_Default>::iterator iter=specParser->node.parameters.begin();iter != specParser->node.parameters.end();iter++ )
+            {
+                params.push_back(QString("%1 %2 %3").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)));
+                //todo add topictype and default anyhow
+            }
+             nodeParams = params;
+
             break;
         }
     }

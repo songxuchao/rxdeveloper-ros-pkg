@@ -308,7 +308,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         }
         QString filePath= packagePath+("/node/"+newFile.fileName());
 
-        rosNode newSpec;
+        Specfile newSpec;
         SpecFileEdit specFile(&newSpec);
         specFile.setWindowTitle("Specfile: "+createFile.getFileName());
         bool accept = specFile.exec();

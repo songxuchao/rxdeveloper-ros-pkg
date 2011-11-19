@@ -1,6 +1,7 @@
 #include "ui_nodeParamEdit.h"
 #include "nodeParamEdit.h"
 #include <QMessageBox>
+#include <QDebug>
 
 NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent), ui(new Ui::NodeParamEdit) {
     ui->setupUi(this);
@@ -13,17 +14,16 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
     for (int row = 0; row < list.count(); ++row) {
         QStringList tempList;
         QString tempString;
-        tempList=list.at(row).split(QRegExp("[\{\[]"));
+        tempList=list.at(row).split(QRegExp(" "));
         tempString=tempList.at(0);
+        qDebug()<<tempString;
         QStandardItem *item0 = new QStandardItem(tempString);
         paramModel->setItem(row,0,item0);
-        tempString=tempList.at(1);
-        tempString.chop(1);
+       tempString=tempList.at(1);
         item0 = new QStandardItem(QString(tempString));
         paramModel->setItem(row,1,item0);
         if (tempList.count()>2){
             tempString=tempList.at(2);
-            tempString.chop(1);
             item0 = new QStandardItem(QString(tempString));
         }else
             item0 = new QStandardItem(QString("-"));
