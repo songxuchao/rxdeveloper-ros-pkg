@@ -4,7 +4,8 @@
 
 #include <QDialog>
 #include "remapArrow.h"
-#include <QStringListModel>
+#include <QStandardItemModel>
+#include <QItemSelection>
 
 
 namespace Ui {
@@ -50,10 +51,10 @@ class RemapArrowEdit : public QDialog {
 private:
                 bool subToPub;
                 Ui::RemapArrowEdit *ui;
-                QStringListModel *model_start_subscribe;
-                QStringListModel *model_end_publish;
-                QStringListModel *model_start_publish;
-                QStringListModel *model_end_subscribe;
+                QStandardItemModel *model_start_subscribe;
+                QStandardItemModel *model_end_publish;
+                QStandardItemModel *model_start_publish;
+                QStandardItemModel *model_end_subscribe;
                 QString fromNode;
                 QString fromNodeNamespace;
                 QString fromGroupNamespace;

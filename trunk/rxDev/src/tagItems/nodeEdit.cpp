@@ -57,6 +57,8 @@ NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent
     remapModel->setHeaderData(3,Qt::Horizontal,QObject::tr("unless"));
     fillRemapModel();
     ui->tableView_remapItems->setModel(remapModel);
+    ui->tableView_remapItems->setColumnWidth(0,242);
+    ui->tableView_remapItems->setColumnWidth(1,242);
 
     envModel = new QStandardItemModel(myItem->envItems.count(),4);
     envModel->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
@@ -65,7 +67,8 @@ NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent
     envModel->setHeaderData(3,Qt::Horizontal,QObject::tr("unless"));
     fillEnvModel();
     ui->tableView_envItems->setModel(envModel);
-
+    ui->tableView_envItems->setColumnWidth(0,242);
+    ui->tableView_envItems->setColumnWidth(1,242);
 
     paramModel = new QStandardItemModel(myItem->paramItems.count(),5);
     paramModel->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
@@ -75,6 +78,11 @@ NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent
     paramModel->setHeaderData(4,Qt::Horizontal,QObject::tr("unless"));
     fillParameterModel();
     ui->tableView_paramItems->setModel(paramModel);
+    ui->tableView_paramItems->setColumnWidth(0,200);
+    ui->tableView_paramItems->setColumnWidth(1,200);
+    ui->tableView_paramItems->setColumnWidth(2,170);
+    ui->tableView_paramItems->setColumnWidth(3,54);
+    ui->tableView_paramItems->setColumnWidth(4,60);
 
     rosparamModel = new QStandardItemModel(myItem->rosparamItems.count(),6);
     rosparamModel->setHeaderData(0,Qt::Horizontal,QObject::tr("command"));
@@ -85,6 +93,12 @@ NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent
     rosparamModel->setHeaderData(5,Qt::Horizontal,QObject::tr("unless"));
     fillRosparamModel();
     ui->tableView_rosparamItems->setModel(rosparamModel);
+    ui->tableView_rosparamItems->setColumnWidth(0,200);
+    ui->tableView_rosparamItems->setColumnWidth(1,200);
+    ui->tableView_rosparamItems->setColumnWidth(2,170);
+    ui->tableView_rosparamItems->setColumnWidth(3,54);
+    ui->tableView_rosparamItems->setColumnWidth(4,60);
+
 
     connect(ui->tableView_paramItems,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(edit_parameterItems(const QModelIndex &)));
     connect(ui->tableView_paramItems,SIGNAL(clicked(QModelIndex)), this, SLOT(selectionHandle_parameterItems(const QModelIndex &)));

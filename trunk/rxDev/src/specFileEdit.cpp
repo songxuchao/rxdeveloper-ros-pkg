@@ -153,27 +153,36 @@ void SpecFileEdit::accept() {
 
         mynode->subscriptions.clear();
         for (int i=0;i<model_subscriptions->rowCount();i++){
-            tempTT.topic=(model_subscriptions->item(i,0))->text().toStdString();
-            tempTT.topictype=(model_subscriptions->item(i,1))->text().toStdString();
+            if (model_subscriptions->item(i,0)->text().isEmpty())
+                tempTT.topic="";
+            else
+                tempTT.topic=(model_subscriptions->item(i,0))->text().toStdString();
+            if (model_subscriptions->item(i,1)->text().isNull())
+                tempTT.topictype="";
+            else
+                tempTT.topictype=(model_subscriptions->item(i,1))->text().toStdString();
             mynode->subscriptions.push_back(tempTT);
         }
         mynode->publications.clear();
         for (int i=0;i<model_publications->rowCount();i++){
-            tempTT.topic=(model_publications->item(i,0))->text().toStdString();
-            tempTT.topictype=(model_publications->item(i,1))->text().toStdString();
+
+                tempTT.topic=(model_publications->item(i,0))->text().toStdString();
+                tempTT.topictype=(model_publications->item(i,1))->text().toStdString();
             mynode->publications.push_back(tempTT);
         }
         mynode->services.clear();
         for (int i=0;i<model_services->rowCount();i++){
-            tempTT.topic=(model_services->item(i,0))->text().toStdString();
-            tempTT.topictype=(model_services->item(i,1))->text().toStdString();
+
+                tempTT.topic=(model_services->item(i,0))->text().toStdString();
+
+                tempTT.topictype=(model_services->item(i,1))->text().toStdString();
             mynode->services.push_back(tempTT);
         }
         mynode->parameters.clear();
         for (int i=0;i<model_parameters->rowCount();i++){
-            tempNTD.paramName=(model_parameters->item(i,0))->text().toStdString();
-            tempNTD.paramType=(model_parameters->item(i,1))->text().toStdString();
-            tempNTD.paramDefault=(model_parameters->item(i,2))->text().toStdString();
+                tempNTD.paramName=(model_parameters->item(i,0))->text().toStdString();
+                tempNTD.paramType=(model_parameters->item(i,1))->text().toStdString();
+               tempNTD.paramDefault=(model_parameters->item(i,2))->text().toStdString();
             mynode->parameters.push_back(tempNTD);
         }
 
@@ -218,6 +227,7 @@ void SpecFileEdit::on_actionAdd_sub_triggered()
     int row = model_subscriptions->rowCount();
     model_subscriptions->insertRow(row);
     model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 0), "<new>");
+    model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 1), "");
 }
 
 void SpecFileEdit::on_actionDelete_pub_triggered()
@@ -230,6 +240,7 @@ void SpecFileEdit::on_actionAdd_pub_triggered()
     int row = model_publications->rowCount();
     model_publications->insertRow(row);
     model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 0), "<new>");
+    model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 1), "");
 }
 void SpecFileEdit::on_actionDelete_serv_triggered()
 {
@@ -241,6 +252,7 @@ void SpecFileEdit::on_actionAdd_serv_triggered()
     int row = model_services->rowCount();
     model_services->insertRow(row);
     model_services->setData(model_services->index(model_services->rowCount() - 1, 0), "<new>");
+    model_services->setData(model_services->index(model_services->rowCount() - 1, 1), "");
 }
 void SpecFileEdit::on_actionDelete_param_triggered()
 {
@@ -252,6 +264,8 @@ void SpecFileEdit::on_actionAdd_param_triggered()
     int row = model_parameters->rowCount();
     model_parameters->insertRow(row);
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 0), "<new>");
+    model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 1), "");
+    model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 2), "");
     //model_parameters->row(row)->doubleClicked();
 
 }
