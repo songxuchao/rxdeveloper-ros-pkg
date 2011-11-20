@@ -31,16 +31,6 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
-       <widget class="QListView" name="listView_startNode_subscribe">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="9" column="0">
        <widget class="Line" name="line">
         <property name="orientation">
@@ -52,16 +42,6 @@
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>from publication:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="0">
-       <widget class="QListView" name="listView_startNode_publish">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -89,6 +69,32 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="7" column="0">
+       <widget class="QTableView" name="tableView_startNode_subscribe">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QTableView" name="tableView_startNode_publish">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -141,16 +147,6 @@ or</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QListView" name="listView_endNode_publish">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="0">
        <widget class="Line" name="line_2">
         <property name="orientation">
@@ -162,16 +158,6 @@ or</string>
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>to subscription:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QListView" name="listView_endNode_subscribe">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -199,6 +185,32 @@ or</string>
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="4" column="0">
+       <widget class="QTableView" name="tableView_endNode_publish">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QTableView" name="tableView_endNode_subscribe">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
