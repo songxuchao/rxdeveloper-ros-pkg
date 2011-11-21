@@ -16,7 +16,7 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
         QString tempString;
         tempList=list.at(row).split(QRegExp(" "));
         tempString=tempList.at(0);
-        qDebug()<<tempString;
+//        qDebug()<<tempString;
         QStandardItem *item0 = new QStandardItem(tempString);
         paramModel->setItem(row,0,item0);
        tempString=tempList.at(1);

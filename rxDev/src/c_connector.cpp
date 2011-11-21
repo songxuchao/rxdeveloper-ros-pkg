@@ -70,6 +70,8 @@ void RxDev::availableNodesOrComps() {
 
 void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
 
+    QBrush b;
+
     QStandardItem *group = new QStandardItem(QString("%1").arg(QString::fromStdString(node.type)));
 
     QStandardItem *child;
@@ -77,9 +79,12 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
         QStandardItem *item2;
     child = new QStandardItem(QString("path"));
     item = new QStandardItem(QString("%1").arg(nodeFile));
+    b.setColor(Qt::blue);
+    child->setForeground(b);
+    b.setColor(Qt::black);
+    item->setForeground(b);
     child->appendRow(item);
     // the appendRow function appends the child as new row
-
     group->appendRow(child);
 
 
@@ -88,8 +93,9 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
     child->appendRow(item);
     child = new QStandardItem(QString("package"));
     item = new QStandardItem(QString("%1").arg(QString::fromStdString(node.package)));
+    b.setColor(Qt::blue);
+    child->setForeground(b);
     child->appendRow(item);
-
     group->appendRow(child);
 
     child = new QStandardItem(QString("subscriptions"));
@@ -97,9 +103,15 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
      {
          item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
          item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+         b.setColor(Qt::red);
+         item->setForeground(b);
+         b.setColor(Qt::gray);
+         item2->setForeground(b);
          item->appendRow(item2);
          child->appendRow(item);
      }
+     b.setColor(Qt::blue);
+     child->setForeground(b);
 
 
     group->appendRow(child);
@@ -109,9 +121,16 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
     {
         item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
         item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+        b.setColor(Qt::red);
+        item->setForeground(b);
+        b.setColor(Qt::gray);
+        item2->setForeground(b);
         item->appendRow(item2);
         child->appendRow(item);
     }
+    b.setColor(Qt::blue);
+    child->setForeground(b);
+
 
     group->appendRow(child);
 
@@ -120,9 +139,16 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
     {
         item = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topic));
         item2 = new QStandardItem(QString::fromStdString(Topic_Type(*iter).topictype));
+        b.setColor(Qt::red);
+        item->setForeground(b);
+        b.setColor(Qt::gray);
+        item2->setForeground(b);
         item->appendRow(item2);
         child->appendRow(item);
     }
+    b.setColor(Qt::blue);
+    child->setForeground(b);
+
     group->appendRow(child);
 
     child = new QStandardItem(QString("parameters"));
@@ -130,16 +156,28 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
     {
         item = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramName));
         item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramType));
+        b.setColor(Qt::red);
+        item->setForeground(b);
+        b.setColor(Qt::gray);
+        item2->setForeground(b);
         item->appendRow(item2);
         item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramDefault));
+        b.setColor(Qt::black);
+        item2->setForeground(b);
         item->appendRow(item2);
         child->appendRow(item);
     }
+    b.setColor(Qt::blue);
+    child->setForeground(b);
+
     group->appendRow(child);
+    b.setColor(Qt::darkBlue);
+    group->setForeground(b);
 
     // append group as new row to the model. model takes the ownership of the item
     if (!(node.type.length()==0) && !(node.package.length()==0))
         model_availableNodes->appendRow(group);
+        ui->treeView_availableNodes->setAutoFillBackground(true);
 }
 
 
@@ -425,6 +463,9 @@ void RxDev::fillItemModel_availableComponents(const QString compFile)
 
     QStandardItem *group = new QStandardItem(QString("%1").arg(subString));
     QStandardItem *path = new QStandardItem(QString("%1").arg(compFile));
+    QBrush b;
+    b.setColor(Qt::darkBlue);
+    group->setForeground(b);
     group->appendRow(path);
 
     // append group as new row to the model. model takes the ownership of the item
@@ -440,7 +481,7 @@ void RxDev::showContextMenu_availableComponents(const QPoint&point){
     //menuPoint_availableComponents = point;
     //const QModelIndex index = ui->listView_availableComponents->selectionModel()->currentIndex();
     QModelIndex seekRoot = index;
-    qDebug()<<index;
+    //qDebug()<<index;
     if(index.isValid()){
     while(seekRoot.parent() != QModelIndex())
     {
@@ -525,11 +566,10 @@ void RxDev::openSpecFile(){
     specParser->nodeParser(filePath);
 
     SpecFileEdit specFile(&specParser->node);
-    qDebug()<<QString::fromStdString(specParser->node.type);
+    //qDebug()<<QString::fromStdString(specParser->node.type);
     specFile.setWindowTitle("Specfile: "+seekRoot.data(Qt::DisplayRole).toString());
     bool accept = specFile.exec();
     if ((accept)){
-        qDebug()<<"speicher "+filePath;
         QFile file;
         file.setFileName(filePath);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -537,7 +577,6 @@ void RxDev::openSpecFile(){
             QString tempContens = specParser->writeSpecFile(&specParser->node);
             QTextStream text(&file);
             text<<tempContens;
-            qDebug()<<"hier jetzt yamlfileschreiben ";
             //qDebug()<<"subs "<<specFile.getSubscriptions();
             file.close();
             QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
@@ -561,7 +600,7 @@ void RxDev::openCompFile(){
         seekRoot = seekRoot.parent();
     }
     QString filePath =  seekRoot.child(0,0).data(Qt::DisplayRole).toString();
-    qDebug()<<filePath;
+  //  qDebug()<<filePath;
     QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
 }
 void RxDev::addCompFile(){
@@ -572,7 +611,7 @@ void RxDev::addCompFile(){
         seekRoot = seekRoot.parent();
     }
     QString filePath =  seekRoot.child(0,0).data(Qt::DisplayRole).toString();
-    qDebug()<<filePath;
+//    qDebug()<<filePath;
     IncludeFileItem * newFile;
     newFile = new IncludeFileItem;
     connect(newFile,SIGNAL(expandItem(QString,GroupItem &)),this,SLOT(expandInclude(const QString &, GroupItem &)));

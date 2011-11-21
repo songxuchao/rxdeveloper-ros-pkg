@@ -357,7 +357,7 @@ void NodeEdit::on_actionAdd_param_triggered()
 {
     QString topicString="",typeString="",defaultString="";
     if (!myItem->getParameters().isEmpty()){
-        qDebug()<<myItem->getParameters();
+//        qDebug()<<myItem->getParameters();
         NodeParamEdit nodeParam(myItem->getParameters());
         bool accept = nodeParam.exec();
         if (accept){

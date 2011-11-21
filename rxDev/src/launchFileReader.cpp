@@ -22,7 +22,7 @@ void RxDev::expandInclude(const QString &file, GroupItem &group){
     if (loadOkay)
     {
 
-        qDebug()<<group.pos();
+//        qDebug()<<group.pos();
         if (group.isVisible() && group.pos()!=QPoint(0,0))          //if IncludeItem has a Parent-GroupItem
             loadDocumentInGroup( &doc, group);
         else                            //treat inclue as an standard launchfile
@@ -196,10 +196,10 @@ void RxDev::loadDocumentInGroup( TiXmlNode * documentNode, GroupItem &group)
             }
         }
         //    qDebug()<<"______________________________________________________";
-        foreach(QGraphicsItem *item, scene->items()){
-            if (item->type()==NodeItem::Type)
-                qDebug()<<item;
-        }
+//        foreach(QGraphicsItem *item, scene->items()){
+//            if (item->type()==NodeItem::Type)
+//                qDebug()<<item;
+//        }
         //    qDebug()<<arrowList.count();
         //    qDebug()<<"______________________________________________________";
 
@@ -234,10 +234,10 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
         }
     }
     //    qDebug()<<"______________________________________________________";
-    foreach(QGraphicsItem *item, scene->items()){
-        if (item->type()==NodeItem::Type)
-            qDebug()<<item;
-    }
+//    foreach(QGraphicsItem *item, scene->items()){
+//        if (item->type()==NodeItem::Type)
+//            qDebug()<<item;
+//    }
     //    qDebug()<<arrowList.count();
     //    qDebug()<<"______________________________________________________";
 

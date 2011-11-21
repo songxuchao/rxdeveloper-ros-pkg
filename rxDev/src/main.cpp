@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
             if (QString( argv[ 1 ] ).endsWith("launch")){
                 file=( argv[ 1 ] );
-                qDebug()<<file;
+//                qDebug()<<file;
             }
 
     }
