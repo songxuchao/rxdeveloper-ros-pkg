@@ -24,6 +24,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/machineEdit.h
     rxdev.h
     newEntry.h
+    wikiDialog.h
     #specFileParser.h
     specFileEdit.h
     settings.h
@@ -32,6 +33,7 @@ qt4_wrap_cpp(MOC_SOURCES
 qt4_wrap_ui(UI_HEADERS
     rxdev.ui
     newEntry.ui
+    wikiDialog.ui
     specFileEdit.ui
     settings.ui
     tagItems/parameterEdit.ui
@@ -77,6 +79,7 @@ set( CPP
     c_creator.cpp
     c_connector.cpp
     newEntry.cpp
+    wikiDialog.cpp
     specFileEdit.cpp
     specFileParser.cpp
     settings.cpp

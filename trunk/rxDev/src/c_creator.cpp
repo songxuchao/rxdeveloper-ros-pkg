@@ -83,7 +83,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
     ui->pushButton_createPython->setEnabled(isPack);
     ui->pushButton_specfile->setEnabled(isPack);
     if (isPack){
-        qDebug()<<packagePath;
+        //qDebug()<<packagePath;
         workingModel->setRootPath(packagePath);
 
         ui->treeView_packageBrowser->setRootIndex(workingModel->index(packagePath));
@@ -99,7 +99,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
 
             folderName = selected.indexes()[0].data().toString();
             folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->currentIndex()).absolutePath()+"/"+folderName;
-            qDebug() << folderPath;
+            //qDebug() << folderPath;
             //folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->.absolutePath()+"/"+folderName;
 
 
@@ -111,7 +111,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
 
         QModelIndex index(ui->treeView_packageBrowser->indexAt(point));
         menuPoint = point;
-        qDebug()<<index;
+//        qDebug()<<index;
         if(workingModel->fileInfo(index).isDir()||!index.isValid()){
             contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
             contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
@@ -314,7 +314,6 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         bool accept = specFile.exec();
         SpecFileParser *specParser = new SpecFileParser;
         if ((accept)){
-            qDebug()<<"speicher "+filePath;
             QFile file;
             file.setFileName(filePath);
             file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -322,7 +321,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
                 QString tempContens = specParser->writeSpecFile(&newSpec);
                 QTextStream text(&file);
                 text<<tempContens;
-                qDebug()<<"hier jetzt yamlfileschreiben ";
+
                 //qDebug()<<"subs "<<specFile.getSubscriptions();
                 file.close();
                 QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );

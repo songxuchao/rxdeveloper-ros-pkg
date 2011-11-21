@@ -1,5 +1,8 @@
 #include "ui_specFileEdit.h"
 #include "specFileEdit.h"
+#include "wikiDialog.h"
+#include <QTextEdit>
+
 /*!\brief small dialog for naming.
  *
  * ...
@@ -13,17 +16,14 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     model_subscriptions= new QStandardItemModel(node->subscriptions.size(),2);
     model_subscriptions->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
     model_subscriptions->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
-
     QStringList subs;
     for(std::list<Topic_Type>::iterator iter=node->subscriptions.begin();iter != node->subscriptions.end();iter++ )
     {
         subs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
-        //todo add topictype anyhow
     }
     for (int i=0;i<subs.count();i++){
         QStringList sub = subs.at(i).split(" ");
         QStandardItem *item0;
-
          item0 = new QStandardItem(sub.at(0));
          model_subscriptions->setItem(i,0,item0);
          item0 = new QStandardItem(sub.at(1));
@@ -37,12 +37,10 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     for(std::list<Topic_Type>::iterator iter=node->publications.begin();iter != node->publications.end();iter++ )
     {
         pubs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
-
     }
     for (int i=0;i<pubs.count();i++){
         QStringList pub = pubs.at(i).split(" ");
         QStandardItem *item0;
-
          item0 = new QStandardItem(pub.at(0));
          model_publications->setItem(i,0,item0);
          item0 = new QStandardItem(pub.at(1));
@@ -50,9 +48,8 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     }
 
     model_services= new QStandardItemModel(node->publications.size(),2);
-    model_services->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
+    model_services->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     model_services->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
-
     QStringList servs;
     for(std::list<Topic_Type>::iterator iter=node->services.begin();iter != node->services.end();iter++ )
     {
@@ -63,9 +60,9 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
         QStandardItem *item0;
 
          item0 = new QStandardItem(serv.at(0));
-         model_publications->setItem(i,0,item0);
+         model_services->setItem(i,0,item0);
          item0 = new QStandardItem(serv.at(1));
-         model_publications->setItem(i,1,item0);
+         model_services->setItem(i,1,item0);
     }
 
 
@@ -271,3 +268,56 @@ void SpecFileEdit::on_actionAdd_param_triggered()
 }
 
 
+
+void SpecFileEdit::on_pushButton_wiki_clicked()
+{
+    WikiDialog *wiki = new WikiDialog;
+
+    QString text;
+    text = QString("== Nodes ==\n{{{\n#!clearsilver CS/NodeAPI\nnode.0 {\n\tname = %1\n\tdesc = `%1` provides ...\n").arg(QString::fromStdString(mynode->type));
+    if (model_subscriptions->rowCount()>0){
+    text.append("\n\tsub{\n");
+    for (int i=0;i<model_subscriptions->rowCount();i++){
+
+        text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_subscriptions->item(i,0)->text()));
+        text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_subscriptions->item(i,1)->text()));
+        text.append(QString("\t\t %1.desc= \n").arg(i));
+    }
+    text.append("\t}");
+    }
+    if (model_publications->rowCount()>0){
+    text.append("\n\tpub{\n");
+    for (int i=0;i<model_publications->rowCount();i++){
+
+        text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_publications->item(i,0)->text()));
+        text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_publications->item(i,1)->text()));
+        text.append(QString("\t\t %1.desc= \n").arg(i));
+    }
+    text.append("\t}");
+    }
+    if (model_services->rowCount()>0){
+    text.append("\n\tsrv{\n");
+    for (int i=0;i<model_services->rowCount();i++){
+
+        text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_services->item(i,0)->text()));
+        text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_services->item(i,1)->text()));
+        text.append(QString("\t\t %1.desc= \n").arg(i));
+    }
+    text.append("\t}");
+    }
+    if (model_parameters->rowCount()>0){
+    text.append("\n\tparam{\n");
+    for (int i=0;i<model_parameters->rowCount();i++){
+
+        text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_parameters->item(i,0)->text()));
+        text.append(QString("\t\t %1.default= %2\n").arg(i).arg(model_parameters->item(i,2)->text()));
+        text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_parameters->item(i,1)->text()));
+        text.append(QString("\t\t %1.desc= \n").arg(i));
+    }
+    text.append("\t}");
+    }
+
+    text.append("\n}\n}}}");
+    wiki->setText(text);
+    wiki->exec();
+}

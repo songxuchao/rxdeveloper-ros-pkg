@@ -46,6 +46,7 @@ private:
     int selectedSub,selectedPub,selectedServ,selectedParam;
 private slots:
 
+    void on_pushButton_wiki_clicked();
 };
 
 #endif

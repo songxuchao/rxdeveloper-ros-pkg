@@ -79,7 +79,7 @@ bool GroupItem::getGroupData()
     bool accept = groupEdit.exec();
     if ((accept)){
         setNamespace(groupEdit.getNamespace());
-        qDebug()<<groupEdit.getClear_params();
+//        qDebug()<<groupEdit.getClear_params();
         setClear_params(groupEdit.getClear_params());
         _width = groupEdit.getWidth();
         _height = groupEdit.getHeight();

@@ -165,7 +165,7 @@ void RemapArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     if (myStartItem->collidesWithItem(myEndItem))
         return;
 
-    qDebug()<<offset;
+//    qDebug()<<offset;
 
     QPen myPen = pen();
     myPen.setColor(myColor);

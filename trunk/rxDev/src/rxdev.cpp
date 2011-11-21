@@ -385,20 +385,6 @@ void RxDev::on_actionLoad_Launchfile_triggered()
             return;
         }
 
-        /*    QFile launchFile(file);
-    //loading and parsing launchfile
-    launchFile.open(QIODevice::ReadOnly);
-    while (!launchFile.atEnd())
-    {
-        QString line = launchFile.readLine();
-
-        if(!line.trimmed().isEmpty()){
-            qDebug()<<line;
-        }
-    }
-    launchFile.close();
-*/
-
         TiXmlDocument doc( file.toStdString() );
         bool loadOkay = doc.LoadFile();
         if (loadOkay)
@@ -442,7 +428,7 @@ void RxDev::on_actionSettings_triggered()
 void RxDev::on_actionStart_triggered()
 {
     QString file=QDir::temp().absolutePath().append("/temp.launch");
-    qDebug()<<file;
+    //qDebug()<<file;
     //writing to Launchfile
     LaunchWriter *launchFile = new LaunchWriter;
     QList<QGraphicsItem *> list;
@@ -456,7 +442,7 @@ void RxDev::on_actionStart_triggered()
     QString launch= (settings.value("terminal").toString().trimmed()+" \"roslaunch temp.launch\"");
     rosLaunch->start(launch);
     QByteArray output = rosLaunch->readAll();
-    qDebug()<<output;
+    //qDebug()<<output;
     QTime time = QTime::currentTime();
     ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - Information: <font color=\"blue\">trying to launch computational graph");
     ui->textEdit_Info->append(output.trimmed()+" If nothing happens you should check the settings for the right terminal emulator.");
