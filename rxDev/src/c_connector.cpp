@@ -172,6 +172,9 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
 
     group->appendRow(child);
     b.setColor(Qt::darkBlue);
+    QFont font;
+    font.setBold(true);
+    group->setFont(font);
     group->setForeground(b);
 
     // append group as new row to the model. model takes the ownership of the item

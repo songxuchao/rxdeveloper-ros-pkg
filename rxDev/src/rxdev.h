@@ -205,11 +205,14 @@ private slots:
 
     void refresh_packageModel();
 
+    void on_actionRoswtf_triggered();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
     QPushButton *rosCoreButton;
     QProcess *rosCoreProcess;
+    QProcess *roswtf;
     QProcess *rosLaunch;
     QProcess *rxgraph;
     QProcess *rxloggerlevel;

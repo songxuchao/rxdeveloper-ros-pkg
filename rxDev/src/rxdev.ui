@@ -224,6 +224,7 @@
     <addaction name="actionDynamic_reconfigure_gui"/>
     <addaction name="actionRxloggerlevel"/>
     <addaction name="actionRxconsole"/>
+    <addaction name="actionRoswtf"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -782,6 +783,11 @@
    </property>
    <property name="text">
     <string>rxconsole</string>
+   </property>
+  </action>
+  <action name="actionRoswtf">
+   <property name="text">
+    <string>roswtf</string>
    </property>
   </action>
  </widget>
