@@ -59,6 +59,7 @@ RxDev::RxDev(QWidget *parent) :
     connect(rxconsole, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     dynamicreconfigure = new QProcess(this);
     connect(dynamicreconfigure, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    roswtf = new QProcess(this);
     rosLaunch = new QProcess(this);
     connect(rosLaunch, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     if (rosLaunch->state()!=2){
@@ -434,9 +435,6 @@ void RxDev::on_actionStart_triggered()
     QList<QGraphicsItem *> list;
     list=scene->items();
     launchFile->createDocument(file,list);
-
-
-
     rosLaunch->setWorkingDirectory(QDir::temp().absolutePath());
     rosLaunch->setProcessChannelMode(QProcess::MergedChannels);
     QString launch= (settings.value("terminal").toString().trimmed()+" \"roslaunch temp.launch\"");
@@ -522,3 +520,17 @@ void RxDev::on_actionRxconsole_toggled(bool status)
 }
 
 
+
+void RxDev::on_actionRoswtf_triggered()
+{
+    roswtf->setWorkingDirectory(QDir::temp().absolutePath());
+    roswtf->setProcessChannelMode(QProcess::MergedChannels);
+    roswtf->start(QString("rosrun roswtf roswtf"));
+    roswtf->waitForFinished(-1);
+    QByteArray output = roswtf->readAll();
+    //qDebug()<<output;
+    QTime time = QTime::currentTime();
+    ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - Information: <font color=\"blue\">roswtf for current launchfile");
+    ui->textEdit_Info->append(output.trimmed());
+    ui->dockWidget_errors->show();
+}
