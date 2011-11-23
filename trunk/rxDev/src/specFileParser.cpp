@@ -39,6 +39,7 @@ void SpecFileParser::nodeParser(QString nodeFile){
         for(YAML::Iterator it=doc.FindValue("subscriptions")->begin();it!=doc.FindValue("subscriptions")->end();++it) {
             try {
                 const YAML::Node& subs = *it;
+
                 Topic_Type tt;
                 subs["topic"]>> tt.topic;
                 subs["type"]>> tt.topictype;
@@ -108,6 +109,8 @@ QString SpecFileParser::writeSpecFile(Specfile *node)
             tempTT= (Topic_Type(*iter).topic);
             out << YAML::BeginMap;
             out << YAML::Key << "topic" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topiccomment);
+            out << YAML::Comment(tempTT);
             tempTT= (Topic_Type(*iter).topictype);
             out << YAML::Key << "type" << YAML::Value <<tempTT;
             out << YAML::EndMap;
@@ -122,6 +125,8 @@ QString SpecFileParser::writeSpecFile(Specfile *node)
             tempTT= (Topic_Type(*iter).topic);
             out << YAML::BeginMap;
             out << YAML::Key << "topic" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topiccomment);
+            out << YAML::Comment(tempTT);
             tempTT= (Topic_Type(*iter).topictype);
             out << YAML::Key << "type" << YAML::Value <<tempTT;
             out << YAML::EndMap;
@@ -136,6 +141,8 @@ QString SpecFileParser::writeSpecFile(Specfile *node)
             tempTT= (Topic_Type(*iter).topic);
             out << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << tempTT;
+            tempTT= (Topic_Type(*iter).topiccomment);
+            out << YAML::Comment(tempTT);
             tempTT= (Topic_Type(*iter).topictype);
             out << YAML::Key << "type" << YAML::Value <<tempTT;
             out << YAML::EndMap;
@@ -150,6 +157,8 @@ QString SpecFileParser::writeSpecFile(Specfile *node)
             out << YAML::BeginMap;
             tempNTD= (Name_Type_Default(*iter).paramName);
             out << YAML::Key << "name" << YAML::Value << tempNTD;
+            tempNTD= (Name_Type_Default(*iter).paramcomment);
+            out << YAML::Comment(tempNTD);
             tempNTD= (Name_Type_Default(*iter).paramType);
             out << YAML::Key << "type" << YAML::Value <<tempNTD;
             tempNTD= (Name_Type_Default(*iter).paramDefault);

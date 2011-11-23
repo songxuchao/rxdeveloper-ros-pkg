@@ -4,7 +4,23 @@
 #include <QStringList>
 #include <QDebug>
 #include <yaml-cpp/yaml.h>
-#include "datastruct.h"
+
+
+//Datastructures for specfile data
+class Topic_Type{
+public:
+    std::string topic;
+    std::string topictype;
+    std::string topiccomment;
+} ;
+
+class Name_Type_Default{
+public:
+    std::string paramName;
+    std::string paramType;
+    std::string paramDefault;
+    std::string paramcomment;
+} ;
 
 class Specfile {
 public:
@@ -18,7 +34,6 @@ public:
 inline void operator >> (const YAML::Node& node, Specfile& spec) {
 
 }
-
 
 
 class SpecFileParser
