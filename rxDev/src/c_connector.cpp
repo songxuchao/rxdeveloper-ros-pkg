@@ -515,7 +515,7 @@ void RxDev::showContextMenu_availableNodes(const QPoint&point){
         seekRoot = seekRoot.parent();
 
     }
-    contextMenu_availableNodes.addAction(tr("open Specfile"),this, SLOT(openSpecFile()));
+    contextMenu_availableNodes.addAction(tr("view/edit Specfile"),this, SLOT(openSpecFile()));
     contextMenu_availableNodes.addAction(tr("expand"),this, SLOT(expandNode()));
     contextMenu_availableNodes.addAction(tr("collapse"),this, SLOT(collapseNode()));
     contextMenu_availableNodes.addSeparator();

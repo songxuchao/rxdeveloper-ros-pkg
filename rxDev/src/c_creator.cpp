@@ -136,7 +136,37 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         if(workingModel->fileInfo(index).isFile())
         {
             QString filePath =  workingModel->filePath(index);
-            QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
+            if (filePath.endsWith(".node")){
+                SpecFileParser *specParser = new SpecFileParser;
+                specParser->nodeParser(filePath);
+
+                SpecFileEdit specFile(&specParser->node);
+                //qDebug()<<QString::fromStdString(specParser->node.type);
+                specFile.setWindowTitle("Specfile: "+filePath);
+                bool accept = specFile.exec();
+                if ((accept)){
+                    QFile file;
+                    file.setFileName(filePath);
+                    file.open(QIODevice::WriteOnly | QIODevice::Text);
+                    if (file.isWritable()){
+                        QString tempContens = specParser->writeSpecFile(&specParser->node);
+                        QTextStream text(&file);
+                        text<<tempContens;
+                        //qDebug()<<"subs "<<specFile.getSubscriptions();
+                        file.close();
+                        QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
+                        on_pushButton_refreshNodesOrComps_clicked();
+                    } else
+                        QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
+
+                    //        setType(nodeEdit.getType());
+                    //        setName(nodeEdit.getName());
+                    //        setArgs(nodeEdit.getArgs());
+
+
+                }
+            }else
+                QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
         }
         else// if(workingModel->fileInfo(index).isDir())
         {

@@ -13,13 +13,14 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     ui->lineEdit_type->setText(QString::fromStdString(node->type));
     ui->lineEdit_package->setText(QString::fromStdString(node->package));
 
-    model_subscriptions= new QStandardItemModel(node->subscriptions.size(),2);
+    model_subscriptions= new QStandardItemModel(node->subscriptions.size(),3);
     model_subscriptions->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
     model_subscriptions->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+    model_subscriptions->setHeaderData(2,Qt::Horizontal,QObject::tr("comment"));
     QStringList subs;
     for(std::list<Topic_Type>::iterator iter=node->subscriptions.begin();iter != node->subscriptions.end();iter++ )
     {
-        subs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+        subs.push_back((QString("%1 %2 %3").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)).arg(QString::fromStdString(Topic_Type(*iter).topiccomment))));
     }
     for (int i=0;i<subs.count();i++){
         QStringList sub = subs.at(i).split(" ");
@@ -28,15 +29,18 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_subscriptions->setItem(i,0,item0);
          item0 = new QStandardItem(sub.at(1));
          model_subscriptions->setItem(i,1,item0);
+         item0 = new QStandardItem(sub.at(2));
+         model_subscriptions->setItem(i,2,item0);
     }
 
-    model_publications= new QStandardItemModel(node->publications.size(),2);
+    model_publications= new QStandardItemModel(node->publications.size(),3);
     model_publications->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
     model_publications->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+    model_publications->setHeaderData(2,Qt::Horizontal,QObject::tr("comment"));
     QStringList pubs;
     for(std::list<Topic_Type>::iterator iter=node->publications.begin();iter != node->publications.end();iter++ )
     {
-        pubs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+        pubs.push_back((QString("%1 %2 %3").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)).arg(QString::fromStdString(Topic_Type(*iter).topiccomment))));
     }
     for (int i=0;i<pubs.count();i++){
         QStringList pub = pubs.at(i).split(" ");
@@ -45,15 +49,18 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_publications->setItem(i,0,item0);
          item0 = new QStandardItem(pub.at(1));
          model_publications->setItem(i,1,item0);
+         item0 = new QStandardItem(pub.at(2));
+         model_publications->setItem(i,2,item0);
     }
 
-    model_services= new QStandardItemModel(node->publications.size(),2);
+    model_services= new QStandardItemModel(node->publications.size(),3);
     model_services->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     model_services->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
+    model_services->setHeaderData(2,Qt::Horizontal,QObject::tr("comment"));
     QStringList servs;
     for(std::list<Topic_Type>::iterator iter=node->services.begin();iter != node->services.end();iter++ )
     {
-        servs.push_back((QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype))));
+        servs.push_back((QString("%1 %2 %3").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)).arg(QString::fromStdString(Topic_Type(*iter).topiccomment))));
     }
     for (int i=0;i<servs.count();i++){
         QStringList serv = servs.at(i).split(" ");
@@ -63,17 +70,20 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_services->setItem(i,0,item0);
          item0 = new QStandardItem(serv.at(1));
          model_services->setItem(i,1,item0);
+         item0 = new QStandardItem(serv.at(2));
+         model_services->setItem(i,2,item0);
     }
 
 
-    model_parameters= new QStandardItemModel(node->parameters.size(),3);
+    model_parameters= new QStandardItemModel(node->parameters.size(),4);
     model_parameters->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     model_parameters->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     model_parameters->setHeaderData(2,Qt::Horizontal,QObject::tr("default"));
+    model_parameters->setHeaderData(3,Qt::Horizontal,QObject::tr("comment"));
     QStringList params;
     for(std::list<Name_Type_Default>::iterator iter=node->parameters.begin();iter != node->parameters.end();iter++ )
     {
-        params.push_back((QString("%1 %2 %3").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault))));
+        params.push_back((QString("%1 %2 %3 %4").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)).arg(QString::fromStdString(Name_Type_Default(*iter).paramcomment))));
         //todo add topictype anyhow
     }
     for (int i=0;i<params.count();i++){
@@ -86,6 +96,8 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_parameters->setItem(i,1,item0);
          item0 = new QStandardItem(param.at(2));
          model_parameters->setItem(i,2,item0);
+         item0 = new QStandardItem(param.at(3));
+         model_parameters->setItem(i,3,item0);
     }
 
 
@@ -150,14 +162,9 @@ void SpecFileEdit::accept() {
 
         mynode->subscriptions.clear();
         for (int i=0;i<model_subscriptions->rowCount();i++){
-            if (model_subscriptions->item(i,0)->text().isEmpty())
-                tempTT.topic="";
-            else
-                tempTT.topic=(model_subscriptions->item(i,0))->text().toStdString();
-            if (model_subscriptions->item(i,1)->text().isNull())
-                tempTT.topictype="";
-            else
-                tempTT.topictype=(model_subscriptions->item(i,1))->text().toStdString();
+               tempTT.topic=(model_subscriptions->item(i,0))->text().toStdString();
+               tempTT.topictype=(model_subscriptions->item(i,1))->text().toStdString();
+               tempTT.topiccomment=(model_subscriptions->item(i,2))->text().toStdString();
             mynode->subscriptions.push_back(tempTT);
         }
         mynode->publications.clear();
@@ -165,14 +172,15 @@ void SpecFileEdit::accept() {
 
                 tempTT.topic=(model_publications->item(i,0))->text().toStdString();
                 tempTT.topictype=(model_publications->item(i,1))->text().toStdString();
+                tempTT.topiccomment=(model_publications->item(i,2))->text().toStdString();
             mynode->publications.push_back(tempTT);
         }
         mynode->services.clear();
         for (int i=0;i<model_services->rowCount();i++){
 
                 tempTT.topic=(model_services->item(i,0))->text().toStdString();
-
                 tempTT.topictype=(model_services->item(i,1))->text().toStdString();
+                tempTT.topiccomment=(model_services->item(i,2))->text().toStdString();
             mynode->services.push_back(tempTT);
         }
         mynode->parameters.clear();
@@ -180,6 +188,7 @@ void SpecFileEdit::accept() {
                 tempNTD.paramName=(model_parameters->item(i,0))->text().toStdString();
                 tempNTD.paramType=(model_parameters->item(i,1))->text().toStdString();
                tempNTD.paramDefault=(model_parameters->item(i,2))->text().toStdString();
+               tempTT.topiccomment=(model_parameters->item(i,3))->text().toStdString();
             mynode->parameters.push_back(tempNTD);
         }
 
@@ -225,6 +234,7 @@ void SpecFileEdit::on_actionAdd_sub_triggered()
     model_subscriptions->insertRow(row);
     model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 0), "<new>");
     model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 1), "");
+    model_subscriptions->setData(model_subscriptions->index(model_subscriptions->rowCount() - 1, 2), "");
 }
 
 void SpecFileEdit::on_actionDelete_pub_triggered()
@@ -238,6 +248,7 @@ void SpecFileEdit::on_actionAdd_pub_triggered()
     model_publications->insertRow(row);
     model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 0), "<new>");
     model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 1), "");
+    model_publications->setData(model_publications->index(model_publications->rowCount() - 1, 2), "");
 }
 void SpecFileEdit::on_actionDelete_serv_triggered()
 {
@@ -250,6 +261,7 @@ void SpecFileEdit::on_actionAdd_serv_triggered()
     model_services->insertRow(row);
     model_services->setData(model_services->index(model_services->rowCount() - 1, 0), "<new>");
     model_services->setData(model_services->index(model_services->rowCount() - 1, 1), "");
+    model_services->setData(model_services->index(model_services->rowCount() - 1, 2), "");
 }
 void SpecFileEdit::on_actionDelete_param_triggered()
 {
@@ -263,6 +275,7 @@ void SpecFileEdit::on_actionAdd_param_triggered()
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 0), "<new>");
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 1), "");
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 2), "");
+    model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 3), "");
     //model_parameters->row(row)->doubleClicked();
 
 }
@@ -281,7 +294,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
 
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_subscriptions->item(i,0)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_subscriptions->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= \n").arg(i));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
     }
     text.append("\t}");
     }
@@ -291,7 +304,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
 
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_publications->item(i,0)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_publications->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= \n").arg(i));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
     }
     text.append("\t}");
     }
@@ -301,7 +314,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
 
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_services->item(i,0)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_services->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= \n").arg(i));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
     }
     text.append("\t}");
     }
@@ -312,7 +325,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_parameters->item(i,0)->text()));
         text.append(QString("\t\t %1.default= %2\n").arg(i).arg(model_parameters->item(i,2)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_parameters->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= \n").arg(i));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
     }
     text.append("\t}");
     }
