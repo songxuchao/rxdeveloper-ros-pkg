@@ -19,6 +19,7 @@ public:
     std::string paramName;
     std::string paramType;
     std::string paramDefault;
+    std::string paramRange;
     std::string paramcomment;
 } ;
 

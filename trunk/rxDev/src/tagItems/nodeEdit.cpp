@@ -355,7 +355,7 @@ void NodeEdit::on_actionDelete_remap_triggered()
 
 void NodeEdit::on_actionAdd_param_triggered()
 {
-    QString topicString="",typeString="",defaultString="";
+    QString topicString="",typeString="",defaultString="",rangeString="";
     if (!myItem->getParameters().isEmpty()){
 //        qDebug()<<myItem->getParameters();
         NodeParamEdit nodeParam(myItem->getParameters());
@@ -365,8 +365,11 @@ void NodeEdit::on_actionAdd_param_triggered()
             tempList=myItem->getParameters().at(nodeParam.getParam()).split(QRegExp(" "));
             topicString=tempList.at(0);
             typeString=tempList.at(1);
-            if (tempList.count()==3){
+            if (tempList.count()>2){
                 defaultString=tempList.at(2);
+            }
+            if (tempList.count()>3){
+                rangeString=tempList.at(3);
             }
         }
     }
@@ -375,6 +378,7 @@ void NodeEdit::on_actionAdd_param_triggered()
     newParam->setName(topicString);
     newParam->setType(typeString);
     newParam->setValue(defaultString);
+    newParam->setRange(rangeString);
     if (newParam->getParamData()==true){
         myItem->addParamItem(newParam);
     }

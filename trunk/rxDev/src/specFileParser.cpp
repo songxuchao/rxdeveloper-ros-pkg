@@ -77,16 +77,27 @@ void SpecFileParser::nodeParser(QString nodeFile){
     }
     if(doc.FindValue("parameters")) {
         for(YAML::Iterator it=doc.FindValue("parameters")->begin();it!=doc.FindValue("parameters")->end();++it) {
+            const YAML::Node& params = *it;
+            Name_Type_Default ntd;
+            params["name"]>> ntd.paramName;
+            params["type"]>> ntd.paramType;
             try{
-                const YAML::Node& params = *it;
-                Name_Type_Default ntd;
-                params["name"]>> ntd.paramName;
-                params["type"]>> ntd.paramType;
+                if (params.FindValue("range"))
+                    params["range"]>> ntd.paramRange;
+                else
+                    ntd.paramRange= "";
+                if (params.FindValue("default"))
+                    params["default"]>> ntd.paramDefault;
+                else
+                    ntd.paramDefault= "";
+
                 params["default"]>> ntd.paramDefault;
-                node.parameters.push_back(ntd);
             } catch(YAML::ParserException& e) {
-                std::cout << e.what() << "\n";
+                //std::cout << e.what() << "\n";
+            } catch (YAML::TypedKeyNotFound <std::string>& e) {
+                //std::cout << "key not found: " << e.key << "\n";
             }
+            node.parameters.push_back(ntd);
         }
     }
 
@@ -162,7 +173,11 @@ QString SpecFileParser::writeSpecFile(Specfile *node)
             tempNTD= (Name_Type_Default(*iter).paramType);
             out << YAML::Key << "type" << YAML::Value <<tempNTD;
             tempNTD= (Name_Type_Default(*iter).paramDefault);
-            out << YAML::Key << "default" << YAML::Value <<tempNTD;
+            if (tempNTD!="~"&&tempNTD!="")
+                out << YAML::Key << "default" << YAML::Value <<tempNTD;
+            tempNTD= (Name_Type_Default(*iter).paramRange);
+            if (tempNTD!="~"&&tempNTD!="")
+                out << YAML::Key << "range" << YAML::Value <<tempNTD;
 
             out << YAML::EndMap;
         }

@@ -6,10 +6,11 @@
 NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent), ui(new Ui::NodeParamEdit) {
     ui->setupUi(this);
     selectedParam=-1;
-    paramModel = new QStandardItemModel(list.count(),3);
+    paramModel = new QStandardItemModel(list.count(),4);
     paramModel->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
     paramModel->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     paramModel->setHeaderData(2,Qt::Horizontal,QObject::tr("default"));
+    paramModel->setHeaderData(3,Qt::Horizontal,QObject::tr("range"));
 
     for (int row = 0; row < list.count(); ++row) {
         QStringList tempList;
@@ -28,7 +29,12 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
         }else
             item0 = new QStandardItem(QString("-"));
         paramModel->setItem(row,2,item0);
-
+        if (tempList.count()>3){
+            tempString=tempList.at(3);
+            item0 = new QStandardItem(QString(tempString));
+        }else
+            item0 = new QStandardItem(QString("-"));
+        paramModel->setItem(row,3,item0);
         }
 
     ui->tableView_nodeParam->setModel(paramModel);

@@ -91,244 +91,246 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         ui->groupBox_package->setTitle("package: "+pack);
     }
 }
-    //Selection handler for the columnView at the component creator-tab
-    void RxDev::selectionHandle_selectedPackage(const QItemSelection &selected,const QItemSelection &deselected)
+//Selection handler for the columnView at the component creator-tab
+void RxDev::selectionHandle_selectedPackage(const QItemSelection &selected,const QItemSelection &deselected)
+{
+    Q_UNUSED(deselected);
+    if (!selected.isEmpty()){   //prevents index out of bounds errors
+
+        folderName = selected.indexes()[0].data().toString();
+        folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->currentIndex()).absolutePath()+"/"+folderName;
+        //qDebug() << folderPath;
+        //folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->.absolutePath()+"/"+folderName;
+
+
+    }
+}
+
+void RxDev::showContextMenu(const QPoint&point){
+    QMenu contextMenu;
+
+    QModelIndex index(ui->treeView_packageBrowser->indexAt(point));
+    menuPoint = point;
+    //        qDebug()<<index;
+    if(workingModel->fileInfo(index).isDir()||!index.isValid()){
+        contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
+        contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
+        contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(on_pushButton_createCpp_clicked()));
+        contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(on_pushButton_createPython_clicked()));
+        contextMenu.addSeparator();
+        contextMenu.addAction(tr("new Folder"),this, SLOT(createNewFolder()));
+        contextMenu.addAction(tr("browse Folder"),this, SLOT(openFileOrFolder()));
+        contextMenu.addAction(tr("rename Folder"),this, SLOT(renameFolder()));
+
+    } else if(workingModel->fileInfo(index).isFile()){
+
+        contextMenu.addAction(tr("open File"),this, SLOT(openFileOrFolder()));
+        contextMenu.addSeparator();
+        contextMenu.addAction(tr("delete File"),this, SLOT(deleteFile()));
+    }
+    contextMenu.exec(ui->treeView_packageBrowser->viewport()->mapToGlobal(point));
+}
+
+void RxDev::openFileOrFolder(){
+    QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
+    if(workingModel->fileInfo(index).isFile())
     {
-        Q_UNUSED(deselected);
-        if (!selected.isEmpty()){   //prevents index out of bounds errors
+        QString filePath =  workingModel->filePath(index);
+        if (filePath.endsWith(".node")){
+            SpecFileParser *specParser = new SpecFileParser;
+            specParser->nodeParser(filePath);
 
-            folderName = selected.indexes()[0].data().toString();
-            folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->currentIndex()).absolutePath()+"/"+folderName;
-            //qDebug() << folderPath;
-            //folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->.absolutePath()+"/"+folderName;
+            SpecFileEdit specFile(&specParser->node);
+            //qDebug()<<QString::fromStdString(specParser->node.type);
+            specFile.setWindowTitle("Specfile: "+filePath);
+            bool accept = specFile.exec();
+            if ((accept)){
+                QFile file;
+                file.setFileName(filePath);
+                file.open(QIODevice::WriteOnly | QIODevice::Text);
+                if (file.isWritable()){
+                    QString tempContens = specParser->writeSpecFile(&specParser->node);
+                    QTextStream text(&file);
+                    text<<tempContens;
+                    //qDebug()<<"subs "<<specFile.getSubscriptions();
+                    file.close();
+                    QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
+                    on_pushButton_refreshNodesOrComps_clicked();
+                } else
+                    QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
 
-
-        }
-    }
-
-    void RxDev::showContextMenu(const QPoint&point){
-        QMenu contextMenu;
-
-        QModelIndex index(ui->treeView_packageBrowser->indexAt(point));
-        menuPoint = point;
-//        qDebug()<<index;
-        if(workingModel->fileInfo(index).isDir()||!index.isValid()){
-            contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
-            contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
-            contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(on_pushButton_createCpp_clicked()));
-            contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(on_pushButton_createPython_clicked()));
-            contextMenu.addSeparator();
-            contextMenu.addAction(tr("new Folder"),this, SLOT(createNewFolder()));
-            contextMenu.addAction(tr("browse Folder"),this, SLOT(openFileOrFolder()));
-            contextMenu.addAction(tr("rename Folder"),this, SLOT(renameFolder()));
-
-        } else if(workingModel->fileInfo(index).isFile()){
-
-            contextMenu.addAction(tr("open File"),this, SLOT(openFileOrFolder()));
-            contextMenu.addSeparator();
-            contextMenu.addAction(tr("delete File"),this, SLOT(deleteFile()));
-        }
-        contextMenu.exec(ui->treeView_packageBrowser->viewport()->mapToGlobal(point));
-    }
-
-    void RxDev::openFileOrFolder(){
-        QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
-        if(workingModel->fileInfo(index).isFile())
-        {
-            QString filePath =  workingModel->filePath(index);
-            if (filePath.endsWith(".node")){
-                SpecFileParser *specParser = new SpecFileParser;
-                specParser->nodeParser(filePath);
-
-                SpecFileEdit specFile(&specParser->node);
-                //qDebug()<<QString::fromStdString(specParser->node.type);
-                specFile.setWindowTitle("Specfile: "+filePath);
-                bool accept = specFile.exec();
-                if ((accept)){
-                    QFile file;
-                    file.setFileName(filePath);
-                    file.open(QIODevice::WriteOnly | QIODevice::Text);
-                    if (file.isWritable()){
-                        QString tempContens = specParser->writeSpecFile(&specParser->node);
-                        QTextStream text(&file);
-                        text<<tempContens;
-                        //qDebug()<<"subs "<<specFile.getSubscriptions();
-                        file.close();
-                        QMessageBox::information( this, "File written!", "The file "+filePath+" was updated\n", QMessageBox::Ok, 0 );
-                        on_pushButton_refreshNodesOrComps_clicked();
-                    } else
-                        QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not get updated\n", QMessageBox::Ok, 0 );
-
-                    //        setType(nodeEdit.getType());
-                    //        setName(nodeEdit.getName());
-                    //        setArgs(nodeEdit.getArgs());
+                //        setType(nodeEdit.getType());
+                //        setName(nodeEdit.getName());
+                //        setArgs(nodeEdit.getArgs());
 
 
-                }
-            }else
-                QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
-        }
-        else// if(workingModel->fileInfo(index).isDir())
-        {
-            QString folderPath;
-
-
-            if (index.isValid())
-                folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
-            else
-                folderPath= packagePath;
-
-            QDesktopServices::openUrl(QUrl::fromLocalFile( folderPath));
-        }
-    }
-    void RxDev::createNewFolder(){
-        QString folderPath;
-        QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
-
-        if (index.isValid())
-            folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
-        else
-            folderPath= packagePath;
-        NewEntry createFolder;
-        createFolder.setWindowTitle("Create Folder in "+folderPath);
-        createFolder.exec();
-        QDir newDir;
-        if (!(createFolder.getFileName()=="")){
-            QDir::setCurrent(folderPath);
-            newDir.mkdir(createFolder.getFileName());
-        }
-    }
-
-
-    void RxDev::createNewFile()
-    {
-        QString folderPath;
-        QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
-
-        if (index.isValid())
-            folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
-        else
-            folderPath= packagePath;
-
-        NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+folderPath);
-        createFile.exec();
-
-        QFile newFile;
-        if (!(createFile.getFileName()=="")){
-            newFile.setFileName(createFile.getFileName());
-            QDir::setCurrent(folderPath);
-            if (!(newFile.exists()))
-            {
-                newFile.open(QIODevice::ReadWrite);
-                newFile.close();
             }
-        }
-
+        }else
+            QDesktopServices::openUrl(QUrl::fromLocalFile( filePath));
     }
-
-
-
-
-    void RxDev::renameFolder()
+    else// if(workingModel->fileInfo(index).isDir())
     {
-        QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
-        NewEntry rename;
-        rename.setWindowTitle(("Rename: "+folderPath));
-        rename.exec();
+        QString folderPath;
 
-        QDir current;
-        //Create new File
-        if (!(rename.getFileName()==""))
-            current.rename(folderPath,(workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+rename.getFileName()));
 
+        if (index.isValid())
+            folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+        else
+            folderPath= packagePath;
+
+        QDesktopServices::openUrl(QUrl::fromLocalFile( folderPath));
     }
+}
+void RxDev::createNewFolder(){
+    QString folderPath;
+    QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
 
-
-
-
-    void RxDev::deleteFile(){
-
-        QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/";
-        QFile delFile;
-        delFile.setFileName(folderName);
+    if (index.isValid())
+        folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    else
+        folderPath= packagePath;
+    NewEntry createFolder;
+    createFolder.setWindowTitle("Create Folder in "+folderPath);
+    createFolder.exec();
+    QDir newDir;
+    if (!(createFolder.getFileName()=="")){
         QDir::setCurrent(folderPath);
-        delFile.remove(folderName);
-
+        newDir.mkdir(createFolder.getFileName());
     }
+}
 
 
+void RxDev::createNewFile()
+{
+    QString folderPath;
+    QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
 
-    void RxDev::on_pushButton_createPackage_clicked()
-    {
-        QProcess rosCreatePackage;
-        rosCreatePackage.setWorkingDirectory(workingDir.absolutePath());
-        rosCreatePackage.setProcessChannelMode(QProcess::MergedChannels);
-        rosCreatePackage.start(QString("roscreate-pkg "+ui->lineEdit_packageName->text()+" "+ui->lineEdit_packageDependencies->text()));
-        rosCreatePackage.waitForFinished(-1);
-        packageModel->insertRow(0);
-        packageModel->setData(packageModel->index(0, 0), ui->lineEdit_packageName->text());
-        ui->lineEdit_packageName->setText("");
-    }
-    void RxDev::on_pushButton_createCpp_clicked()
-    {
-        if (!packagePath.endsWith("/src")){
-            currentDir.setPath(packagePath);
-            currentDir.mkdir("src");
-            packagePath.append("/src");
-        }
-        NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+folderPath);
-        createFile.exec();
-        QString filename=createFile.getFileName();
-        QFile newFile;
-        if (!(filename=="")){
-            if (!filename.endsWith(".cpp")&&!filename.endsWith(".c")&&!filename.endsWith(".C")&&!filename.endsWith(".h")&&!filename.endsWith(".hpp")&&!filename.endsWith(".h++")&&!filename.endsWith(".cc")&&!filename.endsWith(".c++"))
-                filename.append(".cpp");
-            newFile.setFileName(filename);
-            QDir::setCurrent(folderPath);
-            if (!(newFile.exists()))
-            {
-                newFile.open(QIODevice::WriteOnly | QIODevice::Text);
-                newFile.close();
-            }
+    if (index.isValid())
+        folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    else
+        folderPath= packagePath;
+
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
+
+    QFile newFile;
+    if (!(createFile.getFileName()=="")){
+        newFile.setFileName(createFile.getFileName());
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::ReadWrite);
+            newFile.close();
         }
     }
 
-    void RxDev::on_pushButton_createPython_clicked()
-    {
-        if (!packagePath.endsWith("/src")){
-            currentDir.setPath(packagePath);
-            currentDir.mkdir("src");
-        }
-        NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+folderPath);
-        createFile.exec();
-        QString filename=createFile.getFileName();
-        QFile newFile;
-        if (!(filename=="")){
-            if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
-                filename.append(".py");
-            newFile.setFileName(filename);
-            QDir::setCurrent(folderPath);
-            if (!(newFile.exists()))
-            {
-                newFile.open(QIODevice::ReadWrite);
-                newFile.close();
-            }
-        }
+}
 
+
+
+
+void RxDev::renameFolder()
+{
+    QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+folderName;
+    NewEntry rename;
+    rename.setWindowTitle(("Rename: "+folderPath));
+    rename.exec();
+
+    QDir current;
+    //Create new File
+    if (!(rename.getFileName()==""))
+        current.rename(folderPath,(workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/"+rename.getFileName()));
+
+}
+
+
+
+
+void RxDev::deleteFile(){
+
+    QString folderPath =  workingModel->fileInfo(ui->treeView_packageBrowser->indexAt(menuPoint)).absolutePath()+"/";
+    QFile delFile;
+    delFile.setFileName(folderName);
+    QDir::setCurrent(folderPath);
+    delFile.remove(folderName);
+
+}
+
+
+
+void RxDev::on_pushButton_createPackage_clicked()
+{
+    QProcess rosCreatePackage;
+    rosCreatePackage.setWorkingDirectory(workingDir.absolutePath());
+    rosCreatePackage.setProcessChannelMode(QProcess::MergedChannels);
+    rosCreatePackage.start(QString("roscreate-pkg "+ui->lineEdit_packageName->text()+" "+ui->lineEdit_packageDependencies->text()));
+    rosCreatePackage.waitForFinished(-1);
+    packageModel->insertRow(0);
+    packageModel->setData(packageModel->index(0, 0), ui->lineEdit_packageName->text());
+    ui->lineEdit_packageName->setText("");
+}
+void RxDev::on_pushButton_createCpp_clicked()
+{
+    if (!packagePath.endsWith("/src")){
+        currentDir.setPath(packagePath);
+        currentDir.mkdir("src");
+        packagePath.append("/src");
+    }
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
+    QString filename=createFile.getFileName();
+    QFile newFile;
+    if (!(filename=="")){
+        if (!filename.endsWith(".cpp")&&!filename.endsWith(".c")&&!filename.endsWith(".C")&&!filename.endsWith(".h")&&!filename.endsWith(".hpp")&&!filename.endsWith(".h++")&&!filename.endsWith(".cc")&&!filename.endsWith(".c++"))
+            filename.append(".cpp");
+        newFile.setFileName(filename);
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::WriteOnly | QIODevice::Text);
+            newFile.close();
+        }
+    }
+}
+
+void RxDev::on_pushButton_createPython_clicked()
+{
+    if (!packagePath.endsWith("/src")){
+        currentDir.setPath(packagePath);
+        currentDir.mkdir("src");
+    }
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+folderPath);
+    createFile.exec();
+    QString filename=createFile.getFileName();
+    QFile newFile;
+    if (!(filename=="")){
+        if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
+            filename.append(".py");
+        newFile.setFileName(filename);
+        QDir::setCurrent(folderPath);
+        if (!(newFile.exists()))
+        {
+            newFile.open(QIODevice::ReadWrite);
+            newFile.close();
+        }
     }
 
-    void RxDev::on_pushButton_specfile_clicked()
+}
+
+void RxDev::on_pushButton_specfile_clicked()
+{
+    if (!packagePath.endsWith("/node")){
+        currentDir.setPath(packagePath);
+        currentDir.mkdir("node");
+    }
+    NewEntry createFile;
+    createFile.setWindowTitle("Create File in "+packagePath+("/node"));
+    bool name = createFile.exec();
+    if (name)
     {
-        if (!packagePath.endsWith("/node")){
-            currentDir.setPath(packagePath);
-            currentDir.mkdir("node");
-        }
-        NewEntry createFile;
-        createFile.setWindowTitle("Create File in "+packagePath+("/node"));
-        createFile.exec();
         QString filename=createFile.getFileName();
         QFile newFile;
         if (!(filename=="")){
@@ -341,6 +343,7 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
         Specfile newSpec;
         SpecFileEdit specFile(&newSpec);
         specFile.setWindowTitle("Specfile: "+createFile.getFileName());
+
         bool accept = specFile.exec();
         SpecFileParser *specParser = new SpecFileParser;
         if ((accept)){
@@ -367,5 +370,5 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
 
         }
 
-
     }
+}

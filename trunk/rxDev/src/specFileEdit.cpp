@@ -53,7 +53,7 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_publications->setItem(i,2,item0);
     }
 
-    model_services= new QStandardItemModel(node->publications.size(),3);
+    model_services= new QStandardItemModel(node->services.size(),3);
     model_services->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     model_services->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     model_services->setHeaderData(2,Qt::Horizontal,QObject::tr("comment"));
@@ -75,15 +75,16 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     }
 
 
-    model_parameters= new QStandardItemModel(node->parameters.size(),4);
+    model_parameters= new QStandardItemModel(node->parameters.size(),5);
     model_parameters->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     model_parameters->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     model_parameters->setHeaderData(2,Qt::Horizontal,QObject::tr("default"));
-    model_parameters->setHeaderData(3,Qt::Horizontal,QObject::tr("comment"));
+    model_parameters->setHeaderData(3,Qt::Horizontal,QObject::tr("range"));
+    model_parameters->setHeaderData(4,Qt::Horizontal,QObject::tr("comment"));
     QStringList params;
     for(std::list<Name_Type_Default>::iterator iter=node->parameters.begin();iter != node->parameters.end();iter++ )
     {
-        params.push_back((QString("%1 %2 %3 %4").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)).arg(QString::fromStdString(Name_Type_Default(*iter).paramcomment))));
+        params.push_back((QString("%1 %2 %3 %4 %5").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)).arg(QString::fromStdString(Name_Type_Default(*iter).paramRange)).arg(QString::fromStdString(Name_Type_Default(*iter).paramcomment))));
         //todo add topictype anyhow
     }
     for (int i=0;i<params.count();i++){
@@ -98,6 +99,8 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
          model_parameters->setItem(i,2,item0);
          item0 = new QStandardItem(param.at(3));
          model_parameters->setItem(i,3,item0);
+         item0 = new QStandardItem(param.at(4));
+         model_parameters->setItem(i,4,item0);
     }
 
 
@@ -119,6 +122,7 @@ SpecFileEdit::SpecFileEdit(Specfile *node,QWidget *parent) : QDialog(parent), ui
     ui->tableView_parameters->setColumnWidth(0,149);
     ui->tableView_parameters->setColumnWidth(1,149);
     ui->tableView_parameters->setColumnWidth(2,61);
+    ui->tableView_parameters->setColumnWidth(3,69);
 
     ui->toolButton_addSub->setDefaultAction(ui->actionAdd_sub);
     ui->toolButton_addPub->setDefaultAction(ui->actionAdd_pub);
@@ -188,7 +192,8 @@ void SpecFileEdit::accept() {
                 tempNTD.paramName=(model_parameters->item(i,0))->text().toStdString();
                 tempNTD.paramType=(model_parameters->item(i,1))->text().toStdString();
                tempNTD.paramDefault=(model_parameters->item(i,2))->text().toStdString();
-               tempTT.topiccomment=(model_parameters->item(i,3))->text().toStdString();
+               tempNTD.paramRange=(model_parameters->item(i,3))->text().toStdString();
+               tempNTD.paramcomment=(model_parameters->item(i,4))->text().toStdString();
             mynode->parameters.push_back(tempNTD);
         }
 
@@ -276,6 +281,7 @@ void SpecFileEdit::on_actionAdd_param_triggered()
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 1), "");
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 2), "");
     model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 3), "");
+    model_parameters->setData(model_parameters->index(model_parameters->rowCount() - 1, 4), "");
     //model_parameters->row(row)->doubleClicked();
 
 }

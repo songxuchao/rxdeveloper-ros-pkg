@@ -155,14 +155,18 @@ void RxDev::fillItemModel_availableNodes(QString nodeFile, Specfile &node){
     for(std::list<Name_Type_Default>::iterator iter=node.parameters.begin();iter != node.parameters.end();iter++ )
     {
         item = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramName));
-        item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramType));
+        item2 = new QStandardItem("type: "+QString::fromStdString(Name_Type_Default(*iter).paramType));
         b.setColor(Qt::red);
         item->setForeground(b);
         b.setColor(Qt::gray);
         item2->setForeground(b);
         item->appendRow(item2);
-        item2 = new QStandardItem(QString::fromStdString(Name_Type_Default(*iter).paramDefault));
+        item2 = new QStandardItem("default: "+QString::fromStdString(Name_Type_Default(*iter).paramDefault));
         b.setColor(Qt::black);
+        item2->setForeground(b);
+        item->appendRow(item2);
+        item2 = new QStandardItem("range: "+QString::fromStdString(Name_Type_Default(*iter).paramRange));
+        b.setColor(Qt::gray);
         item2->setForeground(b);
         item->appendRow(item2);
         child->appendRow(item);
@@ -652,7 +656,6 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
     gview->selectedNodeName = QString::fromStdString(specParser->node.type);
     gview->selectedNodePackage = QString::fromStdString(specParser->node.package);
     QStringList subs;
-    //CONTINUE HERE std::string muss TOPIC_TYPE werden und so weiter
     for(std::list<Topic_Type>::iterator iter=specParser->node.subscriptions.begin();iter != specParser->node.subscriptions.end();iter++ )
     {
         subs.append(QString("%1 %2").arg(QString::fromStdString(Topic_Type(*iter).topic)).arg(QString::fromStdString(Topic_Type(*iter).topictype)));
@@ -675,9 +678,7 @@ void RxDev::selectionHandle_availableNodes(const QItemSelection &selected, const
     QStringList params;
     for(std::list<Name_Type_Default>::iterator iter=specParser->node.parameters.begin();iter != specParser->node.parameters.end();iter++ )
     {
-        params.append(QString("%1 %2 %3").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)));
-        //todo add topictype anyhow
-        //todo add topicdefault anyhow
+        params.append(QString("%1 %2 %3 %4").arg(QString::fromStdString(Name_Type_Default(*iter).paramName)).arg(QString::fromStdString(Name_Type_Default(*iter).paramType)).arg(QString::fromStdString(Name_Type_Default(*iter).paramDefault)).arg(QString::fromStdString(Name_Type_Default(*iter).paramRange)));
 
     }
     gview->selectedNodeParameters = params;

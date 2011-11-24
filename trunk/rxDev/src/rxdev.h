@@ -197,6 +197,8 @@ private slots:
 
     void on_actionRxconsole_toggled(bool status);
 
+    void on_actionRviz_toggled(bool status);
+
     void on_pushButton_createCpp_clicked();
 
     void on_pushButton_createPython_clicked();
@@ -207,12 +209,14 @@ private slots:
 
     void on_actionRoswtf_triggered();
 
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
     QPushButton *rosCoreButton;
     QProcess *rosCoreProcess;
     QProcess *roswtf;
+    QProcess *rviz;
     QProcess *rosLaunch;
     QProcess *rxgraph;
     QProcess *rxloggerlevel;
