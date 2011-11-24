@@ -292,3 +292,13 @@ void ParameterItem::setUnless(QString newUnless)
 {
     _unlessString = newUnless;
 }
+
+void ParameterItem::setRange(QString newRange)
+{
+    _rangeString = newRange;
+}
+
+QString ParameterItem::getRange()
+{
+    return _rangeString;
+}

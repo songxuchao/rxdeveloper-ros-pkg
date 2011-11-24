@@ -53,6 +53,8 @@ RxDev::RxDev(QWidget *parent) :
 
     rxgraph = new QProcess(this);
     connect(rxgraph, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
+    rviz = new QProcess(this);
+    connect(rviz, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     rxloggerlevel = new QProcess(this);
     connect(rxloggerlevel, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     rxconsole = new QProcess(this);
@@ -470,6 +472,9 @@ void RxDev::state(QProcess::ProcessState){
     if (rxgraph->state()==0){
         ui->actionRxGraph->setChecked(false);
     }
+    if (rviz->state()==0){
+        ui->actionRviz->setChecked(false);
+    }
     if (rxloggerlevel->state()==0){
         ui->actionRxloggerlevel->setChecked(false);
     }
@@ -533,4 +538,12 @@ void RxDev::on_actionRoswtf_triggered()
     ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - Information: <font color=\"blue\">roswtf for current launchfile");
     ui->textEdit_Info->append(output.trimmed());
     ui->dockWidget_errors->show();
+}
+
+void RxDev::on_actionRviz_toggled(bool status)
+{
+    if(status)
+        rviz->start(QString("rosrun rviz rviz"));
+    else
+        rviz->kill();
 }

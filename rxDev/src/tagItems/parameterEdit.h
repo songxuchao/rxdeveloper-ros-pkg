@@ -33,6 +33,8 @@ class ParameterEdit : public QDialog {
         private:
                 Ui::ParameterEdit *ui;
                 int param_type;
+                double range_low;
+                double range_high;
 private slots:
                 void on_pushButton_tryOpen_clicked();
                 void on_radioButton_file_clicked();

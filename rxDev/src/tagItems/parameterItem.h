@@ -59,6 +59,9 @@ class ParameterItem : public QGraphicsWidget
     void setIf(QString newIf);
     QString getUnless();
     void setUnless(QString newUnless);
+    void setRange(QString newRange);
+    QString getRange();
+
     bool getParamData();
     void updateParameterItem();
 
@@ -85,6 +88,7 @@ private:
     QString _nameString;
     QString _valueString;
     QString _typeString;
+    QString _rangeString;
     int _parameter_type;
     QString _ifString;
     QString _unlessString;
