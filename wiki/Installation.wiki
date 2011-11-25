@@ -6,5 +6,5 @@ The rxDeveloper is tested under *Ubuntu 11.04* and *Linux Mint 11* and requires 
 == How do I get it running? ==
   * download the sourcecode: "svn checkout http://rxdeveloper-ros-pkg.googlecode.com/svn/trunk/ rxdeveloper-ros-pkg-read-only"
   * make sure that you did the ROS environment setup and "rxdeveloper-ros-pkg-read-only" is in the _ROS_PACKAGE_PATH_.
-  * compile: "rosmake rxDev"
+  * compile: "rosmake rxDev" (if you get errors during compilation, an update of tinyxml to version 2.6x will help)  
   * run: "rosrun rxDev rxdev" or start the binary "/rxDev/bin/rxdev"
