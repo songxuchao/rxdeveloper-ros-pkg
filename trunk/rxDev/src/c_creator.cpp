@@ -115,8 +115,8 @@ void RxDev::showContextMenu(const QPoint&point){
     if(workingModel->fileInfo(index).isDir()||!index.isValid()){
         contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
         contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
-        contextMenu.addAction(tr("new C++-NodeletFile"),this, SLOT(on_pushButton_createCpp_clicked()));
-        contextMenu.addAction(tr("new Python-NodeletFile"),this, SLOT(on_pushButton_createPython_clicked()));
+        contextMenu.addAction(tr("new C++-File"),this, SLOT(on_pushButton_createCpp_clicked()));
+        contextMenu.addAction(tr("new Python-File"),this, SLOT(on_pushButton_createPython_clicked()));
         contextMenu.addSeparator();
         contextMenu.addAction(tr("new Folder"),this, SLOT(createNewFolder()));
         contextMenu.addAction(tr("browse Folder"),this, SLOT(openFileOrFolder()));
@@ -322,10 +322,9 @@ void RxDev::on_pushButton_createPython_clicked()
 
 void RxDev::on_pushButton_specfile_clicked()
 {
-    if (!packagePath.endsWith("/node")){
-        currentDir.setPath(packagePath);
-        currentDir.mkdir("node");
-    }
+    qDebug()<<packagePath;
+    currentDir.setPath(packagePath);
+    currentDir.mkdir("node");
     NewEntry createFile;
     createFile.setWindowTitle("Create File in "+packagePath+("/node"));
     bool name = createFile.exec();

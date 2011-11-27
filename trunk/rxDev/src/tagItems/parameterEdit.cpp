@@ -11,22 +11,28 @@ ParameterEdit::ParameterEdit(ParameterItem *item, QWidget *parent) : QDialog(par
     ui->setupUi(this);
     param_type =item->getStandardParameter();
     //determine range for dyn reconfigure params
-    QStringList range = (item->getRange()).split(",");
-    if (range.size()>1){
-        QString low = range.at(0);
-        QString high = range.at(1);
-        low.truncate(1);
-        high.chop(1);
-        range_low=low.toDouble();
-        range_high=high.toDouble();
-        if (range_high < range_low){
-            double temp;
-            temp = range_high;
-            range_high= range_low;
-            range_low = temp;
+    qDebug()<<item->getRange();
+    if (item->getRange()==""){
+        range_high= 0;
+        range_low = 0;
+    }else{
+        QStringList range = (item->getRange()).split(",");
+        if (range.size()>1){
+            QString low = range.at(0);
+            QString high = range.at(1);
+            low.remove(0,1);
+            high.chop(1);
+            qDebug()<<high<<" "<<low;
+            range_low=low.toDouble();
+            range_high=high.toDouble();
+            if (range_high < range_low){
+                double temp;
+                temp = range_high;
+                range_high= range_low;
+                range_low = temp;
+            }
         }
     }
-
     ui->lineEdit_if->setText(item->getIf());
     ui->lineEdit_unless->setText(item->getUnless());
     if (param_type==1){
@@ -82,74 +88,74 @@ void ParameterEdit::accept() {
 
     }}
 
-    QString ParameterEdit::getName(){
-        return ui->lineEdit_name->text();
-    }
-    QString ParameterEdit::getValue(){
-        if (param_type==1)
-            return ui->lineEdit_value->text();
-        else
-            return ui->lineEdit_file->text();
-    }
-    QString ParameterEdit::getType(){
-        if (param_type==1)
-            return ui->lineEdit_type->text();
-        else
-            return ui->comboBox_file->itemText(ui->comboBox_file->currentIndex());
-    }
+QString ParameterEdit::getName(){
+    return ui->lineEdit_name->text();
+}
+QString ParameterEdit::getValue(){
+    if (param_type==1)
+        return ui->lineEdit_value->text();
+    else
+        return ui->lineEdit_file->text();
+}
+QString ParameterEdit::getType(){
+    if (param_type==1)
+        return ui->lineEdit_type->text();
+    else
+        return ui->comboBox_file->itemText(ui->comboBox_file->currentIndex());
+}
 
-    void ParameterEdit::on_radioButton_standard_clicked()
-    {
-        ui->radioButton_standard->setChecked(true);
-        ui->radioButton_file->setChecked(false);
-        ui->groupBox_standard->setEnabled(true);
-        ui->groupBox_file->setEnabled(false);
-        ui->lineEdit_name->setEnabled(true);
-        param_type=1;
-    }
-
-
-    void ParameterEdit::on_radioButton_file_clicked()
-    {
-        ui->radioButton_standard->setChecked(false);
-        ui->radioButton_file->setChecked(true);
-        ui->groupBox_standard->setEnabled(false);
-        ui->groupBox_file->setEnabled(true);
-        ui->lineEdit_name->setEnabled(true);
-        param_type=2;
-    }
+void ParameterEdit::on_radioButton_standard_clicked()
+{
+    ui->radioButton_standard->setChecked(true);
+    ui->radioButton_file->setChecked(false);
+    ui->groupBox_standard->setEnabled(true);
+    ui->groupBox_file->setEnabled(false);
+    ui->lineEdit_name->setEnabled(true);
+    param_type=1;
+}
 
 
+void ParameterEdit::on_radioButton_file_clicked()
+{
+    ui->radioButton_standard->setChecked(false);
+    ui->radioButton_file->setChecked(true);
+    ui->groupBox_standard->setEnabled(false);
+    ui->groupBox_file->setEnabled(true);
+    ui->lineEdit_name->setEnabled(true);
+    param_type=2;
+}
 
-    int ParameterEdit::getParamType()
-    {
-        return param_type;
-    }
 
-    QString ParameterEdit::getIf()
-    {
-        return ui->lineEdit_if->text();
-    }
 
-    QString ParameterEdit::getUnless()
-    {
-        return ui->lineEdit_unless->text();
-    }
-    void ParameterEdit::on_pushButton_tryOpen_clicked()
-    {
-        QString file = ui->lineEdit_file->text();
-        if (file.startsWith("$(find ")){
-            file.remove("$(find ");
-            QStringList tempList;
-            tempList<<file.split(")");
-            QProcess findPath;
-            findPath.start(QString("rospack find "+tempList.at(0)));
-            findPath.waitForFinished(-1);
-            QByteArray output = findPath.readAllStandardOutput();
-            file = output.trimmed();
-            file.append(tempList.at(1));
-        }else{
-        }
-        QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+int ParameterEdit::getParamType()
+{
+    return param_type;
+}
 
+QString ParameterEdit::getIf()
+{
+    return ui->lineEdit_if->text();
+}
+
+QString ParameterEdit::getUnless()
+{
+    return ui->lineEdit_unless->text();
+}
+void ParameterEdit::on_pushButton_tryOpen_clicked()
+{
+    QString file = ui->lineEdit_file->text();
+    if (file.startsWith("$(find ")){
+        file.remove("$(find ");
+        QStringList tempList;
+        tempList<<file.split(")");
+        QProcess findPath;
+        findPath.start(QString("rospack find "+tempList.at(0)));
+        findPath.waitForFinished(-1);
+        QByteArray output = findPath.readAllStandardOutput();
+        file = output.trimmed();
+        file.append(tempList.at(1));
+    }else{
     }
+    QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+
+}

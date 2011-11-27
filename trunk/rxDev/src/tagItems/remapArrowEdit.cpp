@@ -117,8 +117,8 @@ RemapArrowEdit::RemapArrowEdit(RemapArrow *item, QWidget *parent) : QDialog(pare
     ui->tableView_endNode_subscribe->setModel(model_end_subscribe);
     ui->tableView_endNode_subscribe->setColumnWidth(0,167);
     ui->tableView_endNode_subscribe->setColumnWidth(1,167);
-    for (int i=0;i<item->endItem()->getPublications().count();i++){
-        QStringList sup = item->endItem()->getPublications().at(i).split(" ");
+    for (int i=0;i<item->endItem()->getSubscriptions().count();i++){
+        QStringList sup = item->endItem()->getSubscriptions().at(i).split(" ");
         QStandardItem *item0;
 
          item0 = new QStandardItem(sup.at(0));
