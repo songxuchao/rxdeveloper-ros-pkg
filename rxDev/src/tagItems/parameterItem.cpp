@@ -15,6 +15,7 @@ ParameterItem::ParameterItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _outterborderPen(),
     _dragStart(0,0),
     _height(50),
+    _rangeString(""),
     _parameter_type(1)
 {
     this->setHandlesChildEvents(true);
