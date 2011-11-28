@@ -15,7 +15,7 @@ MachineItem::MachineItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _outterborderColor(Qt::cyan),
     _outterborderPen(),
     _dragStart(0,0),
-    _height(60)
+    _height(68)
 {
     this->setHandlesChildEvents(true);
     _outterborderPen.setWidth(1);
