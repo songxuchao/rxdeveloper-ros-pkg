@@ -15,7 +15,7 @@ IncludeFileItem::IncludeFileItem(QGraphicsRectItem *parent, QGraphicsScene *scen
     _outterborderColor(Qt::cyan),
     _outterborderPen(),
     _dragStart(0,0),
-    _height(55),
+    _height(60),
     _clearParamsInt(0)
 {
     this->setHandlesChildEvents(true);
@@ -34,17 +34,17 @@ IncludeFileItem::IncludeFileItem(QGraphicsRectItem *parent, QGraphicsScene *scen
     _title.setDefaultTextColor(Qt::black);
 
 
-    _file.setPos(10,0);
+    _file.setPos(10,-2);
     _file.setTextWidth(_width);
     _file.setParentItem(this);
     _file.setDefaultTextColor(Qt::green);
 
-    _namespace.setPos(10,29);
+    _namespace.setPos(10,31);
     _namespace.setTextWidth(_width);
     _namespace.setParentItem(this);
     _namespace.setDefaultTextColor(Qt::red);
 
-    _clearParams.setPos(10,39);
+    _clearParams.setPos(10,41);
     _clearParams.setTextWidth(_width);
     _clearParams.setParentItem(this);
     _clearParams.setDefaultTextColor(Qt::red);

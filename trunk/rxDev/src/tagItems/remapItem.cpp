@@ -15,7 +15,7 @@ RemapItem::RemapItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _outterborderColor(Qt::cyan),
     _outterborderPen(),
     _dragStart(0,0),
-    _height(45)
+    _height(55)
 {
     this->setHandlesChildEvents(true);
     _outterborderPen.setWidth(1);

@@ -14,7 +14,7 @@ RosparamItem::RosparamItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _outterborderColor(Qt::darkCyan),
     _outterborderPen(),
     _dragStart(0,0),
-    _height(70)
+    _height(75)
 {
     this->setHandlesChildEvents(true);
     _outterborderPen.setWidth(1);
@@ -31,23 +31,23 @@ RosparamItem::RosparamItem(QGraphicsRectItem *parent, QGraphicsScene *scene):
     _rosparamTitle.setRotation(-90);
     _rosparamTitle.setDefaultTextColor(Qt::black);
 
-    _name.setPos(10,0);
+    _name.setPos(10,-2);
     _name.setTextWidth(_width);
     _name.setParentItem(this);
     _name.setDefaultTextColor(Qt::green);
 
-    _value.setPos(10,12);
+    _value.setPos(10,10);
     _value.setTextWidth(_width);
     _value.setParentItem(this);
     _value.setDefaultTextColor(Qt::red);
 
-    _type.setPos(10,40);
+    _type.setPos(10,46);
     _type.setParentItem(this);
     _type.setTextWidth(_width);
     _type.setDefaultTextColor(Qt::blue);
 
 
-    _namespace.setPos(10,50);
+    _namespace.setPos(10,56);
     _namespace.setParentItem(this);
     _namespace.setTextWidth(_width);
     _namespace.setDefaultTextColor(Qt::blue);
