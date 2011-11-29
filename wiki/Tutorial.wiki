@@ -1,12 +1,23 @@
-= Tutorial =
+= Tutorials =
 
 I created a tutorial video about the rxDeveloper:
-<wiki:video url="http://rxdeveloper-ros-pkg.googlecode.com/files/rxDev-tutorial.mp4"/>
+
+== specificationfiles ==
+..comming soon.
+=== where are they used ===
+..comming soon.
+=== how to create files ===
+..comming soon.
 
 
-= Details =
+== creating a launchfile ==
+..comming soon.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== editing a launchfile ==
+..comming soon.
+
+== components / a place for includefiles ==
+..comming soon.
+
+== package and file creation ==
+..comming soon.
