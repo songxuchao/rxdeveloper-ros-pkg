@@ -292,6 +292,7 @@ void RxDev::on_pushButton_createCpp_clicked()
             newFile.open(QIODevice::WriteOnly | QIODevice::Text);
             newFile.close();
         }
+        QDir::setCurrent(packagePath);
     }
 }
 
@@ -316,6 +317,7 @@ void RxDev::on_pushButton_createPython_clicked()
             newFile.open(QIODevice::ReadWrite);
             newFile.close();
         }
+        QDir::setCurrent(packagePath);
     }
 
 }
@@ -323,10 +325,10 @@ void RxDev::on_pushButton_createPython_clicked()
 void RxDev::on_pushButton_specfile_clicked()
 {
     qDebug()<<packagePath;
-    currentDir.setPath(packagePath);
+    currentDir.setPath(workingModel->rootPath());
     currentDir.mkdir("node");
     NewEntry createFile;
-    createFile.setWindowTitle("Create File in "+packagePath+("/node"));
+    createFile.setWindowTitle("Create File in "+workingModel->rootPath()+("/node"));
     bool name = createFile.exec();
     if (name)
     {
@@ -337,7 +339,7 @@ void RxDev::on_pushButton_specfile_clicked()
                 filename.append(".node");
             newFile.setFileName(filename);
         }
-        QString filePath= packagePath+("/node/"+newFile.fileName());
+        QString filePath= workingModel->rootPath()+("/node/"+newFile.fileName());
 
         Specfile newSpec;
         SpecFileEdit specFile(&newSpec);
@@ -370,4 +372,5 @@ void RxDev::on_pushButton_specfile_clicked()
         }
 
     }
+    QDir::setCurrent(workingModel->rootPath());
 }
