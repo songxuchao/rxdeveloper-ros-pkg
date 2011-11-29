@@ -1,5 +1,9 @@
 type: openni_node
+
 package: openni_camera
+
+subscriptions:
+
 publications:
  - topic: rgb/camera_info
    type: sensor_msgs/CameraInfo
@@ -10,18 +14,20 @@ publications:
  - topic: depth/image_raw
    type: sensor_msgs/Image
  - topic: depth_registered/camera_info
-   type: sensor_msgs/CameraInfo
+   type: sensor_msgs/CameraInfo				
  - topic: depth_registered/image_raw 
    type: sensor_msgs/Image
  - topic: ir/camera_info
    type: sensor_msgs/CameraInfo
  - topic: ir/image_raw
    type: sensor_msgs/Image
+
 services:
  - name: rgb/set_camera_info
    type: sensor_msgs/SetCameraInfo
  - name: ir/set_camera_info
    type: sensor_msgs/SetCameraInfo
+
 parameters:
   - name: ~rgb_frame_id
     type: string
