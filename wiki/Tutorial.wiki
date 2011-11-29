@@ -1,7 +1,7 @@
 = Tutorial =
 
 I created a tutorial video about the rxDeveloper:
-<wiki:video url=""/>
+<wiki:video url="http://rxdeveloper-ros-pkg.googlecode.com/files/rxDev-tutorial.mp4"/>
 
 
 = Details =
