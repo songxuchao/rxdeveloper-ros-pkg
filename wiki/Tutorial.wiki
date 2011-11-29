@@ -1,6 +1,5 @@
 = Tutorials =
 
-I created a tutorial video about the rxDeveloper:
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
 
 == specificationfiles ==
