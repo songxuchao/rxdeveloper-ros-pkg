@@ -3,9 +3,17 @@
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
 
 == specificationfiles ==
-..comming soon.
+Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
+These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
+
 === where are they used ===
-..comming soon.
+rxDeveloper uses specification files to support the user in many ways:
+# If you want to remap topics, a list of possible topics shows up
+* remap arrows are automatically created when loading a launchfile
+# If you add a private parameter to a node, a list of possible parameters shows up (with default values)
+* the valus for parameters with ranges get checked for out-of-range problems 
+
+
 === how to create files ===
 ..comming soon.
 
