@@ -15,7 +15,7 @@ rxDeveloper uses specification files to support the user in many ways:
 
 
 === how to create files ===
-..comming soon.
+A specificationfile looks like [specexample this]
 
 
 == creating a launchfile ==
