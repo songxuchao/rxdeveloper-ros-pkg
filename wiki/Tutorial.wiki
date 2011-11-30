@@ -8,10 +8,10 @@ These files are very usefull but not mandatory. You can use the rxDeveloper with
 
 === where are they used ===
 rxDeveloper uses specification files to support the user in many ways:
-# If you want to remap topics, a list of possible topics shows up
-* remap arrows are automatically created when loading a launchfile
-# If you add a private parameter to a node, a list of possible parameters shows up (with default values)
-* the valus for parameters with ranges get checked for out-of-range problems 
+  # If you want to remap topics, a list of possible topics shows up
+    * remap arrows are automatically created when loading a launchfile
+  # If you add a private parameter to a node, a list of possible parameters shows up (with default values)
+    * the valus for parameters with ranges get checked for out-of-range problems 
 
 
 === how to create files ===
