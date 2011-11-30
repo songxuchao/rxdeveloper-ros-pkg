@@ -12,25 +12,48 @@ rxDeveloper uses specification files to support the user in many ways:
   # If you want to remap topics, a list of possible topics shows up
     * remap arrows are automatically created when loading a launchfile
   # If you add a private parameter to a node, a list of possible parameters shows up (with default values)
-    * the valus for parameters with ranges get checked for out-of-range problems 
+    * the values for parameters with ranges get checked for out-of-range problems 
 
 
 === how to create files ===
-A specificationfile looks like [specexample this].
-The *type* is the name of a node, *package* is the package the node belongs to. Every specificationfile must contain these two lines.
-Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality.
+A specificationfile looks like [specexample this]. It has to be in a package subfolder "node" in order to be found by the rxdeveloper and end with ".node".
+  * ../<packagename>/node/<myNode>.node
 
-rxDeveloper has a specfile-editor. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the "Component Creator"-tab
+The *type* is the name of a node, *package* is the package the node belongs to. Every specificationfile must contain these two lines.
+Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality. Default value and range for parameters are optional, too.
+
+rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the *Component Creator*-tab.
 http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 
 == creating a launchfile ==
-..comming soon.
+In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a specification files can be added by clicking the corresponding buttons. 
+The toolbar contains buttons to switch between three work modes:
+  # Drag&Drop
+  # Remap
+  # Delete
+Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the <remap>-tag in the launchfile.
+All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
+After that you can save the launchfile.
 
 == editing a launchfile ==
-..comming soon.
+You can load a launchfile and edit it as described in the "creating a launchfile"-step. If the launchfile was saved with the rxDeveloper before the item positions get recovered automatically.
 
 == components / a place for includefiles ==
-..comming soon.
+The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
+  * ../<packagename>/component/<mylaunch>.launch
+You can double click or right click and add existing components to the main window. They will be displayed as includefiles, but you can fully extract them in the includefile-editor (doubleclick the includefile).
 
 == package and file creation ==
-..comming soon.
+In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
+Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
+
+== testing and debugging ==
+The toolbar has a "play" and a "stop" button, so that you can run launchfiles right from the rxdeveloper without touching a terminal application.
+After that you can run a ROS-tool from the "Tools"-menu. You can start the following tools:
+  * rxgraph
+  * rviz
+  * dynamic reconfigure gui
+  * rxloggerlevel
+  * rxconsole
+  * roswtf
+The output of roswtf is displayed in a information window.
