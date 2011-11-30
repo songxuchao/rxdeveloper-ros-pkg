@@ -1,8 +1,8 @@
 = Tutorials =
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="4" />
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
 
-== specificationfiles ==
+== Specificationfiles ==
 Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
 These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
 
@@ -25,7 +25,8 @@ Subscriptions, publications, services and parameters are optional, but should be
 rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the *Component Creator*-tab.
 http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 
-== creating a launchfile ==
+== launchfiles ==
+=== creating a launchfile ==
 In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a specification files can be added by clicking the corresponding buttons. 
 The toolbar contains buttons to switch between three work modes:
   # Drag&Drop
@@ -35,17 +36,13 @@ Switching to the *remap*-mode lets you draw a connection between two nodes by pr
 All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
 After that you can save the launchfile.
 
-== editing a launchfile ==
+=== editing a launchfile ===
 You can load a launchfile and edit it as described in the "creating a launchfile"-step. If the launchfile was saved with the rxDeveloper before the item positions get recovered automatically.
 
-== components / a place for includefiles ==
+=== components / a place for includefiles ===
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
   * `../<packagename>/component/<mylaunch>.launch`
 You can double click or right click and add existing components to the main window. They will be displayed as includefiles, but you can fully extract them in the includefile-editor (doubleclick the includefile).
-
-== package and file creation ==
-In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
-Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
 
 == testing and debugging ==
 The toolbar has a "play" and a "stop" button, so that you can run launchfiles right from the rxdeveloper without touching a terminal application.
@@ -57,3 +54,7 @@ After that you can run a ROS-tool from the "Tools"-menu. You can start the follo
   * rxconsole
   * roswtf
 The output of roswtf is displayed in a information window.
+
+== package and file creation ==
+In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
+Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
