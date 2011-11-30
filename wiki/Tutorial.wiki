@@ -21,7 +21,7 @@ The *type* is the name of a node, *package* is the package the node belongs to. 
 Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality.
 
 rxDeveloper has a specfile-editor. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the "Component Creator"-tab
-
+http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit-node.png
 
 == creating a launchfile ==
 ..comming soon.
