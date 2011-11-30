@@ -17,7 +17,7 @@ rxDeveloper uses specification files to support the user in many ways:
 
 === how to create files ===
 A specificationfile looks like [specexample this]. It has to be in a package subfolder "node" in order to be found by the rxdeveloper and end with ".node".
-  * '../<packagename>/node/<myNode>.node'
+  * `../<packagename>/node/<myNode>.node`
 
 The *type* is the name of a node, *package* is the package the node belongs to. Every specificationfile must contain these two lines.
 Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality. Default value and range for parameters are optional, too.
@@ -40,7 +40,7 @@ You can load a launchfile and edit it as described in the "creating a launchfile
 
 == components / a place for includefiles ==
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
-  * '../<packagename>/component/<mylaunch>.launch'
+  * `../<packagename>/component/<mylaunch>.launch`
 You can double click or right click and add existing components to the main window. They will be displayed as includefiles, but you can fully extract them in the includefile-editor (doubleclick the includefile).
 
 == package and file creation ==
