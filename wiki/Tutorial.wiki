@@ -39,7 +39,6 @@ After that you can run a ROS-tool from the "Tools"-menu. You can choose between 
 The output of roswtf is displayed in a information window.
 
 == Specificationfiles ==
-#SpecificationFile
 Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
 These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
 
