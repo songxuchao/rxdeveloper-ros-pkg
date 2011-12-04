@@ -2,29 +2,6 @@
 <wiki:toc max_depth="4" />
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
 
-== Specificationfiles ==
-Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
-These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
-
-=== where are they used ===
-rxDeveloper uses specification files to support the user in many ways:
-  # New node tags can be created by dragging and dropping
-  # If you want to remap topics, a list of possible topics shows up
-    * remap arrows are automatically created when loading a launchfile
-  # If you add a private parameter to a node, a list of possible parameters shows up (with default values)
-    * the values for parameters with ranges get checked for out-of-range problems 
-
-
-=== how to create files ===
-A specificationfile looks like [specexample this]. It has to be in a package subfolder "node" in order to be found by the rxdeveloper and end with ".node".
-  * `../<packagename>/node/<myNode>.node`
-
-The *type* is the name of a node, *package* is the package the node belongs to. Every specificationfile must contain these two lines.
-Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality. Default value and range for parameters are optional, too.
-
-rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the *Component Creator*-tab.
-http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
-
 == Launchfiles ==
 === creating a launchfile ==
 In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a specification files can be added by clicking the corresponding buttons. 
@@ -32,7 +9,7 @@ The toolbar contains buttons to switch between three work modes:
   # Drag&Drop
   # Remap
   # Delete
-Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile.
+Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile. A *remap-editor* will show you possible remap-topics which you can select or enter your own text. 
 All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
 After that you can save the launchfile.
 
@@ -54,6 +31,28 @@ After that you can run a ROS-tool from the "Tools"-menu. You can start the follo
   * rxconsole
   * roswtf
 The output of roswtf is displayed in a information window.
+
+== Specificationfiles ==
+Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
+These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
+
+=== where are they used ===
+rxDeveloper uses specification files to support the user in many ways:
+  # New node tags can be created by dragging and dropping
+  # If you want to remap topics, a list of possible topics shows up
+    * remap arrows are automatically created when loading a launchfile
+  # If you add a private parameter to a node, a list of possible parameters shows up (with default values)
+    * the values for parameters with ranges get checked for out-of-range problems 
+
+=== how to create files ===
+A specificationfile looks like [specexample this]. It has to be in a package subfolder "node" in order to be found by the rxdeveloper and end with ".node".
+  * `../<packagename>/node/<myNode>.node`
+
+The *type* is the name of a node, *package* is the package the node belongs to. Every specificationfile must contain these two lines.
+Subscriptions, publications, services and parameters are optional, but should be entered for a better functionality. Default value and range for parameters are optional, too.
+
+rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the *Component Creator*-tab.
+http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 
 == Package and file creation ==
 In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
