@@ -27,8 +27,9 @@ http://rxdeveloper-ros-pkg.googlecode.com/files/component.png
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
   * `../<packagename>/component/<mylaunch>.launch`
 You can double click or right click and add existing components to the main window. They will be displayed as *includefiles*, but you can fully extract them in the *includefile-editor* (doubleclick the includefile).
-
+----
 == Testing and debugging ==
+http://rxdeveloper-ros-pkg.googlecode.com/files/testing.png
 The toolbar has a "play" and a "stop" button, so that you can *run launchfiles* right from the rxDeveloper without executing a terminal application.
 After that you can run a ROS-tool from the "Tools"-menu. You can choose between the following tools:
   * rxgraph
@@ -38,7 +39,7 @@ After that you can run a ROS-tool from the "Tools"-menu. You can choose between 
   * rxconsole
   * roswtf
 The output of roswtf is displayed in a information window.
-
+----
 == Specificationfiles ==
 Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
 These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
@@ -60,7 +61,7 @@ Subscriptions, publications, services and parameters are optional, but should be
 
 rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-clicking them in the "Available Nodes/Nodelets"-list and selecting "view/edit specfile". The editor is also launched if you create a new specfile in the *Component Creator*-tab.
 http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
-
+----
 == Package and file creation ==
 http://rxdeveloper-ros-pkg.googlecode.com/files/component-creator.png
 In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
