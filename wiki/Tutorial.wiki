@@ -14,7 +14,7 @@ The toolbar contains buttons to switch between three work modes:
   # Remap
   # Delete
 Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile. A *remap-editor* will show you possible remap-topics which you can select or enter your own text.
-http://rxdeveloper-ros-pkg.googlecode.com/files/remap-edit.node.png
+http://rxdeveloper-ros-pkg.googlecode.com/files/remap-edit.png
 All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
 After that you can save the launchfile.
 
