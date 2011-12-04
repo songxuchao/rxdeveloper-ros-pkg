@@ -1,6 +1,9 @@
 = Tutorials =
-<wiki:toc max_depth="4" />
+----
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
+----
+
+<wiki:toc max_depth="4" />
 ----
 
 == Launchfiles ==
