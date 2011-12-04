@@ -1,6 +1,7 @@
 = Tutorials =
 <wiki:toc max_depth="4" />
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
+----
 
 == Launchfiles ==
 === creating a launchfile ==
@@ -9,21 +10,22 @@ The toolbar contains buttons to switch between three work modes:
   # Drag&Drop
   # Remap
   # Delete
-Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile. A *remap-editor* will show you possible remap-topics which you can select or enter your own text. 
+Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile. A *remap-editor* will show you possible remap-topics which you can select or enter your own text.
+http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
 After that you can save the launchfile.
 
 === editing a launchfile ===
-You can load a launchfile and edit it as described in the "creating a launchfile"-step. If the launchfile was saved with the rxDeveloper before the item positions get recovered automatically.
+You can load a launchfile and edit it as described in the "creating a launchfile"-step. If the launchfile was saved with the rxDeveloper before, the item positions get recovered automatically.
 
 === components / a place for includefiles ===
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
   * `../<packagename>/component/<mylaunch>.launch`
-You can double click or right click and add existing components to the main window. They will be displayed as includefiles, but you can fully extract them in the includefile-editor (doubleclick the includefile).
+You can double click or right click and add existing components to the main window. They will be displayed as *includefiles*, but you can fully extract them in the *includefile-editor* (doubleclick the includefile).
 
 == Testing and debugging ==
-The toolbar has a "play" and a "stop" button, so that you can run launchfiles right from the rxdeveloper without touching a terminal application.
-After that you can run a ROS-tool from the "Tools"-menu. You can start the following tools:
+The toolbar has a "play" and a "stop" button, so that you can *run launchfiles* right from the rxDeveloper without executing a terminal application.
+After that you can run a ROS-tool from the "Tools"-menu. You can choose between the following tools:
   * rxgraph
   * rviz
   * dynamic reconfigure gui
