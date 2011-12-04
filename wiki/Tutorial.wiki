@@ -11,7 +11,7 @@ The toolbar contains buttons to switch between three work modes:
   # Remap
   # Delete
 Switching to the *remap*-mode lets you draw a connection between two nodes by pressing the left mouse button on a node and releasing it over another node. The first node will include the `<remap>-tag` in the launchfile. A *remap-editor* will show you possible remap-topics which you can select or enter your own text.
-http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
+http://rxdeveloper-ros-pkg.googlecode.com/files/remap-edit.node.png
 All Items you add have their own item-editor, here you can add detailed information or in some cases other items.
 After that you can save the launchfile.
 
@@ -57,5 +57,6 @@ rxDeveloper has a *specfile-editor*. You can edit existing specfiles by right-cl
 http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 
 == Package and file creation ==
+http://rxdeveloper-ros-pkg.googlecode.com/files/component-creator.png
 In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
 Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
