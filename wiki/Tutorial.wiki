@@ -9,7 +9,7 @@
 == Launchfiles ==
 === creating a launchfile ==
 http://rxdeveloper-ros-pkg.googlecode.com/files/component-connector.png
-In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a [Tutorials#SpecificationFile]specification files can be added by clicking the corresponding buttons. 
+In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a [Tutorial#SpecificationFile]specification files can be added by clicking the corresponding buttons. 
 The toolbar contains buttons to switch between three work modes:
   # Drag&Drop
   # Remap
