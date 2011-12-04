@@ -23,6 +23,7 @@ After that you can save the launchfile.
 You can load a launchfile and edit it as described in the "creating a launchfile"-step. If the launchfile was saved with the rxDeveloper before, the item positions get recovered automatically.
 
 === components / a place for includefiles ===
+http://rxdeveloper-ros-pkg.googlecode.com/files/component.png
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
   * `../<packagename>/component/<mylaunch>.launch`
 You can double click or right click and add existing components to the main window. They will be displayed as *includefiles*, but you can fully extract them in the *includefile-editor* (doubleclick the includefile).
