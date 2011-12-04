@@ -9,7 +9,7 @@
 == Launchfiles ==
 === creating a launchfile ==
 http://rxdeveloper-ros-pkg.googlecode.com/files/component-connector.png
-In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a specification files can be added by clicking the corresponding buttons. 
+In the *Component Connector*-tab you can drag & drop the available nodes to the main window. Other tags, or nodes/nodelets without a [Tutorials#SpecificationFile]specification files can be added by clicking the corresponding buttons. 
 The toolbar contains buttons to switch between three work modes:
   # Drag&Drop
   # Remap
@@ -39,6 +39,7 @@ After that you can run a ROS-tool from the "Tools"-menu. You can choose between 
 The output of roswtf is displayed in a information window.
 
 == Specificationfiles ==
+#SpecificationFile
 Specificationfiles are YAML-files for nodes, nodelets or dynamic reconfigure nodes containing information about the type, the package, publications, subscriptions, services and parameters.
 These files are very usefull but not mandatory. You can use the rxDeveloper without specificationfiles, but it is more comfortable with them.
 
