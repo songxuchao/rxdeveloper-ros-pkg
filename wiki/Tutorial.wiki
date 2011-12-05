@@ -26,7 +26,8 @@ You can load a launchfile and edit it as described in the "creating a launchfile
 http://rxdeveloper-ros-pkg.googlecode.com/files/component.png
 The *Components*-tab of the sidebar can be used for often used includefiles. If you save a launchfile to the package subfolder "component" it will be listed in the *Components*-tab.
   * `../<packagename>/component/<mylaunch>.launch`
-You can double click or right click and add existing components to the main window. They will be displayed as *includefiles*, but you can fully extract them in the *includefile-editor* (doubleclick the includefile).
+This way you can create a launchfile containing your robot and laser rangefinder drivers once and easily reuse them in different projects.
+You can double click or right click and add existing components to the main window. They will be displayed as *includefiles*, but you can fully extract them in the *includefile-editor* (double click the includefile).
 ----
 == Testing and debugging ==
 http://rxdeveloper-ros-pkg.googlecode.com/files/testing.png
