@@ -1,0 +1,37 @@
+type: turtlesim_node
+package: turtlesim
+subscriptions:
+  - topic: turtle1/command_velocity
+    type: turtlesim/Velocity/
+publications:
+  - topic: rosout
+    type: rosgraph_msgs/Log/
+  - topic: turtle1/color_sensor
+    type: turtlesim/Color/
+  - topic: turtle1/pose
+    type: turtlesim/Pose/
+services:
+  - name: /turtle1/teleport_absolute
+    type: turtlesim/TeleportAbsolute
+  - name: /reset
+    type: std_srvs/Empty
+  - name: /spawn
+    type: turtlesim/Spawn
+  - name: /clear
+    type: std_srvs/Empty
+  - name: /turtle1/set_pen
+    type: turtlesim/SetPen
+  - name: /turtle1/teleport_relative
+    type: turtlesim/TeleportRelative
+  - name: /kill
+    type: turtlesim/Kill
+parameters:
+  - name: ~background_b
+    type: int
+    default: 255
+  - name: ~background_g
+    type: int
+    default: 86
+  - name: ~background_r
+    type: int
+    default: 69

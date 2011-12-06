@@ -1,0 +1,144 @@
+type: amcl
+package: amcl
+subscriptions:
+ - topic: scan
+   type: sensor_msgs/LaserScan
+ - topic: tf
+   type: tf/tfMessage
+ - topic: initialpose
+   type: geometry_msgs/PoseWithCovarianceStamped
+ - topic: map
+   type: nav_msgs/OccupancyGrid
+publications:
+ - topic: amcl_pose
+   type: geometry_msgs/PoseWithCovarianceStamped
+ - topic: particlecloud
+   type: geometry_msgs/PoseArray
+ - topic: tf
+   type: tf/tfMessage
+services:
+ - name: global_localization
+   type: std_srvs/Empty
+ - name: static_map
+   type: nav_msgs/GetMap
+parameters:
+ - name: ~min_particles
+   type: int
+   default: 100
+ - name: ~max_particles
+   type: int
+   default: 5000
+ - name: ~kld_err
+   type: double
+   default: 0.01
+ - name: ~kld_z
+   type: double
+   default: 0.99
+ - name: ~update_min_d
+   type: double
+   default: 0.2
+ - name: ~update_min_a
+   type: double
+   default: pi/6.0
+ - name: ~resample_interval
+   type: int
+   default: 2
+ - name: ~transform_tolerance
+   type: double
+   default: 0.1
+ - name: ~recovery_alpha_slow
+   type: double
+   default: 0.0
+ - name: ~recovery_alpha_fast
+   type: double
+   default: 0.0
+ - name: ~initial_pose_x
+   type: double
+   default: 0.0
+ - name: ~initial_pose_y
+   type: double
+   default: 0.0
+ - name: ~initial_pose_a
+   type: double
+   default: 0.0
+ - name: ~initial_cov_xx
+   type: double
+   default: 0.5*0.5
+ - name: ~initial_cov_yy
+   type: double
+   default: 0.5*0.5
+ - name: ~initial_cov_aa
+   type: double
+   default: (pi/12)*(pi/12)
+ - name: ~gui_publish_rate
+   type: double
+   default: -1.0
+ - name: ~save_pose_rate
+   type: double
+   default: 0.5
+ - name: ~use_map_topic
+   type: bool
+   default: false
+ - name: ~first_map_only
+   type: bool
+   default: false
+ - name: ~laser_min_range
+   type: double
+   default: -1.0
+ - name: ~laser_max_range
+   type: double
+   default: -1.0
+ - name: ~laser_max_beams
+   type: int
+   default: 30
+ - name: ~laser_z_hit
+   type: double
+   default: 0.95
+ - name: ~laser_z_short
+   type: double
+   default: 0.1
+ - name: ~laser_z_max
+   type: double
+   default: 0.05
+ - name: ~laser_z_rand
+   type: double
+   default: 0.05
+ - name: ~laser_sigma_hit
+   type: double
+   default: 0.2
+ - name: ~laser_lambda_short
+   type: double
+   default: 0.1
+ - name: ~laser_likelihood_max_dist
+   type: double
+   default: 2.0
+ - name: ~laser_model_type
+   type: string
+   default: "likelihood_field"
+ - name: ~odom_model_type
+   type: string
+   default: "diff"
+ - name: ~odom_alpha1
+   type: double
+   default: 0.2
+ - name: ~odom_alpha2
+   type: double
+   default: 0.2
+ - name: ~odom_alpha3
+   type: double
+   default: 0.2
+ - name: ~odom_alpha4
+   type: double
+   default: 0.2
+ - name: ~odom_alpha5
+   type: double
+   default: 0.2
+ - name: ~odom_frame_id
+   type: string
+   default: "odom"
+ - name: ~base_frame_id
+   type: string
+   default: "base_link"
+ - name: ~global_frame_id
+   type: string
+   default: "map"

@@ -1,0 +1,14 @@
+type: turtle_teleop_key 
+package: turtlesim
+subscriptions: 
+publications:
+ - topic: rosout
+   type: rosgraph_msgs/Log/
+ - topic: turtle1/command_velocity
+   type: turtlesim/Velocity/
+services:
+ - name: /teleop_turtle/get_loggers
+   type:
+ - name: /teleop_turtle/set_logger_level
+   type:
+parameters:

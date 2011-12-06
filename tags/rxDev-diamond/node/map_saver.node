@@ -1,0 +1,9 @@
+type: map_saver
+package: map_server
+subscriptions: 
+ - topic: map
+   type: nav_msgs/OccupancyGrid
+publications:
+services:
+parameters:
+

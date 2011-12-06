@@ -1,0 +1,12 @@
+type: mimic
+package: turtlesim
+subscriptions: #input
+ - topic: input/pose #takes a pose from a turtlesim_node
+   type: turtlesim/Pose
+publications: #output
+ - topic: rosout
+   type: rosgraph_msgs/Log/
+ - topic: output/command_velocity 	#gives velocitycommands to a turtlesim_node
+   type: turtlesim/Velocity/
+services:
+parameters:

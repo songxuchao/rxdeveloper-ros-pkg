@@ -1,0 +1,77 @@
+type: openni_node
+
+package: openni_camera
+
+subscriptions:
+
+publications:
+ - topic: rgb/camera_info
+   type: sensor_msgs/CameraInfo
+ - topic: rgb/image_raw
+   type: sensor_msgs/Image
+ - topic: depth/camera_info
+   type: sensor_msgs/CameraInfo
+ - topic: depth/image_raw
+   type: sensor_msgs/Image
+ - topic: depth_registered/camera_info
+   type: sensor_msgs/CameraInfo				
+ - topic: depth_registered/image_raw 
+   type: sensor_msgs/Image
+ - topic: ir/camera_info
+   type: sensor_msgs/CameraInfo
+ - topic: ir/image_raw
+   type: sensor_msgs/Image
+
+services:
+ - name: rgb/set_camera_info
+   type: sensor_msgs/SetCameraInfo
+ - name: ir/set_camera_info
+   type: sensor_msgs/SetCameraInfo
+
+parameters:
+  - name: ~rgb_frame_id
+    type: string
+    default: /openni_rgb_optical_frame
+  - name: ~depth_frame_id
+    type: string
+    default: /openni_depth_optical_frame
+  - name: ~rgb_camera_info_url
+    type: string
+    default: file://${ROS_HOME}/camera_info/${NAME}.yaml
+  - name: ~depth_camera_info_url
+    type: string
+    default: file://${ROS_HOME}/camera_info/${NAME}.yaml
+  - name: ~time_out
+    type: double
+  - name: ~image_mode
+    type: int
+    default: 2
+  - name: ~debayering
+    type: int
+    default: 1
+  - name: ~depth_mode
+    type: int
+    default: 2
+  - name: ~depth_registration
+    type: bool
+    default: False
+  - name: ~depth_time_offset
+    type: double
+    default: 0.0
+    range: "[-1.0,1.0]"
+  - name: ~image_time_offset
+    type: double
+    default: 0.0
+    range: "[-1.0,1.0]"
+  - name: ~depth_ir_offset_x
+    type: double
+    default: 5.0
+    range: "[-10,10]"
+  - name: ~depth_ir_offset_y
+    type: double
+    default: 4.0
+    range: "[-10,10]"
+  - name: ~z_offset_mm  # 
+    type: int
+    default: 0
+    range: "[-50,50]"

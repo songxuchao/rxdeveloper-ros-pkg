@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RxDev</class>
+ <widget class="QMainWindow" name="RxDev">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1172</width>
+    <height>919</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>rxDeveloper</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/icons/rxdev.png</normaloff>:/icons/icons/rxdev.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="baseSize">
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Component Connector</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QWidget" name="connector_widget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <item row="0" column="0">
+            <layout class="QHBoxLayout" name="hLayout"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Component Creator</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_package">
+          <property name="title">
+           <string>Package:</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_10">
+           <item row="1" column="0">
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="title">
+              <string>Create new</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="1" column="2">
+               <widget class="QPushButton" name="pushButton_createPython">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Python File</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="pushButton_specfile">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Specfile</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="pushButton_createCpp">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>C++ File</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QTreeView" name="treeView_packageBrowser">
+             <property name="toolTip">
+              <string>Right-click folders or files </string>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Create new package</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_7">
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>Dependencies (only blanks to separate):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Package-Name</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="lineEdit_packageName">
+               <property name="placeholderText">
+                <string>type in package-name</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="lineEdit_packageDependencies">
+               <property name="text">
+                <string>std_msgs roscpp rospy</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_createPackage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Create New Package</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1172</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout_rxdev"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionNew_Launchfile"/>
+    <addaction name="actionLoad_Launchfile"/>
+    <addaction name="actionSave_as_Launchfile"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="actionRxGraph"/>
+    <addaction name="actionRviz"/>
+    <addaction name="actionDynamic_reconfigure_gui"/>
+    <addaction name="actionRxloggerlevel"/>
+    <addaction name="actionRxconsole"/>
+    <addaction name="separator"/>
+    <addaction name="actionRoswtf"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockWidget_availableNodes">
+   <property name="minimumSize">
+    <size>
+     <width>273</width>
+     <height>552</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>200</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>nodes / test-nodes / nodelets</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_15">
+     <item row="2" column="0">
+      <widget class="QGroupBox" name="groupBox_6">
+       <property name="title">
+        <string>Create Tags</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButton_blankNode">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>blank node</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_blankNodelet">
+          <property name="text">
+           <string>blank nodelet</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_managerNodelet">
+          <property name="text">
+           <string>manager nodelet</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButton_group">
+          <property name="text">
+           <string>&lt;group&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pushButton_includeFile">
+          <property name="text">
+           <string>&lt;include&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="pushButton_env">
+          <property name="text">
+           <string>&lt;env&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pushButton_arg">
+          <property name="text">
+           <string>&lt;arg&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pushButton_machine">
+          <property name="text">
+           <string>&lt;machine&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QPushButton" name="pushButton_remap">
+          <property name="text">
+           <string>&lt;remap&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="pushButton_Param">
+          <property name="text">
+           <string>&lt;parameter&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QPushButton" name="pushButton_rosparam">
+          <property name="text">
+           <string>&lt;rosparam&gt;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QTabWidget" name="tabWidget_2">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Nodes/Nodelets</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_12">
+         <item row="1" column="0">
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="title">
+            <string>Available Nodes/Nodelets</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_14">
+            <item row="0" column="0">
+             <widget class="QTreeView" name="treeView_availableNodes">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::DragOnly</enum>
+              </property>
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="sortingEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="headerHidden">
+               <bool>true</bool>
+              </property>
+              <attribute name="headerVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="headerShowSortIndicator" stdset="0">
+               <bool>true</bool>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Components</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_13">
+         <item row="0" column="0">
+          <widget class="QListView" name="listView_availableComponents">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="dragEnabled">
+            <bool>false</bool>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <layout class="QFormLayout" name="formLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <item row="0" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="pushButton_refreshNodesOrComps">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>refresh lists</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_availablePackages">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>150</width>
+     <height>171</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>200</width>
+     <height>171</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>packages</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QListView" name="listView_package">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_errors">
+   <property name="windowIcon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/dialog-information.png</normaloff>:/icons/icons/dialog-information.png</iconset>
+   </property>
+   <property name="windowTitle">
+    <string>Info:</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QTextEdit" name="textEdit_Info">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_clearInfo">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/system-log-out.png</normaloff>:/icons/icons/system-log-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionAbout_rxdev">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/dialog-information.png</normaloff>:/icons/icons/dialog-information.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About rxDeveloper</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/preferences-system.png</normaloff>:/icons/icons/preferences-system.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+   <property name="shortcut">
+    <string>F10</string>
+   </property>
+  </action>
+  <action name="actionAvailable_Nodes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Connector Sidebar</string>
+   </property>
+  </action>
+  <action name="actionLoad_Launchfile">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/document-open.png</normaloff>:/icons/icons/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Launchfile</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionSave_as_Launchfile">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/document-save-as.png</normaloff>:/icons/icons/document-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Launchfile</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionRemap">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/segment-line.png</normaloff>:/icons/icons/segment-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>remap</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionDrag_Drop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/draw-smudge.png</normaloff>:/icons/icons/draw-smudge.png</iconset>
+   </property>
+   <property name="text">
+    <string>Drag&amp;Drop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionDelete_Item">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/node-delete.png</normaloff>:/icons/icons/node-delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete Item</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionNew_Launchfile">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/document-new.png</normaloff>:/icons/icons/document-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Launchfile</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/media-playback-start.png</normaloff>:/icons/icons/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>start</string>
+   </property>
+   <property name="toolTip">
+    <string>try to run computational graph</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/media-playback-stop.png</normaloff>:/icons/icons/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>stop</string>
+   </property>
+   <property name="toolTip">
+    <string>stop running computational graph</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionRxGraph">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>rxgraph</string>
+   </property>
+  </action>
+  <action name="actionDynamic_reconfigure_gui">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>dynamic reconfigure gui</string>
+   </property>
+  </action>
+  <action name="actionRxloggerlevel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>rxloggerlevel</string>
+   </property>
+  </action>
+  <action name="actionRxconsole">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>rxconsole</string>
+   </property>
+  </action>
+  <action name="actionRoswtf">
+   <property name="text">
+    <string>roswtf</string>
+   </property>
+  </action>
+  <action name="actionRviz">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>rviz</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>activated()</signal>
+   <receiver>RxDev</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

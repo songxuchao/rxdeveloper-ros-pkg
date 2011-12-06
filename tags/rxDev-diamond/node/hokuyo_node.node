@@ -1,0 +1,51 @@
+type: hokuyo_node
+package: hokuyo_node
+publications:
+  - topic: scan  # 
+    type: sensor_msgs/LaserScan
+  - topic: diagnostics  # 
+    type: diagnostic_msgs/DiagnosticStatus
+services:
+  - name: ~self_test  # 
+    type: diagnostic_msgs/SelfTest
+parameters:
+  - name: ~min_ang  # 
+    type: double
+    default: -pi/2
+    range: "[-pi,pi]"
+  - name: ~max_ang  # 
+    type: double
+    default: pi/2
+    range: "[-pi,pi]"
+  - name: ~intensity  # 
+    type: bool
+    default: false
+  - name: ~cluster  # 
+    type: int
+    default: 1
+  - name: ~skip  # 
+    type: int
+    default: 0
+  - name: ~port  # 
+    type: string
+    default: /dev/ttyACM0
+  - name: ~calibrate_time  # 
+    type: bool
+    default: true
+  - name: ~frame_id  # 
+    type: string
+    default: laser
+  - name: ~time_offset  # 
+    type: double
+    default: 0.0
+  - name: ~allow_unsafe_settings  # 
+    type: bool
+    default: False
+  - name: ~max_ang_limit  # 
+    type: double
+  - name: ~max_ang_limit  # 
+    type: double
+  - name: ~min_range  # 
+    type: double
+  - name: ~max_range  # 
+    type: double

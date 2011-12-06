@@ -1,0 +1,23 @@
+<package>
+  <description brief="rxdev">
+
+     rxDeveloper is a graphical tool for creating and editing launchfiles
+
+  </description>
+  <author>Filip Muellers</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rxdev</url>
+  <depend package="roslib"/>
+  <depend package="roscpp"/>
+  <depend package="rosgraph"/>
+  <depend package="qt4"/>
+  <depend package="rostopic"/>
+  <depend package="rosnode"/>
+  <depend package="tinyxml"/> 
+  <depend package="yaml_cpp"/>
+  
+</package>
+
+
+

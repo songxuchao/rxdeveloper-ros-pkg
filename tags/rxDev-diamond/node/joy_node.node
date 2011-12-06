@@ -1,0 +1,28 @@
+type: joy_node
+package: joy
+subscriptions:
+ - topic: scan
+   type: sensor_msgs/LaserScan
+ - topic: tf
+   type: tf/tfMessage
+ - topic: initialpose
+   type: geometry_msgs/PoseWithCovarianceStamped
+ - topic: map
+   type: nav_msgs/OccupancyGrid
+publications}:
+ - topic: joy
+   type: joy/Joy
+services:
+parameters:
+ - name: ~dev
+   type: string
+   default: "/dev/input/js0"
+ - name: ~deadzone
+   type: double
+   default: 0.05
+ - name: ~autorepeat_rate
+   type: double
+   default: 0.0
+ - name: ~coalesce_interval
+   type: double
+   default: 0.001

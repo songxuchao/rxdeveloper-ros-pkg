@@ -1,0 +1,62 @@
+type: move_base
+package: move_base
+subscriptions:
+ - topic: move_base/goal
+   type: move_base_msgs/MoveBaseActionGoal
+ - topic: move_base/cancel
+   type: actionlib_msgs/GoalID
+ - topic: move_base_simple/goal
+   type: geometry_msgs/PoseStamped
+publications:
+ - topic: move_base/feedback
+   type: move_base_msgs/MoveBaseActionFeedback
+ - topic: move_base/status
+   type: actionlib_msgs/GoalStatusArray
+ - topic: move_base/result
+   type: move_base_msgs/MoveBaseActionResult
+ - topic: cmd_vel
+   type: geometry_msgs/Twist
+services:
+ - name: ~make_plan
+   type: nav_msgs/GetPlan
+ - name: ~clear_unknown_space
+   type: std_srvs/Empty
+ - name: ~clear_costmaps
+   type: std_srvs/Empty
+parameters:
+ - name: ~base_global_planner
+   type: string
+   default: "navfn/NavfnROS"
+ - name: ~base_local_planner
+   type: string
+   default: "base_local_planner/TrajectoryPlannerROS"
+ - name: ~recovery_behaviors
+   type: list
+   default: 
+ - name: ~controller_frequency
+   type: double
+   default: 20.0
+ - name: ~planner_patience
+   type: double
+   default: 5.0
+ - name: ~controller_patience
+   type: double
+   default: 15.0
+ - name: ~conservative_reset_dist
+   type: double
+   default: 3.0
+ - name: ~recovery_behavior_enabled
+   type: bool
+   default: true
+ - name: ~clearing_rotation_allowed
+   type: bool
+   default: true
+ - name: ~shutdown_costmaps
+   type: bool
+   default: false
+ - name: ~oscillation_timeout
+   type: double
+   default: 0.0
+ - name: ~oscillation_distance
+   type: double
+   default: 0.5
