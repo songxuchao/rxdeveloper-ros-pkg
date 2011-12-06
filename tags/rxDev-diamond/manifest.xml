@@ -13,8 +13,8 @@
   <depend package="rosgraph"/>
   <depend package="rostopic"/>
   <depend package="rosnode"/>
-  <depend package="yaml_cpp"/> 
-  <rosdep name="tinyxml"/>
+  <depend package="yaml_cpp"/>
+  <depend package="tinyxml"/>  
   <rosdep name="qt4"/>   
 </package>
 
