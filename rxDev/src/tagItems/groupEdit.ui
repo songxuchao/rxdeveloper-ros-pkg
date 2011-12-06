@@ -53,9 +53,6 @@
         <property name="toolTip">
          <string>$(arg foo)</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="5" column="0">
@@ -69,9 +66,6 @@
        <widget class="QLineEdit" name="lineEdit_unless">
         <property name="toolTip">
          <string>$(arg foo)</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>
@@ -114,9 +108,6 @@
        <widget class="QLineEdit" name="lineEdit_namespace">
         <property name="toolTip">
          <string>foo</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>

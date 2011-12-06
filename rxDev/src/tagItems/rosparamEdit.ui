@@ -25,9 +25,6 @@
        <property name="toolTip">
         <string>$(find pkg-name)/path/foo.yaml</string>
        </property>
-       <property name="placeholderText">
-        <string/>
-       </property>
       </widget>
      </item>
      <item row="1" column="0">
@@ -110,9 +107,6 @@
         <property name="toolTip">
          <string>$(arg foo)</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -127,9 +121,6 @@
         <property name="toolTip">
          <string>$(arg foo)</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -143,9 +134,6 @@
        <widget class="QLineEdit" name="lineEdit_namespace">
         <property name="toolTip">
          <string>namespace</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>
