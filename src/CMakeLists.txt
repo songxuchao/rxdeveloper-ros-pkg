@@ -101,7 +101,7 @@ set( CPP
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 rosbuild_add_executable(rxdev ${CPP} ${MOC_SOURCES} ${UI_HEADERS} ${QT_RESOURCES})
 #rosbuild_add_executable(yaml_parser yaml_parser.cpp)
-target_link_libraries(rxdev ${QT_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} ${PYTHON_LIBRARIES} tinyxml yaml-cpp)
+target_link_libraries(rxdev ${QT_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} ${PYTHON_LIBRARIES})
 #target_link_libraries(yaml_parser ${QT_LIBRARIES})
 
 
