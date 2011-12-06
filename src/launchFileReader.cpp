@@ -258,7 +258,7 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
 
     switch ( firstLevelNode->Type() )
     {
-    case TiXmlNode::ELEMENT:                        // case with the important <tags>
+    case TiXmlNode::TINYXML_ELEMENT:                        // case with the important <tags>
 
         if (QString(firstLevelNode->Value())=="machine"){
             MachineItem* newMachine = new MachineItem;
@@ -391,18 +391,18 @@ void RxDev::beginParsing(TiXmlNode *firstLevelNode){
         }
         break;
 
-    case TiXmlNode::COMMENT:{                        // ignored <tag>
+    case TiXmlNode::TINYXML_COMMENT:{                        // ignored <tag>
         //printf( "Comment: \"%s\"", firstLevelNode->Value());
         //QPoint coords =getCoords(firstLevelNode);
         //qDebug()<<coords;
         break;
     }
 
-    case TiXmlNode::UNKNOWN:                        // ignored <tag>
+    case TiXmlNode::TINYXML_UNKNOWN:                        // ignored <tag>
         printf( "Unknown" );
         break;
 
-    case TiXmlNode::DECLARATION:                    // ignored <tag>
+    case TiXmlNode::TINYXML_DECLARATION:                    // ignored <tag>
         printf( "Declaration" );
         break;
     default:
@@ -506,7 +506,7 @@ void RxDev::create_machineItem(MachineItem &newMachine, TiXmlNode *machineNode,i
             EnvItem* newEnv = new EnvItem;
             create_envItem(*newEnv,pChild,includeX,includeY);
             newMachine.addEnvItem(newEnv);
-        }else if (pChild->Type()==TiXmlNode::COMMENT){
+        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -693,7 +693,7 @@ void RxDev::create_nodeorTestItem(NodeItem &newNode, int nodeOrTest, TiXmlNode *
             remapData->item=newRemap;
             arrowList.append(*remapData);
 
-        } else if (pChild->Type()==TiXmlNode::COMMENT){
+        } else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -741,7 +741,7 @@ void RxDev::create_paramItem(ParameterItem &newParam, TiXmlNode *parameterNode,i
     TiXmlNode * pChild;
     for ( pChild = parameterNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        if (pChild->Type()==TiXmlNode::COMMENT){
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -776,7 +776,7 @@ void RxDev::create_remapItem(RemapItem &newRemap,TiXmlNode *remapNode,int &x,int
     TiXmlNode * pChild;
     for ( pChild = remapNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        if (pChild->Type()==TiXmlNode::COMMENT){
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -897,7 +897,7 @@ void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNod
     TiXmlNode * pChild;
     for ( pChild = rosparamNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        if (pChild->Type()==TiXmlNode::COMMENT){
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -931,7 +931,7 @@ void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
     TiXmlNode * pChild;
     for ( pChild = envNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        if (pChild->Type()==TiXmlNode::COMMENT){
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -971,7 +971,7 @@ void RxDev::create_argItem(ArgItem &newArg, TiXmlNode *argNode,int &x, int &y)
     TiXmlNode * pChild;
     for ( pChild = argNode->FirstChild(); pChild != 0; pChild = pChild->NextSibling())
     {
-        if (pChild->Type()==TiXmlNode::COMMENT){
+        if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -1020,7 +1020,7 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
             create_argItem(*newArg,pChild,includeX,includeY);
             newIncludeFile.addArgItem(newArg);
 
-        } else if (pChild->Type()==TiXmlNode::COMMENT){
+        } else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             x=coords.x();
             y=coords.y();
@@ -1206,7 +1206,7 @@ void RxDev::create_groupItem(TiXmlNode *groupNode,GroupItem* newGroup)
                 newNode->setPos(QPoint(x1,y1));
                 newNode->setLocation(newNode->mapToParent(newNode->pos()));
             }
-        }else if (pChild->Type()==TiXmlNode::COMMENT){
+        }else if (pChild->Type()==TiXmlNode::TINYXML_COMMENT){
             QPoint coords =getCoords(pChild);
             xGroup=coords.x();
             yGroup=coords.y();
