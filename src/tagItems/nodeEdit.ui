@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>758</width>
-    <height>569</height>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,6 +53,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QLineEdit" name="lineEdit_name">
+       <property name="toolTip">
+        <string>nodename</string>
+       </property>
        <property name="inputMask">
         <string/>
        </property>
@@ -60,7 +63,7 @@
         <string/>
        </property>
        <property name="placeholderText">
-        <string>nodename</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -76,11 +79,14 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="toolTip">
+        <string>mypackage</string>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>mypackage</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -96,6 +102,9 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="toolTip">
+        <string>nodetype</string>
+       </property>
        <property name="inputMask">
         <string/>
        </property>
@@ -103,7 +112,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>nodetype</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -274,8 +283,11 @@
         </item>
         <item row="0" column="2">
          <widget class="QLineEdit" name="lineEdit_retry">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>0</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
@@ -288,8 +300,11 @@
         </item>
         <item row="0" column="5">
          <widget class="QLineEdit" name="lineEdit_time_limit">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>60.0</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
@@ -302,8 +317,11 @@
         </item>
         <item row="1" column="2">
          <widget class="QLineEdit" name="lineEdit_args">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>arg1 arg2 arg3</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
@@ -316,8 +334,11 @@
         </item>
         <item row="1" column="5">
          <widget class="QLineEdit" name="lineEdit_namespace">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>foo</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
@@ -337,22 +358,31 @@
         </item>
         <item row="2" column="2">
          <widget class="QLineEdit" name="lineEdit_machine">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>machine-name</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
         <item row="2" column="5">
          <widget class="QLineEdit" name="lineEdit_launch_prefix">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>prefix arguments</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
         <item row="6" column="5">
          <widget class="QLineEdit" name="lineEdit_if">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>$(arg foo)</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>
@@ -372,8 +402,11 @@
         </item>
         <item row="7" column="5">
          <widget class="QLineEdit" name="lineEdit_unless">
-          <property name="placeholderText">
+          <property name="toolTip">
            <string>$(arg foo)</string>
+          </property>
+          <property name="placeholderText">
+           <string/>
           </property>
          </widget>
         </item>

@@ -56,13 +56,13 @@ void ArgEdit::on_comboBox_currentIndexChanged(int index)
 {
     if (index == 0){
         ui->lineEdit_value_or_default->setText("");
-        ui->lineEdit_value_or_default->setPlaceholderText("none");
+        ui->lineEdit_value_or_default->setToolTip("none");
         ui->lineEdit_value_or_default->setEnabled(false);
     } else if (index == 1){
-        ui->lineEdit_value_or_default->setPlaceholderText("bar");
+        ui->lineEdit_value_or_default->setToolTip("bar");
         ui->lineEdit_value_or_default->setEnabled(true);
     } else if (index == 2){
-        ui->lineEdit_value_or_default->setPlaceholderText("1");
+        ui->lineEdit_value_or_default->setToolTip("1");
         ui->lineEdit_value_or_default->setEnabled(true);
     }
 }

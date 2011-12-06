@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>718</width>
-    <height>297</height>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QLineEdit" name="lineEdit_name">
+       <property name="toolTip">
+        <string>namespace/name</string>
+       </property>
        <property name="inputMask">
         <string/>
        </property>
@@ -57,7 +60,7 @@
         <string/>
        </property>
        <property name="placeholderText">
-        <string>namespace/name</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -81,8 +84,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEdit_value">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>value</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -95,11 +101,14 @@
       </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="lineEdit_type">
+        <property name="toolTip">
+         <string>str|int|double|bool</string>
+        </property>
         <property name="inputMask">
          <string/>
         </property>
         <property name="placeholderText">
-         <string>str|int|double|bool</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -136,8 +145,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEdit_file">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(find pkg-name)/path/file.txt</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -200,8 +212,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEdit_if">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -214,8 +229,11 @@
       </item>
       <item row="0" column="3">
        <widget class="QLineEdit" name="lineEdit_unless">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
