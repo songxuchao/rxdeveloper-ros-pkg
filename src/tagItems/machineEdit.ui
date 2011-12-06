@@ -35,9 +35,6 @@
        <property name="toolTip">
         <string>machine-name</string>
        </property>
-       <property name="placeholderText">
-        <string/>
-       </property>
       </widget>
      </item>
      <item row="2" column="0">
@@ -51,9 +48,6 @@
       <widget class="QLineEdit" name="lineEdit_address">
        <property name="toolTip">
         <string>blah.willowgarage.com</string>
-       </property>
-       <property name="placeholderText">
-        <string/>
        </property>
       </widget>
      </item>
@@ -80,9 +74,6 @@
         <property name="toolTip">
          <string>/path/to/ros/root/</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="3" column="0">
@@ -96,9 +87,6 @@
        <widget class="QLineEdit" name="lineEdit_ros_package_path">
         <property name="toolTip">
          <string>/path1:/path2</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>
@@ -114,9 +102,6 @@
         <property name="toolTip">
          <string>true|false|never</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="5" column="0">
@@ -131,9 +116,6 @@
         <property name="toolTip">
          <string>username</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="6" column="0">
@@ -147,9 +129,6 @@
        <widget class="QLineEdit" name="lineEdit_password">
         <property name="toolTip">
          <string>passwhat</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>
@@ -175,9 +154,6 @@
         <property name="toolTip">
          <string>10.0</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item row="9" column="0">
@@ -192,10 +168,7 @@
         <property name="toolTip">
          <string>$(arg foo)</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
-       </widget>
+        </widget>
       </item>
       <item row="10" column="0">
        <widget class="QLabel" name="label_12">
@@ -208,9 +181,6 @@
        <widget class="QLineEdit" name="lineEdit_unless">
         <property name="toolTip">
          <string>$(arg foo)</string>
-        </property>
-        <property name="placeholderText">
-         <string/>
         </property>
        </widget>
       </item>
