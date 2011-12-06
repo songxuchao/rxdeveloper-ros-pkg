@@ -154,8 +154,11 @@
              </item>
              <item row="1" column="1">
               <widget class="QLineEdit" name="lineEdit_packageName">
-               <property name="placeholderText">
+               <property name="toolTip">
                 <string>type in package-name</string>
+               </property>
+               <property name="placeholderText">
+                <string/>
                </property>
               </widget>
              </item>
@@ -236,7 +239,7 @@
   <widget class="QDockWidget" name="dockWidget_availableNodes">
    <property name="minimumSize">
     <size>
-     <width>273</width>
+     <width>288</width>
      <height>552</height>
     </size>
    </property>

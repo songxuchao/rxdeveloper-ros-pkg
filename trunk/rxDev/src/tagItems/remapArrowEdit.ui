@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
+    <width>816</width>
     <height>566</height>
    </rect>
   </property>
@@ -230,8 +230,11 @@ or</string>
       </item>
       <item row="0" column="2">
        <widget class="QLineEdit" name="lineEdit_if">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -244,8 +247,11 @@ or</string>
       </item>
       <item row="0" column="4">
        <widget class="QLineEdit" name="lineEdit_unless">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>

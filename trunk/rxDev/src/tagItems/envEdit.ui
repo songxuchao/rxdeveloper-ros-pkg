@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>205</height>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,8 +27,11 @@
    </item>
    <item row="0" column="1">
     <widget class="QLineEdit" name="lineEdit_name">
-     <property name="placeholderText">
+     <property name="toolTip">
       <string>environment-variable-name</string>
+     </property>
+     <property name="placeholderText">
+      <string/>
      </property>
     </widget>
    </item>
@@ -41,8 +44,11 @@
    </item>
    <item row="1" column="1">
     <widget class="QLineEdit" name="lineEdit_value">
-     <property name="placeholderText">
+     <property name="toolTip">
       <string>environment-variable-value</string>
+     </property>
+     <property name="placeholderText">
+      <string/>
      </property>
     </widget>
    </item>
@@ -61,8 +67,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEdit_if">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -75,8 +84,11 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="lineEdit_unless">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>$(arg foo)</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
