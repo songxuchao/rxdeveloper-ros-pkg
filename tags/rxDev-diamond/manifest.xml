@@ -12,6 +12,7 @@
   <depend package="roscpp"/>
   <depend package="rosgraph"/>
   <depend package="rostopic"/>
+  <depend package="common"/>
   <depend package="rosnode"/>
   <depend package="tinyxml"/> 
   <depend package="yaml_cpp"/>
