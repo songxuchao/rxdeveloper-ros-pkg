@@ -11,12 +11,11 @@
   <depend package="roslib"/>
   <depend package="roscpp"/>
   <depend package="rosgraph"/>
-  <depend package="qt4"/>
   <depend package="rostopic"/>
   <depend package="rosnode"/>
   <depend package="tinyxml"/> 
   <depend package="yaml_cpp"/>
-  
+  <rosdep name="qt4"/>   
 </package>
 
 
