@@ -227,10 +227,10 @@ void NodeEdit::reject() {
 void NodeEdit::accept() {
 
 
-    if ( ui->lineEdit_name->text()==""){
+    if ( ui->lineEdit_name->text()==""||ui->lineEdit_pkg->text()==""||ui->lineEdit_type->text()==""){
         QMessageBox::information(this, (QString::fromUtf8("Information")),
-                                 QString::fromUtf8("<h2>Name missing</h2>"
-                                                   "<p>Please insert the correct name!</p>"));
+                                 QString::fromUtf8("<h2>Name, package or type missing</h2>"
+                                                   "<p>Please insert the correct data!</p>"));
         ui->lineEdit_name->setFocus();
 
     } else{
