@@ -202,6 +202,7 @@
     </property>
     <addaction name="actionAbout_rxdev"/>
     <addaction name="separator"/>
+    <addaction name="actionOnline_Help"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -798,6 +799,11 @@
    </property>
    <property name="text">
     <string>rviz</string>
+   </property>
+  </action>
+  <action name="actionOnline_Help">
+   <property name="text">
+    <string>Online Help</string>
    </property>
   </action>
  </widget>

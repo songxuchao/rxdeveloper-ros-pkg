@@ -318,7 +318,7 @@ void RxDev::on_pushButton_blankNodelet_clicked()
 void RxDev::on_pushButton_managerNodelet_clicked()
 {
     NodeItem * newNode;
-    newNode = new NodeItem("","nodelet",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
+    newNode = new NodeItem("","nodelet",QStringList(),QStringList(),QStringList(),QStringList());
     newNode->setType("nodelet");
     newNode->setArgs("manager");
     newNode->setLocation(findSpace(QPoint(0,55)));
@@ -333,7 +333,7 @@ void RxDev::on_pushButton_managerNodelet_clicked()
 void RxDev::on_pushButton_blankNode_clicked()
 {
     NodeItem * newNode;
-    newNode = new NodeItem("","",QStringList(""),QStringList(""),QStringList(""),QStringList(""));
+    newNode = new NodeItem("","",QStringList(),QStringList(),QStringList(),QStringList());
     newNode->setType("_blank_node");
     newNode->setLocation(findSpace(QPoint(0,55)));
 newNode->setColor(Qt::yellow);
