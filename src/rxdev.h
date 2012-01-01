@@ -210,6 +210,8 @@ private slots:
     void on_actionRoswtf_triggered();
 
 
+    void on_actionOnline_help_triggered();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
