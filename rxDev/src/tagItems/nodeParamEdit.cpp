@@ -7,7 +7,7 @@ NodeParamEdit::NodeParamEdit(QStringList list, QWidget *parent) : QDialog(parent
     ui->setupUi(this);
     selectedParam=-1;
     paramModel = new QStandardItemModel(list.count(),4);
-    paramModel->setHeaderData(0,Qt::Horizontal,QObject::tr("topic"));
+    paramModel->setHeaderData(0,Qt::Horizontal,QObject::tr("name"));
     paramModel->setHeaderData(1,Qt::Horizontal,QObject::tr("type"));
     paramModel->setHeaderData(2,Qt::Horizontal,QObject::tr("default"));
     paramModel->setHeaderData(3,Qt::Horizontal,QObject::tr("range"));
