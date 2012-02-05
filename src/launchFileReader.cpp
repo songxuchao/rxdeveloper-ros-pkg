@@ -225,6 +225,17 @@ void RxDev::loadDocument( TiXmlNode * documentNode)
     {
 
         if (QString(pChild->Value())=="launch"){
+            TiXmlAttribute* tagAttribute=pChild->ToElement()->FirstAttribute();
+            while (tagAttribute)
+            {
+
+                if (QString(tagAttribute->Name())=="deprecated"){
+                    gview->setDeprecated(true);
+                    gview->setMessage(QString(tagAttribute->Value()));
+                }
+            tagAttribute=tagAttribute->Next();
+
+            }
             TiXmlNode * pChild2;
             for ( pChild2 = pChild->FirstChild(); pChild2 != 0; pChild2 = pChild2->NextSibling())
             {
