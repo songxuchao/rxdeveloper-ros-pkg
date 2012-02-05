@@ -17,7 +17,8 @@ QStringList groups;
 
 void RxDev::expandInclude(const QString &file, GroupItem &group){
 
-    TiXmlDocument doc( file.toStdString() );
+    std::string utf8_text = file.toUtf8().constData();
+    TiXmlDocument doc( utf8_text );
     bool loadOkay = doc.LoadFile();
     if (loadOkay)
     {

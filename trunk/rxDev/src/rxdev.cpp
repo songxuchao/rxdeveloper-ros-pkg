@@ -387,8 +387,8 @@ void RxDev::on_actionLoad_Launchfile_triggered()
             QMessageBox::critical( this, tr( "RxDev" ), tr( "The file '%1' does not exist!" ).arg( file ) );
             return;
         }
-
-        TiXmlDocument doc( file.toStdString() );
+        std::string utf8_text = file.toUtf8().constData();
+        TiXmlDocument doc( utf8_text );
         bool loadOkay = doc.LoadFile();
         if (loadOkay)
         {
