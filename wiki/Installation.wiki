@@ -3,6 +3,7 @@
 == What do I need? ==
 The rxDeveloper is tested with
  * Ubuntu 10.04
+ * Ubuntu 10.10
  * Ubuntu 11.04
  * Ubuntu 11.10
  * Linux Mint 11
