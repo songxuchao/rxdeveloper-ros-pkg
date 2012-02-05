@@ -445,12 +445,18 @@ void LaunchWriter::create_rosparamTag(TiXmlElement &elem, QGraphicsItem &item )
     RosparamItem *rosparam = qgraphicsitem_cast<RosparamItem *>(&item);
     rosparamTag = new TiXmlElement( "rosparam" );
     rosparamTag->SetAttribute("file", rosparam->getValue().toStdString());
-    if (rosparam->getType() == "command load")
+    if (rosparam->getType() == "command load"){
         rosparamTag->SetAttribute("command", "load");
-    if (rosparam->getType() == "command dump")
+        rosparamTag->SetAttribute("file", rosparam->getValue().toStdString());
+    }
+    if (rosparam->getType() == "command dump"){
         rosparamTag->SetAttribute("command", "dump");
-    if (rosparam->getType() == "command delete")
+        rosparamTag->SetAttribute("file", rosparam->getValue().toStdString());
+    }
+    if (rosparam->getType() == "command delete"){
         rosparamTag->SetAttribute("command", "delete");
+        rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
+    }
     //optional
     if (rosparam->getName()!="")
         rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
@@ -481,12 +487,18 @@ void LaunchWriter::create_rosparamTag(TiXmlElement &elem, RosparamItem &rosparam
 
     rosparamTag = new TiXmlElement( "rosparam" );
     rosparamTag->SetAttribute("file", rosparam.getValue().toStdString());
-    if (rosparam.getType() == "command load")
+    if (rosparam.getType() == "command load"){
         rosparamTag->SetAttribute("command", "load");
-    if (rosparam.getType() == "command dump")
+        rosparamTag->SetAttribute("file", rosparam.getValue().toStdString());
+    }
+    if (rosparam.getType() == "command dump"){
         rosparamTag->SetAttribute("command", "dump");
-    if (rosparam.getType() == "command delete")
+        rosparamTag->SetAttribute("file", rosparam.getValue().toStdString());
+    }
+    if (rosparam.getType() == "command delete"){
         rosparamTag->SetAttribute("command", "delete");
+        rosparamTag->SetAttribute("param", rosparam.getName().toStdString());
+    }
     //optional
     if (rosparam.getName()!="")
         rosparamTag->SetAttribute("param", rosparam.getName().toStdString());

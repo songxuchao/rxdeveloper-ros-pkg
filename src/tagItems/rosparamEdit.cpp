@@ -36,10 +36,10 @@ void RosparamEdit::reject() {
 void RosparamEdit::accept() {
 
 
-    if ( ui->lineEdit_paramFile->text()==""){
+    if ( ui->lineEdit_paramFile->text()=="" && ui->lineEdit_param->text()==""){
         QMessageBox::information(this, (QString::fromUtf8("Information")),
-                                 QString::fromUtf8("<h2>File missing</h2>"
-                                                   "<p>Please insert the correct name!</p>"));
+                                 QString::fromUtf8("<h2>File or param missing</h2>"
+                                                   "<p>Please insert the correct file or param!</p>"));
         ui->lineEdit_paramFile->setFocus();
 
     } else{
