@@ -310,7 +310,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
 
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_publications->item(i,0)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_publications->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_publications->item(i,2)->text()));
     }
     text.append("\t}");
     }
@@ -320,7 +320,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
 
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_services->item(i,0)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_services->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_services->item(i,2)->text()));
     }
     text.append("\t}");
     }
@@ -331,7 +331,7 @@ void SpecFileEdit::on_pushButton_wiki_clicked()
         text.append(QString("\t\t %1.name= %2\n").arg(i).arg(model_parameters->item(i,0)->text()));
         text.append(QString("\t\t %1.default= %2\n").arg(i).arg(model_parameters->item(i,2)->text()));
         text.append(QString("\t\t %1.type= %2\n").arg(i).arg(model_parameters->item(i,1)->text()));
-        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_subscriptions->item(i,2)->text()));
+        text.append(QString("\t\t %1.desc= %2\n").arg(i).arg(model_parameters->item(i,3)->text()));
     }
     text.append("\t}");
     }
