@@ -4,6 +4,7 @@
 #include "rxdev.h"
 #include "tagItems/remapArrowEdit.h"
 #include "tagItems/groupItem.h"
+#include "tagItems/launchEdit.h"
 
 
 /*!\brief Graphicsview with special features
@@ -11,7 +12,9 @@
  * initializes the extended QGraphicsView
  */
 LaunchFileView::LaunchFileView(QWidget *parent) : QGraphicsView(parent),
-    _handScrolling(false)
+    _handScrolling(false),
+    deprecated(false),
+    message("")
 {
     setAcceptDrops(true);
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -334,14 +337,51 @@ void LaunchFileView::setMode(Mode mode)
 
 void LaunchFileView::mouseDoubleClickEvent(QMouseEvent *event)
 {
-//    QList<QGraphicsItem *> list;
-//    list=items();
+        if(itemAt(event->pos())){
+            QGraphicsView::mouseDoubleClickEvent(event);
+        }
+        else{
+            LaunchEdit launch(this);
+            launch.setWindowTitle("Launch:");
+            bool accept = launch.exec();
+            if (accept){
+                if (launch.getDeprecated()){
+                    setDeprecated(true);
+                    setMessage(launch.getMessage());
+                }
+                else{
+                    setDeprecated(false);
+                    setMessage("");
+                }
 
-//    for (int i = 0; i < list.size(); i++) {
-//        if (list.at(i)->type() != 8)
-//            qDebug()<<(list.at(i)->type())<<": "<<list.at(i)->pos()+this->pos();
-//    }
-    QGraphicsView::mouseDoubleClickEvent(event);
+            }
+
+
+            event->accept();
+        }
+
+
+
+}
+
+void LaunchFileView::setDeprecated(bool depri)
+{
+    deprecated=depri;
+}
+
+void LaunchFileView::setMessage(QString new_message)
+{
+    message=new_message;
+}
+
+bool LaunchFileView::getDeprecated()
+{
+    return deprecated;
+}
+
+QString LaunchFileView::getMessage()
+{
+    return message;
 }
 
 

@@ -355,7 +355,10 @@ void RxDev::on_actionSave_as_Launchfile_triggered()
         QList<QGraphicsItem *> list;
         list=scene->items();
         ui->statusBar->showMessage(tr("writing launchfile..."));
-        launchFile->createDocument(file,list);
+        QString depricated_launch="";
+        if (gview->getDeprecated())
+            depricated_launch=gview->getMessage();
+        launchFile->createDocument(file,list, depricated_launch);
         ui->statusBar->showMessage(tr("Launchfile '%1' has been written").arg(file), 5000);
         setWindowTitle("rxDeveloper - "+file);
         QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("Writing done")),
@@ -436,7 +439,10 @@ void RxDev::on_actionStart_triggered()
     LaunchWriter *launchFile = new LaunchWriter;
     QList<QGraphicsItem *> list;
     list=scene->items();
-    launchFile->createDocument(file,list);
+    QString depricated_launch="";
+    if (gview->getDeprecated())
+        depricated_launch=gview->getMessage();
+    launchFile->createDocument(file,list, depricated_launch);
     rosLaunch->setWorkingDirectory(QDir::temp().absolutePath());
     rosLaunch->setProcessChannelMode(QProcess::MergedChannels);
     QString launch= (settings.value("terminal").toString().trimmed()+" \"roslaunch temp.launch\"");

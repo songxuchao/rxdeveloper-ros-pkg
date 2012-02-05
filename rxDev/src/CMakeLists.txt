@@ -7,6 +7,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/nodeEdit.h
     tagItems/argItem.h
     tagItems/argEdit.h
+    tagItems/launchEdit.h
     tagItems/envItem.h
     tagItems/envEdit.h
     tagItems/remapArrowEdit.h
@@ -42,6 +43,7 @@ qt4_wrap_ui(UI_HEADERS
     tagItems/includeFileEdit.ui
     tagItems/machineEdit.ui
     tagItems/argEdit.ui
+    tagItems/launchEdit.ui
     tagItems/envEdit.ui
     tagItems/nodeEdit.ui
     tagItems/groupEdit.ui
@@ -59,6 +61,7 @@ set( CPP
     tagItems/groupEdit.cpp
     tagItems/argItem.cpp
     tagItems/argEdit.cpp
+    tagItems/launchEdit.cpp
     tagItems/envItem.cpp
     tagItems/envEdit.cpp
     tagItems/includeFileItem.cpp
