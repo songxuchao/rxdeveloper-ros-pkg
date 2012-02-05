@@ -80,7 +80,10 @@ public:
     QStringList selectedNodePublications;
     QStringList selectedNodeServices;
     QStringList selectedNodeParameters;
-
+    bool getDeprecated();
+    QString getMessage();
+    void setDeprecated(bool depri);
+    void setMessage(QString new_message);
 protected:
 
 
@@ -117,6 +120,8 @@ private:
     int _width;
     int _height;
     int _space;
+    bool deprecated;
+    QString message;
 
 };
 

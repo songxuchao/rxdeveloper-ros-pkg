@@ -10,7 +10,7 @@
 class LaunchWriter
 {
 public:
-    void createDocument(QString file, QList<QGraphicsItem *> &list);
+    void createDocument(QString file, QList<QGraphicsItem *> &list, QString launch_depricated);
 private:
     bool project;
 private slots:

@@ -201,6 +201,8 @@ void RxDev::on_actionNew_Launchfile_triggered()
             scene->removeItem(list.at(i));
         }
         setWindowTitle("rxDeveloper - *new");
+        gview->setDeprecated(false);
+        gview->setMessage("");
     }
 }
 

@@ -17,13 +17,16 @@
  *
  * Create the <launch> tag and the children tags in the file.
  */
-void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
+void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list, QString launch_deprecated)
 {
     //TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "", "" );
     //doc.LinkEndChild( decl );
     TiXmlDocument doc;
 
     TiXmlElement * launchTag = new TiXmlElement( "launch" );
+    if (launch_deprecated !="")
+        launchTag->SetAttribute("deprecated", launch_deprecated.toStdString());
+
     doc.LinkEndChild( launchTag );
 
     create_commentTag(*launchTag,"Created with rxDev");
@@ -88,7 +91,8 @@ void LaunchWriter::createDocument(QString file, QList<QGraphicsItem *> &list)
             create_paramTag(*launchTag,*list.at(paramItems.at(i)));
     }
 
-    doc.SaveFile( file.toStdString() );
+    std::string utf8_text = file.toUtf8().constData();
+    doc.SaveFile( utf8_text );
 
 }
 
