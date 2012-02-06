@@ -122,6 +122,10 @@ void LaunchWriter::create_groupTag(TiXmlElement &elem, QGraphicsItem &item)
         groupTag->SetAttribute("clear_params", "true");
     else if (group->getClear_params() == 2)
         groupTag->SetAttribute("clear_params", "false");
+    if (group->getIf()!="")
+        groupTag->SetAttribute("if", group->getIf().toStdString());
+    if (group->getUnless()!="")
+        groupTag->SetAttribute("unless", group->getUnless().toStdString());
     //end optional
 
 
@@ -235,9 +239,9 @@ void LaunchWriter::create_includeTag(TiXmlElement &elem, QGraphicsItem &item)
     //optional
     if (include->getNamespace()!=""){
         includeTag->SetAttribute("ns", include->getNamespace().toStdString());
-        if (include->getClearParams()==true)  //can only be used if a ns exists
+        if (include->getClearParams()==1)  //can only be used if a ns exists
             includeTag->SetAttribute("clear_params", "true");
-        else if (include->getClearParams()==false)  //can only be used if a ns exists
+        else if (include->getClearParams()==2)  //can only be used if a ns exists
             includeTag->SetAttribute("clear_params", "false");
         if (include->getIf()!="")
             includeTag->SetAttribute("if", include->getIf().toStdString());
