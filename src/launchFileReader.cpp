@@ -1007,7 +1007,12 @@ void RxDev::create_includeFileItem(IncludeFileItem &newIncludeFile, TiXmlNode *i
         }else if (QString(tagAttribute->Name())=="ns"){
             newIncludeFile.setNamespace(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="clear_params"){
-            newIncludeFile.setClearParams(bool(tagAttribute->Value()));
+            if (QString(tagAttribute->Value())=="true")
+                newIncludeFile.setClearParams(1);
+            else if (QString(tagAttribute->Value())=="false")
+                newIncludeFile.setClearParams(2);
+            else
+                newIncludeFile.setClearParams(0);
         }else if (QString(tagAttribute->Name())=="if"){
             newIncludeFile.setIf(QString(tagAttribute->Value()));
         }else if (QString(tagAttribute->Name())=="unless"){

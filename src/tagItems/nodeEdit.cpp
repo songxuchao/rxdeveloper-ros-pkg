@@ -36,11 +36,11 @@ NodeEdit::NodeEdit(NodeItem *item, bool blank, QWidget *parent) : QDialog(parent
     ui->comboBox_cwd->setCurrentIndex(item->getCwd());
     ui->lineEdit_if->setText(item->getIf());
     ui->lineEdit_unless->setText(item->getUnless());
+    ui->comboBox_required->setCurrentIndex(item->getRequired());
 
     node_or_test = item->getNode_or_test();
     if (node_or_test==0){
         on_radioButton_standardNode_clicked();
-        ui->comboBox_required->setCurrentIndex(item->getRequired());
         ui->comboBox_respawn->setCurrentIndex(item->getRespawn());
         ui->comboBox_output->setCurrentIndex(item->getOutput());
     }else{
@@ -285,7 +285,6 @@ void NodeEdit::on_radioButton_testNode_clicked()
     ui->radioButton_standardNode->setChecked(false);
     ui->label_name->setText("test-name:");
     ui->comboBox_respawn->setEnabled(false);
-    ui->comboBox_required->setEnabled(false);
     ui->label_output->setEnabled(false);
     ui->label_machine->setEnabled(false);
     ui->comboBox_output->setEnabled(false);
@@ -303,7 +302,6 @@ void NodeEdit::on_radioButton_standardNode_clicked()
     ui->radioButton_testNode->setChecked(false);
     ui->label_name->setText("name:");
     ui->comboBox_respawn->setEnabled(true);
-    ui->comboBox_required->setEnabled(true);
     ui->label_output->setEnabled(true);
     ui->label_machine->setEnabled(true);
     ui->comboBox_output->setEnabled(true);
