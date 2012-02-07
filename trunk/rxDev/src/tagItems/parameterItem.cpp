@@ -303,3 +303,5 @@ QString ParameterItem::getRange()
 {
     return _rangeString;
 }
+
+

@@ -466,6 +466,10 @@ void LaunchWriter::create_rosparamTag(TiXmlElement &elem, QGraphicsItem &item )
         rosparamTag->SetAttribute("command", "delete");
         rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
     }
+    if (rosparam->getText()!="")
+        rosparamTag->LinkEndChild(new TiXmlText(rosparam->getText().toStdString()));
+    if (rosparam->getName()!="")
+        rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
     //optional
     if (rosparam->getName()!="")
         rosparamTag->SetAttribute("param", rosparam->getName().toStdString());
@@ -508,6 +512,10 @@ void LaunchWriter::create_rosparamTag(TiXmlElement &elem, RosparamItem &rosparam
         rosparamTag->SetAttribute("command", "delete");
         rosparamTag->SetAttribute("param", rosparam.getName().toStdString());
     }
+    if (rosparam.getText()!="")
+        rosparamTag->LinkEndChild(new TiXmlText(rosparam.getText().toStdString()));
+    if (rosparam.getName()!="")
+        rosparamTag->SetAttribute("param", rosparam.getName().toStdString());
     //optional
     if (rosparam.getName()!="")
         rosparamTag->SetAttribute("param", rosparam.getName().toStdString());

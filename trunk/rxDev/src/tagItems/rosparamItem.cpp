@@ -75,6 +75,7 @@ bool RosparamItem::getRosparamData()
         setName(param.getName());
         setValue(param.getValue());
         setType(param.getType());
+        setText(param.getText());
         setNamespace(param.getNamespace());
         updateRosparamItem();
         setIf(param.getIf());
@@ -297,4 +298,14 @@ QString RosparamItem::getUnless()
 void RosparamItem::setUnless(QString newUnless)
 {
     _unlessString = newUnless;
+}
+
+QString RosparamItem::getText()
+{
+    return _rosparamText;
+}
+
+void RosparamItem::setText(QString newText)
+{
+    _rosparamText = newText;
 }
