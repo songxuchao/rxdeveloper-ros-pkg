@@ -917,13 +917,15 @@ void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNod
         }
         //qDebug()<<"x:"<<x<<" y:"<<y;
     }
+    if (rosparamNode->ToElement()->GetText() !="")                  //check for yaml-text
+        newRosparam.setText(rosparamNode->ToElement()->GetText());
     newRosparam.updateRosparamItem();
 }
 
 /*!\brief <env>-tag object
-                         *
-                         * get attributes for the <env>-object.
-                         */
+ *
+ * get attributes for the <env>-object.
+ */
 void RxDev::create_envItem(EnvItem &newEnv,TiXmlNode *envNode, int &x, int &y)
 {
     TiXmlAttribute* tagAttribute=envNode->ToElement()->FirstAttribute();

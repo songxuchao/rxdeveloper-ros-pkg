@@ -21,6 +21,7 @@ class RosparamEdit : public QDialog {
                 QString getValue();
                 QString getType();
                 QString getNamespace();
+                QString getText();
                 QString getIf();
                 QString getUnless();
 
