@@ -55,6 +55,8 @@ class RosparamItem : public QGraphicsWidget
     void setValue(QString newValue);
     QString getNamespace();
     void setNamespace(QString newNamespace);
+    QString getText();
+    void setText(QString newText);
     QString getIf();
     void setIf(QString newIf);
     QString getUnless();
@@ -88,6 +90,7 @@ private:
     QString _namespaceString;
     QString _ifString;
     QString _unlessString;
+    QString _rosparamText;
  };
 
 

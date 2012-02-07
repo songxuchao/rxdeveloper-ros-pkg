@@ -916,6 +916,8 @@ void RxDev::create_rosparamItem(RosparamItem &newRosparam,TiXmlNode *rosparamNod
         }
         //qDebug()<<"x:"<<x<<" y:"<<y;
     }
+    if (rosparamNode->ToElement()->GetText() !="")                  //check for yaml-text
+        newRosparam.setText(rosparamNode->ToElement()->GetText());
     newRosparam.updateRosparamItem();
 }
 
