@@ -22,7 +22,6 @@ void RxDev::expandInclude(const QString &file, GroupItem &group){
     bool loadOkay = doc.LoadFile();
     if (loadOkay)
     {
-
 //        qDebug()<<group.pos();
         if (group.isVisible() && group.pos()!=QPoint(0,0))          //if IncludeItem has a Parent-GroupItem
             loadDocumentInGroup( &doc, group);

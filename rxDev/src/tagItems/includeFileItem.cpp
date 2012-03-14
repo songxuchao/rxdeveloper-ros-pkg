@@ -57,7 +57,8 @@ IncludeFileItem::IncludeFileItem(QGraphicsRectItem *parent, QGraphicsScene *scen
 void IncludeFileItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     setColor(Qt::red);
-    getFileData();
+    bool check = getFileData();
+    check;
     setColor(Qt::cyan);
     event->setAccepted(true);
 }
@@ -78,11 +79,11 @@ bool IncludeFileItem::getFileData()
         GroupItem *group;
         if (this->parentItem()){
             group =qgraphicsitem_cast<GroupItem *>(this->parentItem());
-        }
+        }else
+            group = new GroupItem;
 //        qDebug()<<file;
         if (file!=""){
             if (QFile(file).exists()){
-
                 expandItem(file,*group);
                 if (this->parentItem()==0||this->parentItem()==group)
                     scene()->removeItem(this);
