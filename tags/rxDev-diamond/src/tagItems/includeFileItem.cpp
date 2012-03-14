@@ -78,7 +78,8 @@ bool IncludeFileItem::getFileData()
         GroupItem *group;
         if (this->parentItem()){
             group =qgraphicsitem_cast<GroupItem *>(this->parentItem());
-        }
+        }else
+            group = new GroupItem;
 //        qDebug()<<file;
         if (file!=""){
             if (QFile(file).exists()){
