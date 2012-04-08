@@ -111,6 +111,16 @@
                 </property>
                </widget>
               </item>
+              <item row="3" column="2">
+               <widget class="QPushButton" name="pushButton_specfilFromExe">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Specfile from running process</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -193,7 +203,7 @@
      <x>0</x>
      <y>0</y>
      <width>1172</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -202,7 +212,7 @@
     </property>
     <addaction name="actionAbout_rxdev"/>
     <addaction name="separator"/>
-    <addaction name="actionOnline_help"/>
+    <addaction name="actionOnline_Help"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -801,9 +811,9 @@
     <string>rviz</string>
    </property>
   </action>
-  <action name="actionOnline_help">
+  <action name="actionOnline_Help">
    <property name="text">
-    <string>Online help</string>
+    <string>Online Help</string>
    </property>
   </action>
  </widget>

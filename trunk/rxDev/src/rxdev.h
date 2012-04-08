@@ -204,6 +204,7 @@ private slots:
     void on_pushButton_createPython_clicked();
 
     void on_pushButton_specfile_clicked();
+    void on_pushButton_specfilFromExe_clicked();
 
     void refresh_packageModel();
 
@@ -212,12 +213,14 @@ private slots:
 
     void on_actionOnline_Help_triggered();
 
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
     QPushButton *rosCoreButton;
     QProcess *rosCoreProcess;
     QProcess *roswtf;
+    QProcess *rosnode;
     QProcess *rviz;
     QProcess *rosLaunch;
     QProcess *rxgraph;

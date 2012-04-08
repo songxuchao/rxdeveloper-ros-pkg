@@ -62,6 +62,7 @@ RxDev::RxDev(QWidget *parent) :
     dynamicreconfigure = new QProcess(this);
     connect(dynamicreconfigure, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     roswtf = new QProcess(this);
+    rosnode = new QProcess(this);
     rosLaunch = new QProcess(this);
     connect(rosLaunch, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(state( QProcess::ProcessState) ));
     if (rosLaunch->state()!=2){
@@ -331,7 +332,7 @@ void RxDev::changeToolBar(){
 void RxDev::on_actionAbout_rxdev_activated()
 {
     QMessageBox::about(this, (QString::fromUtf8("About rxDeveloper")),
-                       QString::fromUtf8("<h2>rxdev v.1.0 RC</h2>"
+                       QString::fromUtf8("<h2>rxdev v.1.1 </h2>"
                                          "<p>Copyright &copy; 2011 Institute for Computer Science VI (AIS)"
                                          "<p>Created by: Filip Müllers (mailto:F.Muellers@gmail.com)"));
 }
