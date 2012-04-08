@@ -23,6 +23,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/groupEdit.h
     tagItems/machineItem.h
     tagItems/machineEdit.h
+    nodeSelection.h
     rxdev.h
     newEntry.h
     wikiDialog.h
@@ -37,6 +38,7 @@ qt4_wrap_ui(UI_HEADERS
     wikiDialog.ui
     specFileEdit.ui
     settings.ui
+    nodeSelection.ui
     tagItems/parameterEdit.ui
     tagItems/rosparamEdit.ui
     tagItems/nodeParamEdit.ui
@@ -60,8 +62,8 @@ set( CPP
     tagItems/groupItem.cpp
     tagItems/groupEdit.cpp
     tagItems/argItem.cpp
-    tagItems/launchEdit.cpp
     tagItems/argEdit.cpp
+    tagItems/launchEdit.cpp
     tagItems/envItem.cpp
     tagItems/envEdit.cpp
     tagItems/includeFileItem.cpp
@@ -79,6 +81,7 @@ set( CPP
     tagItems/remapEdit.cpp
     main.cpp
     rxdev.cpp
+    nodeSelection.cpp
     c_creator.cpp
     c_connector.cpp
     newEntry.cpp
@@ -104,7 +107,7 @@ set( CPP
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 rosbuild_add_executable(rxdev ${CPP} ${MOC_SOURCES} ${UI_HEADERS} ${QT_RESOURCES})
 #rosbuild_add_executable(yaml_parser yaml_parser.cpp)
-target_link_libraries(rxdev ${QT_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} ${PYTHON_LIBRARIES} yaml-cpp tinyxml)
+target_link_libraries(rxdev ${QT_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} ${PYTHON_LIBRARIES} tinyxml yaml-cpp)
 #target_link_libraries(yaml_parser ${QT_LIBRARIES})
 
 

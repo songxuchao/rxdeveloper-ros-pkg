@@ -5,6 +5,8 @@
 #include <QUrl>
 #include "specFileEdit.h"
 #include "specFileParser.h"
+#include "nodeSelection.h"
+
 
 QPoint menuPoint;
 QString folderName;
@@ -82,6 +84,8 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
     ui->pushButton_createCpp->setEnabled(isPack);
     ui->pushButton_createPython->setEnabled(isPack);
     ui->pushButton_specfile->setEnabled(isPack);
+    ui->pushButton_specfilFromExe->setEnabled(isPack);
+
     if (isPack){
         //qDebug()<<packagePath;
         workingModel->setRootPath(packagePath);
@@ -115,6 +119,7 @@ void RxDev::showContextMenu(const QPoint&point){
     if(workingModel->fileInfo(index).isDir()||!index.isValid()){
         contextMenu.addAction(tr("new File"),this, SLOT(createNewFile()));
         contextMenu.addAction(tr("new SpecFile"),this, SLOT(on_pushButton_specfile_clicked()));
+        contextMenu.addAction(tr("new SpecFile from running process"),this, SLOT(on_pushButton_specfilFromExe_clicked()));
         contextMenu.addAction(tr("new C++-File"),this, SLOT(on_pushButton_createCpp_clicked()));
         contextMenu.addAction(tr("new Python-File"),this, SLOT(on_pushButton_createPython_clicked()));
         contextMenu.addSeparator();
@@ -373,4 +378,135 @@ void RxDev::on_pushButton_specfile_clicked()
 
     }
     QDir::setCurrent(workingModel->rootPath());
+}
+
+
+void RxDev::on_pushButton_specfilFromExe_clicked()
+{
+    //fetch possible Nodes
+    rosnode->setWorkingDirectory(QDir::temp().absolutePath());
+    rosnode->setProcessChannelMode(QProcess::MergedChannels);
+    rosnode->start(QString("rosnode list"));
+    rosnode->waitForFinished(-1);
+    QByteArray output = rosnode->readAll();
+    if (output.contains("ERROR")){          //no nodes are running
+        QMessageBox::information(this, QString::fromUtf8("There are no running ROS processes."),
+                                QString::fromUtf8("Please run a ROS process and try again!"));
+    }
+    else{
+        QStringList nodes;
+        nodes.append(QString(output).split("\n"));
+        nodes.removeLast();                     //removes an empty String at the end
+        //let user choose from the available nodes
+        NodeSelection nodeSelection(nodes);
+        bool accept = nodeSelection.exec();
+        if (accept){
+            QString selected = nodes.at(nodeSelection.getNode());
+            //qDebug()<<"==>"<<selected;
+
+            // fetch information for selected node
+            rosnode->start(QString("rosnode info "+selected));
+            rosnode->waitForFinished(-1);
+            QByteArray output = rosnode->readAll();
+            //qDebug()<<output;
+            QStringList info;
+            Specfile newSpec;
+            //selected.remove("/");
+            //selected.toStdString() >> newSpec.type;
+            info.append(QString(output).split(":"));
+            QStringList pubs;
+            pubs.append(QString(info[1]).split("\n"));
+            for (int row=0;row<pubs.count();row++){
+                if (QString(pubs[row]).startsWith(" * ")){
+                    //qDebug()<<"Pubs: "<<pubs[row];
+                    QString pub=pubs[row];
+                    QStringList publist;
+                    publist.append(pub.split(" ["));
+                    Topic_Type tt;
+                    tt.topic=publist[0].remove(" * ").toStdString();
+                    tt.topictype= publist[1].remove("]").toStdString();
+                    newSpec.publications.push_back(tt);
+                }
+            }
+            QStringList subs;
+            subs.append(QString(info[2]).split("\n"));
+            for (int row=0;row<subs.count();row++){
+                if (QString(subs[row]).startsWith(" * ")){
+                    //qDebug()<<"Subs: "<<subs[row];
+                    QString sub=subs[row];
+                    QStringList sublist;
+                    sublist.append(sub.split(" ["));
+                    Topic_Type tt;
+                    tt.topic=sublist[0].remove(" * ").toStdString();
+                    tt.topictype= sublist[1].remove("]").toStdString();
+                    newSpec.subscriptions.push_back(tt);
+                }
+
+            }
+            QStringList servs;
+            servs.append(QString(info[3]).split("\n"));
+            for (int row=0;row<servs.count();row++){
+                if (QString(servs[row]).startsWith(" * ")){
+                    //qDebug()<<"servs: "<<servs[row];
+                    QString serv=servs[row];
+                    Topic_Type tt;
+                    serv.remove(" * ");
+                    tt.topic=serv.toStdString();
+                    newSpec.services.push_back(tt);
+                }
+
+            }
+
+            //qDebug()<<packagePath;
+            currentDir.setPath(workingModel->rootPath());
+            currentDir.mkdir("node");
+            NewEntry createFile;
+            createFile.setWindowTitle("Create File in "+workingModel->rootPath()+("/node"));
+            bool name = createFile.exec();
+            if (name)
+            {
+                QString filename=createFile.getFileName();
+                QFile newFile;
+                if (!(filename=="")){
+                    if (!filename.endsWith(".node"))
+                        filename.append(".node");
+                    newFile.setFileName(filename);
+                }
+                QString filePath= workingModel->rootPath()+("/node/"+newFile.fileName());
+
+                SpecFileEdit specFile(&newSpec);
+                specFile.setWindowTitle("Specfile: "+createFile.getFileName());
+
+                bool accept = specFile.exec();
+                SpecFileParser *specParser = new SpecFileParser;
+                if ((accept)){
+                    QFile file;
+                    file.setFileName(filePath);
+                    file.open(QIODevice::WriteOnly | QIODevice::Text);
+                    if (file.isWritable()){
+                        QString tempContens = specParser->writeSpecFile(&newSpec);
+                        QTextStream text(&file);
+                        text<<tempContens;
+
+                        //qDebug()<<"subs "<<specFile.getSubscriptions();
+                        file.close();
+                        QMessageBox::information( this, "File written!", "The file "+filePath+" was created\n", QMessageBox::Ok, 0 );
+                        on_pushButton_refreshNodesOrComps_clicked();
+
+                    } else
+                        QMessageBox::critical(this, "File is write protected!", "The file "+filePath+" could not be written\n", QMessageBox::Ok, 0 );
+
+                    //        setType(nodeEdit.getType());
+                    //        setName(nodeEdit.getName());
+                    //        setArgs(nodeEdit.getArgs());
+
+
+                }
+
+            }
+            QDir::setCurrent(workingModel->rootPath());
+
+        }
+    }
+
 }
