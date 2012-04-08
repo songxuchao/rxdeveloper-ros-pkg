@@ -23,6 +23,7 @@ qt4_wrap_cpp(MOC_SOURCES
     tagItems/groupEdit.h
     tagItems/machineItem.h
     tagItems/machineEdit.h
+    nodeSelection.h
     rxdev.h
     newEntry.h
     wikiDialog.h
@@ -37,6 +38,7 @@ qt4_wrap_ui(UI_HEADERS
     wikiDialog.ui
     specFileEdit.ui
     settings.ui
+    nodeSelection.ui
     tagItems/parameterEdit.ui
     tagItems/rosparamEdit.ui
     tagItems/nodeParamEdit.ui
@@ -79,6 +81,7 @@ set( CPP
     tagItems/remapEdit.cpp
     main.cpp
     rxdev.cpp
+    nodeSelection.cpp
     c_creator.cpp
     c_connector.cpp
     newEntry.cpp
