@@ -2,6 +2,7 @@
 #include "specFileEdit.h"
 #include "wikiDialog.h"
 #include <QTextEdit>
+#include <QUrl>
 
 /*!\brief small dialog for naming.
  *
@@ -370,7 +371,7 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
 
             //Write the new File
             QFile newFile;
-            newFile.setFileName(QString(ui->lineEdit_package->text()+".cpp"));
+            newFile.setFileName(QString(ui->lineEdit_type->text()+".cpp"));
             bool reallyWriteFile=true;
             if (!(newFile.exists()))
             {
@@ -474,6 +475,13 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
                 // write the output
                 outstream << header.toUtf8().data() << pubs.toUtf8().data() << subs.toUtf8().data() << servs.toUtf8().data() << params.toUtf8().data() << footer.toUtf8().data();
                 newFile.close();
+                QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("File created")),
+                                                                           QString::fromUtf8("<h2>C++-File has been written!</h2>"
+                                                                                             "<p>The file %1 was created. Do you want to open this file?</p>").arg(ui->lineEdit_type->text()+".cpp"),
+
+                                                                           QMessageBox::Yes | QMessageBox::No);
+                if (button == QMessageBox::Yes)
+                    QDesktopServices::openUrl(QUrl::fromLocalFile(packagePath+"/"+ui->lineEdit_type->text()+".cpp"));
 
             }
 
