@@ -66,6 +66,7 @@ http://rxdeveloper-ros-pkg.googlecode.com/files/specfileedit.node.png
 ----
 == Package and file creation ==
 http://rxdeveloper-ros-pkg.googlecode.com/files/component-creator.png
+
 In the *Component Creator*-Tab you can browse existing packages of your working directory. The working directory can be specified in the settings.
 Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
 
