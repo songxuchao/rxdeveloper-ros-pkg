@@ -1,5 +1,6 @@
 = Tutorials =
 ----
+This video was made with rxDeveloper version 1.0b, there are some fancy new features in the newer versions!
 <wiki:video url="http://www.youtube.com/watch?v=RvGsbhp3kWE"/>
 ----
 
