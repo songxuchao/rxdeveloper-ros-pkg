@@ -70,3 +70,6 @@ In the *Component Creator*-Tab you can browse existing packages of your working 
 Creating a new package will add it to the list of packages and you can also add sourcefiles wherever you want and specificationfiles (specfiles will automatically be created in the subfolder "node").
 
 *Version 1.1* supports specfile creation from running nodes. In the component creation tab you now can add new specfiles with automatically created specification information for running nodes.
+
+*Version 1.2* supports the creation of c++-files from a specfile. Files will be automatically created in the subfolder "src" of the given package and need modification. You will also need to add a line to the _CMakeLists.txt_ for the new c++-file.
+http://rxdeveloper-ros-pkg.googlecode.com/files/create_c++.png
