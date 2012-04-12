@@ -234,12 +234,12 @@ private:
     QStandardItemModel *model_availableNodes;
     QStandardItemModel *model_availableComponents;
     QString folderPath;
-
+    QString packagePath;
     //QFileSystemWatcher *watcher;
     QStringList workingDirPackages;
     QStringList packageList;
     QStringList nodeList;
-    QString packagePath;
+
     bool check;
     bool project;
     QDir workingDir;
