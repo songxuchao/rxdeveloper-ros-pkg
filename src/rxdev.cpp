@@ -332,7 +332,7 @@ void RxDev::changeToolBar(){
 void RxDev::on_actionAbout_rxdev_activated()
 {
     QMessageBox::about(this, (QString::fromUtf8("About rxDeveloper")),
-                       QString::fromUtf8("<h2>rxdev v.1.1 </h2>"
+                       QString::fromUtf8("<h2>rxdev v.1.2 </h2>"
                                          "<p>Copyright &copy; 2011 Institute for Computer Science VI (AIS)"
                                          "<p>Created by: Filip Müllers (mailto:F.Muellers@gmail.com)"));
 }
@@ -454,6 +454,7 @@ void RxDev::on_actionStart_triggered()
     ui->textEdit_Info->append("<font color=\"red\">"+time.toString()+" - Information: <font color=\"blue\">trying to launch computational graph");
     ui->textEdit_Info->append(output.trimmed()+" If nothing happens you should check the settings for the right terminal emulator.");
     ui->dockWidget_errors->show();
+
 
 
 }
