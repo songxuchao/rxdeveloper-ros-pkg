@@ -76,6 +76,7 @@ private slots:
 
     void enableCreatePackageButton(const QString &text);
 
+    void makeFileExe();
     void openFileOrFolder();
     void showContextMenu(const QPoint &point);
 
