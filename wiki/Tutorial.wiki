@@ -76,5 +76,7 @@ With the buttons "rosdep install" and "rosmake" you can make your ROS packages.
 *Version 1.1* supports specfile creation from running nodes. In the component creation tab you now can add new specfiles with automatically created specification information for running nodes.
 
 *Version 1.2* supports the creation of c++-files from a specfile. Files will be automatically created in the subfolder "src" of the given package and need modification. You can add a line to the _CMakeLists.txt_ for the new c++-file, too.
+
 *Version 1.3b* supports the creation of python-files from a specfile. Files will be automatically created in the subfolder "nodes" of the given package and need modification.
+The contextmenu of the packagebrowser allows you to make pythonfiles executable.
 http://rxdeveloper-ros-pkg.googlecode.com/files/create_c++.png
