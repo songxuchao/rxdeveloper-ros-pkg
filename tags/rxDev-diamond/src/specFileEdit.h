@@ -48,6 +48,7 @@ private slots:
 
     void on_pushButton_wiki_clicked();
     void on_pushButton_createCpp_clicked();
+    void on_pushButton_createPy_clicked();
 };
 
 #endif

@@ -130,10 +130,25 @@ void RxDev::showContextMenu(const QPoint&point){
     } else if(workingModel->fileInfo(index).isFile()){
 
         contextMenu.addAction(tr("open File"),this, SLOT(openFileOrFolder()));
+        contextMenu.addAction(tr("make File executable"),this, SLOT(makeFileExe()));
         contextMenu.addSeparator();
         contextMenu.addAction(tr("delete File"),this, SLOT(deleteFile()));
     }
     contextMenu.exec(ui->treeView_packageBrowser->viewport()->mapToGlobal(point));
+}
+
+// Makes Pythonfiles executable
+void RxDev::makeFileExe(){
+    QModelIndex index(ui->treeView_packageBrowser->indexAt(menuPoint));
+    if(workingModel->fileInfo(index).isFile())
+    {
+        QString filePath =  workingModel->filePath(index);
+        if (filePath.endsWith(".py")||filePath.endsWith(".pyc")||filePath.endsWith(".pyd")||filePath.endsWith(".pyo")){
+            QProcess makeExe;
+            makeExe.start(QString("chmod +x "+filePath));
+            makeExe.waitForFinished(-1);
+        }
+    }
 }
 
 void RxDev::openFileOrFolder(){
@@ -313,7 +328,7 @@ void RxDev::on_pushButton_createPython_clicked()
     QString filename=createFile.getFileName();
     QFile newFile;
     if (!(filename=="")){
-        if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
+        if (!filename.endsWith(".pyd")&&!filename.endsWith(".pyc")&&!filename.endsWith(".pyo")&&!filename.endsWith(".py"))
             filename.append(".py");
         newFile.setFileName(filename);
         QDir::setCurrent(folderPath);

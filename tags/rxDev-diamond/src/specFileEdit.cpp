@@ -378,7 +378,7 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
                 reallyWriteFile=true;
             }else{
                 switch( QMessageBox::question( this, tr("File already exists!"),
-                                               tr("Do you want to overwrite the existing file?\nAre you sure?"),
+                                               tr("Do you want to overwrite the existing file %1?\nAre you sure?").arg(packagePath+"/"+ui->lineEdit_type->text()+".cpp"),
                                                QMessageBox::Yes | QMessageBox::No,
                                                QMessageBox::No ))
                 {
@@ -394,11 +394,12 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
                 }
             }
             if(reallyWriteFile){
+                newFile.remove();
                 newFile.open(QIODevice::ReadWrite);
                 QTextStream outstream( &newFile );        // use a text stream
 
                 QString header;
-                header=QString( "// src/"+ui->lineEdit_type->text()+"\t created from specfile\n\n"+
+                header=QString( "// src/"+ui->lineEdit_type->text()+".cpp\t created from specfile\n\n"+
                                 "#include <ros/ros.h> // You must include this to do things with ROS.\n"+
                                 "#include \"std_msgs/String.h\"\n\n"+
                                 "int main (int argc, char** argv)\n"+
@@ -477,11 +478,31 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
                 newFile.close();
                 QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("File created")),
                                                                            QString::fromUtf8("<h2>C++-File has been written!</h2>"
-                                                                                             "<p>The file %1 was created. Do you want to open this file?</p>").arg(ui->lineEdit_type->text()+".cpp"),
+                                                                                             "<p>The file %1 was created. Do you want to open this file?</p>").arg(packagePath+"/"+ui->lineEdit_type->text()+".cpp"),
 
                                                                            QMessageBox::Yes | QMessageBox::No);
                 if (button == QMessageBox::Yes)
                     QDesktopServices::openUrl(QUrl::fromLocalFile(packagePath+"/"+ui->lineEdit_type->text()+".cpp"));
+
+                QMessageBox::StandardButton cmake = QMessageBox::question(this, (QString::fromUtf8("Modifying the CMakeLists.txt")),
+                                                                           QString::fromUtf8("<h2>rxDeveloper can add the following line to the CMakelists.txt of the package '%1':</h2>"
+                                                                                             "<p>rosbuild_add_executable(%2 src/%2.cpp)</p><p>Do you want rxDeveloper to add this line?</p>").arg(ui->lineEdit_package->text()).arg(ui->lineEdit_type->text()),
+
+                                                                           QMessageBox::Yes | QMessageBox::No);
+                if (cmake == QMessageBox::Yes){
+                    QString cmakelistPath=packagePath;
+                    cmakelistPath.chop(4);
+                    currentDir.setPath(cmakelistPath);
+                    QDir::setCurrent(currentDir.absolutePath());
+                    QFile cmakelistFile;
+                    cmakelistFile.setFileName("CMakeLists.txt");
+                    cmakelistFile.open(QFile::Append | QFile::Text);
+                            QTextStream outstreamC( &cmakelistFile);        // use a text stream
+                            outstreamC << QString("\nrosbuild_add_executable(%1 src/%1.cpp)").arg(ui->lineEdit_type->text());
+                            cmakelistFile.close();
+                            QDesktopServices::openUrl(QUrl::fromLocalFile(cmakelistPath+"/CMakeLists.txt"));
+                }
+
 
             }
 
@@ -500,3 +521,153 @@ void SpecFileEdit::on_pushButton_createCpp_clicked()
 
 }
 
+/**
+ * try to create a python-template from the given information
+ **/
+void SpecFileEdit::on_pushButton_createPy_clicked()
+{
+    QProcess getPackagePath;
+    getPackagePath.start(QString("rospack find "+ui->lineEdit_package->text()));
+    getPackagePath.waitForFinished(-1);
+    QByteArray output = getPackagePath.readAllStandardOutput();
+    QString packagePath = output.trimmed();
+    QDir currentDir;
+
+    if (output.startsWith("/")){
+        currentDir.setPath(packagePath);
+        QDir::setCurrent(currentDir.absolutePath());
+        QFile test("test.tmp");
+        bool writable = test.open(QIODevice::ReadWrite);
+        test.close();
+        if (writable){
+            test.remove();
+            currentDir.mkdir("nodes");
+            packagePath.append("/nodes");
+            currentDir.setPath(packagePath);
+            QDir::setCurrent(currentDir.absolutePath());
+
+            //Write the new File
+            QFile newFile;
+            newFile.setFileName(QString(ui->lineEdit_type->text()+".py"));
+            bool reallyWriteFile=true;
+            if (!(newFile.exists()))
+            {
+                reallyWriteFile=true;
+            }else{
+                switch( QMessageBox::question( this, tr("File already exists!"),
+                                               tr("Do you want to overwrite the existing file %1?\nAre you sure?").arg(packagePath+"/"+ui->lineEdit_type->text()+".py"),
+                                               QMessageBox::Yes | QMessageBox::No,
+                                               QMessageBox::No ))
+                {
+                case QMessageBox::Yes:
+                    reallyWriteFile=true;
+                    break;
+                case QMessageBox::No:
+                    reallyWriteFile=false;
+                    break;
+                default:
+                    reallyWriteFile=false;
+                    break;
+                }
+            }
+            if(reallyWriteFile){
+                newFile.remove();
+                newFile.open(QIODevice::ReadWrite);
+
+                QTextStream outstream( &newFile );        // use a text stream
+
+                QString header;
+                header=QString("#!/usr/bin/env python\n");
+                header.append("# nodes/"+ui->lineEdit_type->text()+".py\t created from specfile\n\n");
+                header.append("import roslib; roslib.load_manifest('"+ui->lineEdit_package->text()+"')\n");
+                header.append("import rospy\t#You must include this to do things with ROS.\n");
+                header.append("from std_msgs.msg import String\n\n");
+                header.append("def "+ui->lineEdit_type->text()+"():\n");
+                header.append("  rospy.init_node('"+ui->lineEdit_type->text()+"')\n");
+
+                QString footer="";
+
+                footer= QString("  while not rospy.is_shutdown():\n");
+                for (int i=0;i<model_publications->rowCount();i++){
+                    QString type=model_publications->item(i,1)->text();
+                    if(type.contains("tring")){
+                        type = "String";
+                    }
+                    footer.append(QString("    pub_%1.publish(%2(msg)\t #create message msg of the right type: %2\n").arg(i).arg(type));
+                }
+                footer.append("    rospy.sleep(1.0)\n");
+                footer.append("if __name__ == '__main__':\n");
+                footer.append("  try:\n");
+                footer.append("    "+ui->lineEdit_type->text()+"()\n");
+                footer.append("  except rospy.ROSInterruptException: pass\n");
+
+                QString pubs="";
+                if (model_publications->rowCount()>0){
+                    pubs="  #publish on topics\n";
+                    for (int i=0;i<model_publications->rowCount();i++){
+                        QString type=model_publications->item(i,1)->text();
+                        if(type.contains("tring")){
+                            type = "String";
+                        }
+                        pubs.append(QString("  pub_%1 = rospy.Publisher('%3', %2)\n").arg(i).arg(type).arg(model_publications->item(i,0)->text()));
+                    }
+                }
+
+                QString subs="";
+                if (model_subscriptions->rowCount()>0){
+                    subs="  #subscribe to topics\n";
+                    for (int i=0;i<model_subscriptions->rowCount();i++){
+                        QString type=model_subscriptions->item(i,1)->text();
+                        if(type.contains("tring")){
+                            type = "String";
+                        }
+                        subs.append(QString("  sub_%1 = rospy.Subscriber('%2', %3, sub%1_method)\t# please define the method: sub%1_method(data):\n").arg(i).arg(model_subscriptions->item(i,0)->text()).arg(type));
+                    }
+                }
+                QString servs="";
+                if (model_services->rowCount()>0){
+                    servs="  #services provided\n";
+                    for (int i=0;i<model_services->rowCount();i++){
+                        servs.append(QString("  service_%1 = rospy.Service('%2', service%1_method)\t# please define the method: service%1_method\n").arg(i).arg(model_services->item(i,0)->text()));
+                    }
+                }
+                QString params="";
+                if (model_parameters->rowCount()>0){
+                    params="  #parameters\n";
+                    for (int i=0;i<model_parameters->rowCount();i++){
+                        QString type=model_parameters->item(i,1)->text();
+                        if(type.contains("std_msgs/")){
+                            type.replace("std_msgs/","std_msgs::");
+                        }
+                        QString value=model_parameters->item(i,2)->text();
+                        params.append(QString("  rospy.set_param('%1', %2);\t# Param of Type: %3\n").arg(model_parameters->item(i,0)->text()).arg(value).arg(type));
+                    }
+                }
+
+                // write the output
+                outstream << header.toUtf8().data() << pubs.toUtf8().data() << subs.toUtf8().data() << servs.toUtf8().data() << params.toUtf8().data() << footer.toUtf8().data()<<"\n";
+                newFile.close();
+                QMessageBox::StandardButton button = QMessageBox::question(this, (QString::fromUtf8("File created")),
+                                                                           QString::fromUtf8("<h2>Python-File has been written!</h2>"
+                                                                                             "<p>The file %1 was created. Do you want to open this file?</p>").arg(packagePath+"/"+ui->lineEdit_type->text()+".py"),
+
+                                                                           QMessageBox::Yes | QMessageBox::No);
+                if (button == QMessageBox::Yes)
+                    QDesktopServices::openUrl(QUrl::fromLocalFile(packagePath+"/"+ui->lineEdit_type->text()+".py"));
+
+            }
+
+
+        }else
+            QMessageBox::warning(this, (QString::fromUtf8("Error")),
+                                 QString::fromUtf8("<h2>Folder is not writable!</h2>"
+                                                   "<p>You don't have permission to create a file in: %1</p>").arg(packagePath));
+    }
+    else
+        QMessageBox::warning(this, (QString::fromUtf8("Error")),
+                             QString::fromUtf8("<h2>Package does not exist!</h2>"
+                                               "<p>Please create the package \"%1\" before trying to create files!</p>").arg(ui->lineEdit_package->text()));
+
+
+
+}
