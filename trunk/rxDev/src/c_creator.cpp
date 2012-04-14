@@ -85,7 +85,8 @@ void RxDev::selectionHandle_packages(const QItemSelection &selected, const QItem
     ui->pushButton_createPython->setEnabled(isPack);
     ui->pushButton_specfile->setEnabled(isPack);
     ui->pushButton_specfilFromExe->setEnabled(isPack);
-
+    ui->pushButton_rosmake->setEnabled(isPack);
+    ui->pushButton_rosdepInstall->setEnabled(isPack);
     if (isPack){
         //qDebug()<<packagePath;
         workingModel->setRootPath(packagePath);
@@ -524,4 +525,24 @@ void RxDev::on_pushButton_specfilFromExe_clicked()
         }
     }
 
+}
+
+void RxDev::on_pushButton_rosdepInstall_clicked()
+{
+        QProcess rosdep;
+        rosdep.setWorkingDirectory(workingModel->rootPath());
+        rosdep.setProcessChannelMode(QProcess::MergedChannels);
+        QString depString= (settings.value("terminal").toString().trimmed()+" \"rosdep install "+ui->listView_package->currentIndex().data().toString()+"\"");
+        rosdep.startDetached(depString);
+        rosdep.waitForFinished(-1);
+}
+
+void RxDev::on_pushButton_rosmake_clicked()
+{
+    QProcess rosdep;
+    rosdep.setWorkingDirectory(workingModel->rootPath());
+    rosdep.setProcessChannelMode(QProcess::MergedChannels);
+    QString depString= (settings.value("terminal").toString().trimmed()+" \"rosmake "+ui->listView_package->currentIndex().data().toString()+"\"");
+    rosdep.startDetached(depString);
+    rosdep.waitForFinished(-1);
 }

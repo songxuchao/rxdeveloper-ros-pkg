@@ -215,6 +215,10 @@ private slots:
     void on_actionOnline_Help_triggered();
 
 
+    void on_pushButton_rosdepInstall_clicked();
+
+    void on_pushButton_rosmake_clicked();
+
 private:
     Ui::RxDev *ui;
     QLabel *rosCoreStatus;
