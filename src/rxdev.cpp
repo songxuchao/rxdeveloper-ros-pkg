@@ -332,7 +332,7 @@ void RxDev::changeToolBar(){
 void RxDev::on_actionAbout_rxdev_activated()
 {
     QMessageBox::about(this, (QString::fromUtf8("About rxDeveloper")),
-                       QString::fromUtf8("<h2>rxdev v.1.2 </h2>"
+                       QString::fromUtf8("<h2>rxdev v.1.3b </h2>"
                                          "<p>Copyright &copy; 2011 Institute for Computer Science VI (AIS)"
                                          "<p>Created by: Filip Müllers (mailto:F.Muellers@gmail.com)"));
 }
